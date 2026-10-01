@@ -1,0 +1,10 @@
+node_modules
+dist
+.DS_Store
+
+# local tooling and design references (not part of the site)
+.claude
+design-screens
+
+# unused 3D file (not loaded by the site)
+public/models/red-bull-rb6.usdz

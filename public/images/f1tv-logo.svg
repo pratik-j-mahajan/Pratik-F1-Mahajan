@@ -1,0 +1,37 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="53.0875" height="8.87224" viewBox="0 0 53.0875 8.87224" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group">
+<g id="Group_2">
+<mask id="mask0_0_4" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="9">
+<g id="f-1-tv_svg__b">
+<path id="Vector" d="M0 1.49012e-08H27.4476V8.7552H0V1.49012e-08Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask0_0_4)">
+<path id="Vector_2" fill-rule="evenodd" clip-rule="evenodd" d="M0 8.7552L5.85273 2.63492C7.97271 0.418 9.11906 1.49012e-08 13.1112 1.49012e-08H27.4476L24.5376 2.98452H13.7351C10.7916 2.98452 10.0329 3.22924 8.58415 4.73252L4.71585 8.7552H0Z" fill="#E10600"/>
+</g>
+</g>
+<path id="Vector_3" fill-rule="evenodd" clip-rule="evenodd" d="M14.0251 3.81113C11.0823 3.81113 10.5139 3.95097 9.18681 5.33873L5.94307 8.75417H10.3128L11.3498 7.64685C11.9627 6.98261 12.2192 6.81845 13.6797 6.81845H20.8259L23.7359 3.81113H14.0251V3.81113Z" fill="#E10600"/>
+<g id="Group_3">
+<mask id="mask1_0_4" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="20" y="0" width="14" height="9">
+<g id="f-1-tv_svg__d">
+<path id="Vector_4" d="M20.0997 0H33.4668V8.7552H20.0997V0Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask1_0_4)">
+<path id="Vector_5" fill-rule="evenodd" clip-rule="evenodd" d="M28.4728 0L20.1 8.7552H25.0607L33.467 0H28.4728Z" fill="#E10600"/>
+</g>
+</g>
+<path id="Vector_6" fill-rule="evenodd" clip-rule="evenodd" d="M28.1744 7.2957H29.304V7.51534H28.8601V8.7549H28.616V7.51534H28.1744V7.2957ZM29.5299 7.2957H29.8739L30.2586 8.43722H30.263L30.6383 7.2957H30.9787V8.7549H30.7455V7.62858H30.7418L30.3548 8.7549H30.1537L29.7667 7.62858H29.7623V8.7549H29.5299V7.2957Z" fill="#E10600"/>
+<path id="Vector_7" fill-rule="evenodd" clip-rule="evenodd" d="M35.561 0V1.9266H38.7421V8.7552H40.975V1.9266H44.1568V0H35.561Z" fill="black"/>
+<g id="Group_4">
+<mask id="mask2_0_4" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="44" y="0" width="10" height="9">
+<g id="f-1-tv_svg__f">
+<path id="Vector_8" d="M44.2687 0H53.0875V8.87224H44.2687V0Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask2_0_4)">
+<path id="Vector_9" fill-rule="evenodd" clip-rule="evenodd" d="M46.5789 0L48.4781 6.43264C48.5072 6.51852 48.5378 6.58616 48.5677 6.63708C48.5968 6.68724 48.6457 6.71308 48.7127 6.71308C48.7863 6.71308 48.841 6.68952 48.8745 6.6424C48.9175 6.57435 48.9496 6.49937 48.9692 6.42048L50.8779 0H53.0875L51.0113 6.82936C50.8174 7.46016 50.5499 7.95796 50.2074 8.32352C49.8649 8.68908 49.3817 8.87224 48.7564 8.87224C48.0787 8.87224 47.5715 8.70124 47.2326 8.35848C46.8937 8.01648 46.6204 7.50652 46.412 6.82936L44.2687 0H46.5789Z" fill="black"/>
+</g>
+</g>
+</g>
+</svg>

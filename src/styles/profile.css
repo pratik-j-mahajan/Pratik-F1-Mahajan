@@ -1,0 +1,1014 @@
+/* About — the profile shown after the pass is scanned: hero, what I do, finish.
+   Built on the page's theme tokens (.theme-light / .theme-dark in about.css). */
+
+.theme-light {
+  --ink-2: #3a3b40;
+  --hair: rgba(13, 13, 15, 0.1);
+  --hair-strong: rgba(13, 13, 15, 0.22);
+}
+
+.theme-dark {
+  --ink-2: #c4c8d2;
+  --hair: rgba(255, 255, 255, 0.09);
+  --hair-strong: rgba(255, 255, 255, 0.22);
+}
+
+.ab {
+  --pad: clamp(20px, 5vw, 72px);
+  font-family: var(--font);
+}
+
+.ab ::selection {
+  background: var(--red);
+  color: #fff;
+}
+
+.ab-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ab-label span {
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Buttons & links ---------- */
+.ab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 22px;
+  border: 1px solid var(--hair-strong);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.ab-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ab-btn--red {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff;
+}
+
+.ab-btn--red:hover {
+  border-color: #c20500;
+  background: #c20500;
+}
+
+.ab-btn--red:hover svg {
+  transform: translateY(2px);
+}
+
+.ab-btn--ghost:hover {
+  border-color: currentColor;
+}
+
+.ab-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* resting hairline, and a red line that wipes across on hover */
+.ab-link::before,
+.ab-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+}
+
+.ab-link::before {
+  background: currentColor;
+  opacity: 0.25;
+}
+
+.ab-link::after {
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.ab-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.ab-link span {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ab-link:hover span {
+  transform: translateX(3px);
+}
+
+/* ---------- Top controls ---------- */
+/* Back + theme toggle get a frosted strip once you leave the top, and tuck away while
+   you scroll down so they never sit on top of the content you're reading. */
+.ab-shade {
+  position: fixed;
+  z-index: 55;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 76px;
+  border-bottom: 1px solid var(--hair);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about.bar-shown .ab-shade {
+  opacity: 1;
+}
+
+.about.bar-hidden .ab-shade {
+  opacity: 1;
+  transform: translateY(-100%);
+}
+
+.ab-shade ~ .about-back,
+.ab-shade ~ .theme-toggle {
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease;
+}
+
+.about.bar-hidden .about-back,
+.about.bar-hidden .theme-toggle {
+  transform: translateY(-84px);
+}
+
+@media (max-width: 800px) {
+  .ab-shade {
+    height: 64px;
+  }
+}
+
+/* small section label with a red lead-in */
+.abx-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.abx-kicker::before {
+  content: '';
+  width: 16px;
+  height: 2px;
+  background: var(--red);
+}
+
+/* ---------- Hero ---------- */
+.abx-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(40px, 6vw, 112px);
+  min-height: max(100svh, 640px);
+  padding: 96px var(--pad) 56px;
+}
+
+.abx-hero-copy {
+  max-width: 660px;
+}
+
+.abx-title {
+  margin: 22px 0 0;
+  font-size: clamp(42px, 5.3vw, 86px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.042em;
+}
+
+.abx-title i {
+  font-style: normal;
+  color: var(--red);
+}
+
+.abx-intro {
+  max-width: 420px;
+  margin-top: 26px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.abx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 28px;
+  margin-top: 34px;
+}
+
+.abx-facts {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 16px clamp(24px, 3vw, 44px);
+  margin: 48px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--hair);
+}
+
+.abx-facts dt {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.abx-facts dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0 0;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.abx-live {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: abx-live 2s ease-out infinite;
+}
+
+@keyframes abx-live {
+  0% {
+    box-shadow: 0 0 0 0 rgba(225, 6, 0, 0.45);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px rgba(225, 6, 0, 0);
+  }
+}
+
+/* photo */
+.abx-photo-wrap {
+  position: relative;
+  justify-self: end;
+}
+
+.abx-photo {
+  position: relative;
+  height: min(72svh, 660px);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 40px 70px -40px rgba(12, 20, 51, 0.45);
+}
+
+.abx-photo-clip {
+  position: absolute;
+  inset: 0;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.abx-photo:hover .abx-photo-clip {
+  transform: scale(1.035);
+}
+
+.abx-photo img,
+.abx-flight img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* the ID photo in flight from the pass to the frame */
+.abx-flight {
+  position: fixed;
+  z-index: 50;
+  overflow: hidden;
+  box-shadow: 0 40px 70px -40px rgba(12, 20, 51, 0.45);
+  pointer-events: none;
+}
+
+/* broadcast name strip (.lt, global.css), hanging off the frame's bottom-left edge */
+.abx-lt {
+  position: absolute;
+  z-index: 2;
+  left: -32px;
+  bottom: 32px;
+}
+
+.abx-lt-first {
+  font-weight: 500;
+}
+
+/* lit: brand colours on; everything else steps back */
+
+/* near-black brand colours would vanish on the dark page */
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1000px) {
+  .abx-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    min-height: 0;
+    padding-top: 88px;
+  }
+
+  .abx-photo-wrap {
+    order: -1;
+    justify-self: start;
+    width: min(100%, 420px);
+  }
+
+  .abx-photo {
+    width: 100%;
+    height: auto;
+  }
+
+  .abx-lt {
+    left: 16px;
+    bottom: 16px;
+  }
+
+}
+
+/* ---------- Phone ---------- */
+/* budget: the whole page stays under three screens */
+@media (max-width: 760px) {
+  .abx-hero {
+    gap: 28px;
+    padding: 76px var(--pad) 44px;
+  }
+
+  .abx-photo-wrap {
+    width: 100%;
+  }
+
+  .abx-photo {
+    aspect-ratio: 5 / 4;
+  }
+
+  .abx-photo img {
+    object-position: 50% 12%;
+  }
+
+  .abx-lt {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .abx-title {
+    margin-top: 16px;
+    font-size: min(40px, 9.6vw);
+  }
+
+  .abx-intro {
+    margin-top: 16px;
+    font-size: 15px;
+  }
+
+  .abx-actions {
+    margin-top: 24px;
+  }
+
+  .abx-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 28px;
+    padding-top: 16px;
+  }
+
+  .abx-facts-now {
+    display: none;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .abx-live {
+    animation: none;
+  }
+
+}
+
+/* ---------- The ticket: what I do · kit · let's build ---------- */
+.tk-sec {
+  padding: clamp(80px, 9vw, 128px) var(--pad) 0;
+  border-top: 1px solid var(--hair);
+}
+
+.tk-head {
+  max-width: 720px;
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+
+.tk-title {
+  margin: 14px 0 0;
+  font-size: clamp(26px, 2.8vw, 40px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.tk-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 32px;
+  margin-top: clamp(64px, 7vw, 96px);
+  padding: 22px 0 28px;
+  border-top: 1px solid var(--hair);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tk-foot p {
+  margin: 0;
+}
+
+.tk-foot p span {
+  margin: 0 6px;
+}
+
+.tk-foot nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  color: var(--ink);
+}
+
+.tk-foot .ab-link {
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+
+  .tk-foot {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ---------- The ticket (Figma "Printable", 1077 × 361) ---------- */
+.tk-fit {
+  --red-t: #ee0600;
+  --navy-t: #1f1b71;
+  --mono: 'Roboto Mono', ui-monospace, monospace;
+  height: var(--fit-h);
+}
+
+.tk2 {
+  width: 1077px;
+  height: 361px;
+  transform-origin: 0 0;
+  scale: var(--s);
+  filter: drop-shadow(0 30px 40px rgba(12, 20, 51, 0.16)) drop-shadow(0 2px 3px rgba(12, 20, 51, 0.08));
+}
+
+.theme-dark .tk2 {
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
+}
+
+.tk2-stage {
+  position: relative;
+  width: 1077px;
+  height: 361px;
+  color: #000;
+  font-family: var(--mono);
+}
+
+.tk2-stage > * {
+  position: absolute;
+}
+
+.tk2-shape {
+  left: 3.01px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1073.991px;
+  height: 361.006px;
+}
+
+.tk2-shape-rot {
+  flex: none;
+  width: 361.006px;
+  height: 1073.991px;
+  transform: rotate(-90deg);
+}
+
+.tk2-shape img,
+.tk2-perf img,
+.tk2-band-bg,
+.tk2-band-foot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tk2-perf {
+  left: 713px;
+  top: 11.43px;
+  bottom: 12.64px;
+  width: 6.02px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tk2-perf-rot {
+  flex: none;
+  width: 336.939px;
+  height: 6.017px;
+  transform: rotate(90deg);
+}
+
+.tk2-main {
+  inset: 0 auto 0 3px;
+  width: 712px;
+}
+
+.tk2-main > * {
+  position: absolute;
+}
+
+.tk2-band {
+  left: 0;
+  top: 0;
+  width: 712px;
+  height: 50.5px;
+}
+
+.tk2-band > * {
+  position: absolute;
+}
+
+.tk2-band-bg {
+  inset: 0;
+}
+
+.tk2-logo {
+  left: 31px;
+  top: 18px;
+  width: 66px;
+  height: 16.5px;
+}
+
+.tk2-event {
+  left: 236px;
+  top: 26px;
+  margin: 0;
+  color: #fff;
+  font-size: 15px;
+  letter-spacing: 0.75px;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.tk2-event b {
+  font-weight: 600;
+}
+
+.tk2-cap {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.42px;
+  white-space: nowrap;
+}
+
+.tk2-holder {
+  left: 32px;
+  top: 76px;
+}
+
+.tk2-name {
+  margin: 8px 0 0;
+  font-size: 32px;
+  letter-spacing: 0.32px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.tk2-role {
+  margin: 6px 0 0;
+  font-size: 14px;
+  letter-spacing: 0.42px;
+}
+
+.tk2-seat {
+  display: grid;
+  grid-template-columns: repeat(4, 70px);
+  margin: 26px 0 0;
+  border: 1.5px solid var(--navy-t);
+}
+
+.tk2-seat div {
+  padding: 7px 10px 8px;
+  border-left: 1px solid rgba(31, 27, 113, 0.25);
+}
+
+.tk2-seat div:first-child {
+  border-left: 0;
+}
+
+.tk2-seat dt {
+  color: #6b6f7b;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tk2-seat dd {
+  margin: 3px 0 0;
+  color: var(--navy-t);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tk2-tools {
+  left: 367px;
+  top: 76px;
+  width: 316px;
+}
+
+.tk2-tools ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tk2-tool {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 6px;
+  border: 1px solid rgba(31, 27, 113, 0.18);
+  border-radius: 8px;
+  font-size: 12.5px;
+  letter-spacing: 0;
+  white-space: nowrap;
+  transition:
+    opacity 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+.tk2-tool-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: #f3f3f6;
+}
+
+.tk2-tool-icon svg {
+  width: 15px;
+  height: 15px;
+  fill: #111214;
+  transition: fill 0.3s ease;
+}
+
+.tk2-tool-badge {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1.4px solid currentColor;
+  border-radius: 4px;
+  font-family: var(--font);
+  font-size: 8.5px;
+  font-weight: 700;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.tk2-tool.is-lit,
+.tk2-tool:hover {
+  border-color: var(--navy-t);
+}
+
+.tk2-tool.is-lit svg,
+.tk2-tool:hover svg {
+  fill: var(--brand);
+}
+
+.tk2-tool.is-lit .tk2-tool-badge,
+.tk2-tool:hover .tk2-tool-badge {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-fg);
+}
+
+.tk2-tool.is-dim {
+  opacity: 0.3;
+}
+
+.tk2-zones {
+  left: 32px;
+  right: 28px;
+  top: 292px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 10px 0 0;
+  border-top: 1px dashed rgba(31, 27, 113, 0.3);
+  list-style: none;
+}
+
+.tk2-zones button {
+  position: relative;
+  padding: 2px 0 4px;
+  border: 0;
+  background: none;
+  color: var(--navy-t);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: default;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.tk2-zones li + li button::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--red-t);
+  transform: translateY(-50%);
+}
+
+.tk2-zones button.is-on {
+  color: var(--red-t);
+}
+
+.tk2-zones button.is-dim {
+  opacity: 0.4;
+}
+
+.tk2-zones button:focus-visible {
+  outline: 2px solid var(--red-t);
+  outline-offset: 3px;
+}
+
+.tk2-band-foot {
+  left: 0;
+  top: 335.5px;
+  width: 712px;
+  height: 25.5px;
+  transform: scaleY(-1);
+}
+
+.tk2-stub {
+  left: 716px;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 361px;
+  height: 361px;
+  padding: 30px 30px 26px 34px;
+}
+
+.tk2-stub .tk2-cap {
+  color: #6b6f7b;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tk2-stub-title {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.tk2-stub-title i {
+  font-style: normal;
+  color: var(--red-t);
+}
+
+.tk2-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+}
+
+.tk2-actions .ab-btn {
+  height: 42px;
+  padding: 0 18px;
+  font-size: 13px;
+}
+
+.tk2-actions .ab-link {
+  color: #000;
+  font-size: 13px;
+}
+
+.tk2-code {
+  display: grid;
+  gap: 5px;
+  margin-top: auto;
+  color: var(--navy-t);
+}
+
+.tk2-barcode {
+  display: block;
+  width: 100%;
+  height: 40px;
+}
+
+.tk2-code span {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+
+/* phones: too narrow to scale the printed ticket, so it stands upright */
+@media (max-width: 760px) {
+  .tk-fit {
+    height: auto;
+  }
+
+  .tk2 {
+    width: auto;
+    height: auto;
+    scale: none;
+  }
+
+  .tk2-stage {
+    display: grid;
+    width: auto;
+    height: auto;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fff;
+  }
+
+  .tk2-stage > *,
+  .tk2-main > *,
+  .tk2-band > .tk2-event {
+    position: static;
+    transform: none;
+  }
+
+  .tk2-shape,
+  .tk2-perf {
+    display: none;
+  }
+
+  .tk2-main {
+    display: grid;
+    gap: 22px;
+    width: auto;
+    padding-bottom: 0;
+  }
+
+  .tk2-band {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: auto;
+    height: 50px;
+    padding: 0 18px;
+  }
+
+  .tk2-band-bg {
+    position: absolute;
+  }
+
+  .tk2-band > .tk2-logo,
+  .tk2-band > .tk2-event {
+    position: relative;
+    left: auto;
+    top: auto;
+  }
+
+  .tk2-logo {
+    flex: none;
+    width: 52px;
+    height: 13px;
+  }
+
+  .tk2-event {
+    font-size: 13px;
+  }
+
+  .tk2-holder,
+  .tk2-tools,
+  .tk2-zones {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .tk2-name {
+    font-size: 26px;
+  }
+
+  .tk2-seat {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .tk2-tools {
+    width: auto;
+  }
+
+  .tk2-zones li + li button::before {
+    display: none;
+  }
+
+  .tk2-zones {
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    justify-content: flex-start;
+    padding-top: 14px;
+  }
+
+  .tk2-band-foot {
+    width: auto;
+    height: 14px;
+    margin-top: 4px;
+  }
+
+  .tk2-band-foot img {
+    height: 14px;
+  }
+
+  .tk2-stub {
+    width: auto;
+    height: auto;
+    padding: 24px 18px;
+    border-top: 2px dashed rgba(61, 86, 133, 0.25);
+  }
+
+  .tk2-code {
+    margin-top: 8px;
+  }
+}
