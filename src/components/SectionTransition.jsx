@@ -6,6 +6,15 @@ import LowerThird from './LowerThird.jsx'
 import sections from '../data/sections.js'
 
 const pad = (n) => String(n).padStart(2, '0')
+const VOLUME = 0.5 // section videos play at half volume
+const MUTE_KEY = 'section-video-muted'
+const readMuted = () => {
+  try {
+    return localStorage.getItem(MUTE_KEY) === '1'
+  } catch {
+    return false
+  }
+}
 
 const TransitionContext = createContext(() => {})
 
@@ -18,6 +27,22 @@ export function SectionTransitionProvider({ children }) {
   const [progress, setProgress] = useState(0)
   const videoRef = useRef(null)
   const doneRef = useRef(false)
+  const [muted, setMuted] = useState(readMuted)
+
+  const toggleSound = () => {
+    const next = !muted
+    setMuted(next)
+    const v = videoRef.current
+    if (v) {
+      v.muted = next
+      v.volume = VOLUME
+    }
+    try {
+      localStorage.setItem(MUTE_KEY, next ? '1' : '0')
+    } catch {
+      /* fine */
+    }
+  }
 
   const play = useCallback((s) => {
     doneRef.current = false
@@ -36,15 +61,20 @@ export function SectionTransitionProvider({ children }) {
   useEffect(() => {
     if (!section) return
     const video = videoRef.current
+    if (video) {
+      video.volume = VOLUME
+      video.muted = muted
+    }
     // A click started this, so sound is allowed; fall back to muted if the browser refuses.
     video?.play().catch(() => {
       video.muted = true
+      setMuted(true)
       video.play().catch(finish)
     })
     const onKey = (e) => e.key === 'Escape' && finish()
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [section, finish])
+  }, [section, finish]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TransitionContext.Provider value={play}>
@@ -87,6 +117,30 @@ export function SectionTransitionProvider({ children }) {
               <img src="/images/f1tv-logo.svg" alt="F1 TV" />
               <span className="sv-event">Portfolio Grand Prix</span>
             </motion.div>
+
+            <motion.button
+              type="button"
+              className={`sv-sound${muted ? ' is-muted' : ''}`}
+              onClick={toggleSound}
+              aria-pressed={!muted}
+              aria-label={muted ? 'Turn sound on' : 'Turn sound off'}
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+                {muted ? <path d="m17 9 5 5m0-5-5 5" /> : <path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" />}
+              </svg>
+              <span>{muted ? 'Sound off' : 'Sound on'}</span>
+              {!muted && (
+                <span className="sv-eq" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              )}
+            </motion.button>
 
             <motion.div
               className="sv-lap"

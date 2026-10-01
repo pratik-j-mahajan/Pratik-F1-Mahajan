@@ -1612,6 +1612,92 @@ button {
   opacity: 0.6;
 }
 
+/* sound toggle: same dark broadcast box as the lap counter, sitting to its left */
+.sv-sound {
+  position: absolute;
+  top: 28px;
+  right: 168px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px 0 12px;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(10, 11, 14, 0.72);
+  color: #fff;
+  font-family: 'Titillium Web', var(--font);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background 0.25s ease;
+}
+
+.sv-sound svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sv-sound svg path:first-child {
+  fill: currentColor;
+}
+
+.sv-sound:hover {
+  background: rgba(10, 11, 14, 0.9);
+}
+
+.sv-sound.is-muted {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.sv-sound:focus-visible {
+  outline: 2px solid #e10600;
+  outline-offset: 3px;
+}
+
+/* little red level meter while sound is on */
+.sv-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.sv-eq i {
+  width: 3px;
+  height: 100%;
+  background: #e10600;
+  transform-origin: bottom;
+  animation: sv-eq 0.9s ease-in-out infinite;
+}
+
+.sv-eq i:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.sv-eq i:nth-child(3) {
+  animation-delay: 0.45s;
+}
+
+@keyframes sv-eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
 .sv-lt {
   position: absolute;
   left: 32px;
@@ -1634,6 +1720,16 @@ button {
     right: 16px;
   }
 
+  .sv-sound {
+    top: 16px;
+    right: 136px;
+    padding: 0 10px;
+  }
+
+  .sv-sound span:not(.sv-eq) {
+    display: none;
+  }
+
   .sv-lt {
     left: 16px;
     right: 16px;
@@ -1646,7 +1742,8 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sv-live i {
+  .sv-live i,
+  .sv-eq i {
     animation: none;
   }
 }

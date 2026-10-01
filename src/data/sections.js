@@ -28,6 +28,7 @@ const sections = [
     title: 'Projects',
     turn: 'DRS',
     path: '/projects',
+    video: '/videos/projects.mp4',
     blurb: 'Product, visual and front-end work at full speed.',
     pin: { x: 57.5, y: 76.2 },
   },
