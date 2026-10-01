@@ -50,7 +50,8 @@ export default function PassGate({ onGranted }) {
   const hookSwing = useSpring(useTransform(vx, [-2000, 2000], [6, -6]), { stiffness: 80, damping: 6, mass: 0.7 })
   const hookSpin = useSpring(useTransform(vx, [-1600, 1600], [-50, 50]), { stiffness: 55, damping: 5, mass: 0.6 })
 
-  const anchorX = size.w * (size.w < 800 ? 0.5 : 0.25)
+  // phones: hang the pass on the left so it clears the scanner on the right
+  const anchorX = size.w * (size.w < 560 ? 0.3 : size.w < 800 ? 0.4 : 0.25)
   const rest = () => ({ x: anchorX, y: Math.max(150, size.h * 0.2) })
 
   useLayoutEffect(() => {

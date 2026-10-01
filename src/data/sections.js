@@ -3,7 +3,8 @@ const DEFAULT_VIDEO = '/videos/case-study.mp4'
 
 // Portfolio sections, each pinned to a spot on the circuit map.
 // `pin` is the marker position as a percentage of the map image;
-// `align: 'start'` hangs the label to the right of its point (for pins near the left edge on phones).
+// `align` hangs the label beside its point on phones: 'start' = to the right (pins near the left
+// edge), 'end' = to the left (pins near the right edge).
 const sections = [
   {
     id: 'about',

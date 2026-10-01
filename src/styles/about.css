@@ -1484,11 +1484,38 @@
     height: 48px;
     padding: 7px;
   }
-  .gate-guide,
   .gate-hint,
   .gate-overhead,
   .gate-foot--right {
     display: none;
+  }
+}
+
+/* phones: pass on the left, scanner on the right, the short guide under the pass */
+@media (max-width: 560px) {
+  .gate {
+    --pass-w: min(50vw, 196px);
+  }
+  .gate-right {
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    padding: 0 16px 52px;
+  }
+  .gate-guide {
+    order: -1;
+    align-self: flex-end;
+    width: auto;
+    max-width: 52vw;
+    margin-bottom: 4px;
+  }
+  .gate-line {
+    margin: 10px 0 12px;
+    font-size: 16px;
+  }
+  .pillar {
+    width: 112px;
+    height: calc(max(38svh, 280px) + 40px);
   }
 }
 

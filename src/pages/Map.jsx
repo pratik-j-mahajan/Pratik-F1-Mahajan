@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import sections from '../data/sections.js'
 import useParallax from '../hooks/useParallax.js'
 import useMusic from '../hooks/useMusic.js'
-import { useSectionTransition } from '../components/SectionTransition.jsx'
+import { prefetchSectionVideo, useSectionTransition } from '../components/SectionTransition.jsx'
 import {
   ArrowIcon,
   ListIcon,
@@ -41,6 +41,7 @@ export default function Map() {
 
   const active = sections.find((s) => s.id === activeId)
   const point = (id) => {
+    prefetchSectionVideo(sections.find((x) => x.id === id)?.video)
     setActiveId(id)
     if (id) setCardId(id)
   }
@@ -64,10 +65,10 @@ export default function Map() {
         animate={{ filter: isList ? 'blur(6px) brightness(0.55)' : 'blur(0px) brightness(1)' }}
         transition={{ duration: 0.5 }}
       >
-        <img className="map-img" src="/images/map-day.jpg" alt="Circuit map" />
+        <img className="map-img" src="/images/map-day.webp" alt="Circuit map" />
         <motion.img
           className="map-img"
-          src="/images/map-night.jpg"
+          src="/images/map-night.webp"
           alt=""
           initial={false}
           animate={{ opacity: night ? 1 : 0 }}
@@ -83,7 +84,7 @@ export default function Map() {
               key={s.id}
               to={s.path}
               onClick={openSection(s)}
-              className={`map-pin${s.pin.align === 'start' ? ' is-start' : ''}${activeId === s.id ? ' is-active' : ''}`}
+              className={`map-pin${s.pin.align ? ` is-${s.pin.align}` : ''}${activeId === s.id ? ' is-active' : ''}`}
               style={{ left: `${s.pin.x}%`, top: `${s.pin.y}%` }}
               onMouseEnter={() => point(s.id)}
               onMouseLeave={() => setActiveId(null)}
@@ -122,7 +123,7 @@ export default function Map() {
           </p>
           <p className="profile-number" aria-hidden="true">06</p>
           <div className="profile-driver">
-            <img src="/images/driver.png" alt="Pratik Mahajan" />
+            <img src="/images/driver.webp" alt="Pratik Mahajan" />
           </div>
           <span className="profile-fade" aria-hidden="true" />
           <p className="profile-name">Pratik Mahajan</p>

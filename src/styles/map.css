@@ -786,10 +786,10 @@
 
 /* ---------- Phones ---------- */
 @media (max-width: 700px) {
-  /* Map sized so all five pins fit in the area above the bottom sheet */
+  /* Map sized so all five pins fit, sitting right on top of the bottom sheet (no dead band) */
   .map-layer {
-    left: -46vw;
-    top: max(0px, calc(((100svh - var(--nav-h)) * 0.52 - 94.86vw) / 2));
+    left: -47vw;
+    top: max(72px, calc((100svh - var(--nav-h)) * 0.56 - 94.86vw + 6px));
     width: 170vw;
   }
   .map-pin {
@@ -824,11 +824,20 @@
   .map-pin.is-start .map-pin-stem {
     margin-left: 4.5px;
   }
+  /* near the right edge: the label hangs to the left */
+  .map-pin.is-end {
+    align-items: flex-end;
+    transform: translate(calc(-100% + 5.5px), calc(-100% + 6px));
+  }
+  .map-pin.is-end .map-pin-stem {
+    margin-right: 4.5px;
+  }
   .map-sidebar {
     top: auto;
     width: auto;
     right: 0;
-    max-height: 48%;
+    height: 44%;
+    max-height: 44%;
     overflow-y: auto;
     padding: 16px;
     border-radius: 20px 20px 0 0;

@@ -94,7 +94,7 @@ export default function Home() {
     <div className="home">
       <section className="hero" onMouseMove={parallax.onMouseMove} onMouseLeave={parallax.onMouseLeave}>
         <div className="hero-stage">
-          <motion.img className="hero-bg" src="/images/hero-bg-v2.png" alt="" aria-hidden="true" style={{ x: parallax.x, y: parallax.y }} />
+          <motion.img className="hero-bg" src="/images/hero-bg-v2.webp" alt="" aria-hidden="true" style={{ x: parallax.x, y: parallax.y }} />
 
           <motion.p
             className="hero-number"
@@ -108,7 +108,7 @@ export default function Home() {
           </motion.p>
 
           <motion.div className="hero-driver" {...rise(0.2)}>
-            <img src="/images/driver.png" alt="Pratik Mahajan" />
+            <img src="/images/driver.webp" alt="Pratik Mahajan" />
             <div className="hero-driver-fade" />
           </motion.div>
 
@@ -153,8 +153,11 @@ export default function Home() {
                 <span className="hero-hint-tag">
                   <i aria-hidden="true">i</i> New here?
                 </span>
-                <p>
+                <p className="hero-hint-long">
                   Press <b>Start</b> to enter the circuit — every section of my portfolio is a corner on the track.
+                </p>
+                <p className="hero-hint-short">
+                  Tap <b>Start</b> to explore.
                 </p>
                 <button type="button" className="hero-hint-close" onClick={closeHint} aria-label="Dismiss">
                   ×

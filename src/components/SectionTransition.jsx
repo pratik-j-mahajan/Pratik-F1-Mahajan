@@ -18,6 +18,16 @@ const readMuted = () => {
 
 const TransitionContext = createContext(() => {})
 
+// Warm the browser cache with a section's video (on hover), so it starts instantly on click.
+const warmed = new Set()
+export function prefetchSectionVideo(src) {
+  if (!src || warmed.has(src)) return
+  warmed.add(src)
+  fetch(src, { priority: 'low' }).catch(() => warmed.delete(src))
+}
+
+const STALL_MS = 4000 // if the video hasn't started by then, go straight to the section
+
 // Call with a section to play its video, then open the section page.
 export const useSectionTransition = () => useContext(TransitionContext)
 
@@ -28,6 +38,7 @@ export function SectionTransitionProvider({ children }) {
   const videoRef = useRef(null)
   const doneRef = useRef(false)
   const [muted, setMuted] = useState(readMuted)
+  const [buffering, setBuffering] = useState(true)
 
   const toggleSound = () => {
     const next = !muted
@@ -47,6 +58,7 @@ export function SectionTransitionProvider({ children }) {
   const play = useCallback((s) => {
     doneRef.current = false
     setProgress(0)
+    setBuffering(true)
     setSection(s)
   }, [])
 
@@ -71,9 +83,16 @@ export function SectionTransitionProvider({ children }) {
       setMuted(true)
       video.play().catch(finish)
     })
+    // slow connection: don't leave people staring at a black screen
+    const stall = setTimeout(() => {
+      if (!video || video.currentTime < 0.05) finish()
+    }, STALL_MS)
     const onKey = (e) => e.key === 'Escape' && finish()
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      clearTimeout(stall)
+      window.removeEventListener('keydown', onKey)
+    }
   }, [section, finish]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -97,6 +116,8 @@ export function SectionTransitionProvider({ children }) {
               preload="auto"
               onEnded={finish}
               onError={finish}
+              onPlaying={() => setBuffering(false)}
+              onWaiting={() => setBuffering(true)}
               onTimeUpdate={(e) => {
                 const v = e.currentTarget
                 if (v.duration) setProgress(v.currentTime / v.duration)
@@ -116,6 +137,11 @@ export function SectionTransitionProvider({ children }) {
               </span>
               <img src="/images/f1tv-logo.svg" alt="F1 TV" />
               <span className="sv-event">Portfolio Grand Prix</span>
+              {buffering && (
+                <span className="sv-loading" role="status">
+                  <i aria-hidden="true" /> Loading
+                </span>
+              )}
             </motion.div>
 
             <motion.button
