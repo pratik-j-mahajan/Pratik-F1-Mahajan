@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigationType } from 'react-router-dom'
+import { Link, useNavigationType } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import BackButton from '../components/BackButton.jsx'
 import PassGate from '../components/about/PassGate.jsx'
@@ -94,21 +94,21 @@ export default function About() {
   return (
     <div className={`about ${dark ? 'theme-dark' : 'theme-light'}${entered ? ` bar-${bar}` : ''}`}>
       {entered && <span className="ab-shade" aria-hidden="true" />}
-      <button
-        type="button"
-        className="theme-toggle"
-        onClick={() => setTheme(dark ? 'light' : 'dark')}
-        aria-label={`Switch to ${dark ? 'light' : 'dark'} theme`}
-      >
-        <span className={`theme-opt${!dark ? ' is-on' : ''}`}>
-          <SunIcon /> Light
-        </span>
-        <span className={`theme-opt${dark ? ' is-on' : ''}`}>
-          <MoonIcon /> Dark
-        </span>
-      </button>
-
-      <BackButton className="about-back" />
+      {entered ? (
+        <>
+          <ThemeToggle dark={dark} onToggle={() => setTheme(dark ? 'light' : 'dark')} />
+          <BackButton className="about-back" />
+        </>
+      ) : (
+        // the scan screen sits under the same dark bar as the other section pages
+        <header className="navbar navbar--page about-nav">
+          <BackButton className="navbar-back" />
+          <Link to="/" className="navbar-logo" aria-label="Home">
+            <img src="/images/f1-logo-red.svg" alt="F1" />
+          </Link>
+          <ThemeToggle bar dark={dark} onToggle={() => setTheme(dark ? 'light' : 'dark')} />
+        </header>
+      )}
 
       <AnimatePresence>
         {!entered && (
@@ -131,5 +131,23 @@ export default function About() {
         </main>
       )}
     </div>
+  )
+}
+
+function ThemeToggle({ dark, onToggle, bar = false }) {
+  return (
+    <button
+      type="button"
+      className={`theme-toggle${bar ? ' theme-toggle--bar' : ''}`}
+      onClick={onToggle}
+      aria-label={`Switch to ${dark ? 'light' : 'dark'} theme`}
+    >
+      <span className={`theme-opt${!dark ? ' is-on' : ''}`}>
+        <SunIcon /> Light
+      </span>
+      <span className={`theme-opt${dark ? ' is-on' : ''}`}>
+        <MoonIcon /> Dark
+      </span>
+    </button>
   )
 }

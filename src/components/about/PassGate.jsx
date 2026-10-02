@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, useVelocity } from 'framer-motion'
 import { PassFront } from './VipPass.jsx'
+import FlapBoard from './FlapBoard.jsx'
 
 /*
   Paddock entry gate. The pass hangs on a cloth lanyard (left half); hover to grab it
@@ -22,6 +23,13 @@ const STATUS = {
   scanning: 'Verifying',
   granted: 'Access granted',
 }
+// handwritten notes pinned around the hanging pass; `top` is % down the card
+const NOTES = [
+  { side: 'left', top: 30, text: 'Sunglasses stay on.', sub: 'Brand guidelines.' },
+  { side: 'left', top: 84, text: 'All access*', sub: '*except meetings that could’ve been an email' },
+  { side: 'right', top: 24, text: 'Lucky 06.', sub: 'Chosen by vibes, approved by nobody.' },
+  { side: 'right', top: 93, text: 'Scan me.', sub: 'Faster than my Slack replies.' },
+]
 const LANYARD_TEXT = 'VIP PASS ✦ PADDOCK CLUB ✦ '.repeat(8)
 
 export default function PassGate({ onGranted }) {
@@ -203,12 +211,15 @@ export default function PassGate({ onGranted }) {
             <PassFront />
           </div>
           <span className="gate-matte" aria-hidden="true" />
+          <GateNotes show={phase === 'idle'} />
           {scanning && <span className="gate-beam" aria-hidden="true" />}
         </div>
       </motion.div>
 
       {/* ---------- backdrop ---------- */}
       <div className="gate-scene" aria-hidden="true">
+        {/* big outlined lettering on the back wall, standing on the floor line */}
+        <p className="gate-wall">Paddock</p>
         <span className="gate-horizon" />
         <svg className="gate-hint" viewBox="0 0 200 60" preserveAspectRatio="none">
           <path d="M4 50 C60 8 140 8 196 30" />
@@ -247,6 +258,7 @@ export default function PassGate({ onGranted }) {
             <span className="gate-overhead-cable gate-overhead-cable--l" />
             <span className="gate-overhead-cable gate-overhead-cable--r" />
             <div className="gate-overhead-board">
+              <div className="gate-overhead-head">
               <svg viewBox="0 0 24 24" className="gate-overhead-arrow">
                 <path d="M12 4v15M6 13l6 6 6-6" />
               </svg>
@@ -255,6 +267,11 @@ export default function PassGate({ onGranted }) {
                 Gate
                 <small>Paddock Club</small>
               </span>
+              <span className="gate-overhead-live">
+                <i /> Live
+              </span>
+              </div>
+              <FlapBoard />
             </div>
           </motion.div>
         <div className={`pillar${scanning ? ' is-scanning' : ''}${granted ? ' is-granted' : ''}${phase === 'held' ? ' is-held' : ''}`}>
@@ -312,6 +329,50 @@ export default function PassGate({ onGranted }) {
         </div>
       </div>
     </div>
+  )
+}
+
+// The notes draw in one by one once the pass has dropped in and settled, and step
+// aside while the pass is being carried or scanned.
+function GateNotes({ show }) {
+  return (
+    <motion.div
+      className="gate-notes"
+      aria-hidden="true"
+      animate={{ opacity: show ? 1 : 0 }}
+      transition={{ duration: show ? 0.4 : 0.15 }}
+    >
+      {NOTES.map((n, i) => {
+        const delay = 1.15 + i * 0.32
+        return (
+          <div key={i} className={`gate-note is-${n.side}`} style={{ top: `${n.top}%` }}>
+            <svg className="gate-note-arrow" viewBox="0 0 70 40">
+              <motion.path
+                d="M3 8 C 22 2, 44 6, 62 28"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.45, delay, ease: [0.6, 0, 0.3, 1] }}
+              />
+              <motion.path
+                d="M52 27 L63 29 L61 18"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 0.2, delay: delay + 0.4 }}
+              />
+            </svg>
+            <motion.p
+              className="gate-note-text"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: delay + 0.15, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {n.text}
+              <small>{n.sub}</small>
+            </motion.p>
+          </div>
+        )
+      })}
+    </motion.div>
   )
 }
 

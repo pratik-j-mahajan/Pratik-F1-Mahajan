@@ -605,19 +605,58 @@
   pointer-events: none;
 }
 
+/* ---------- Bar over the scan screen (same as Projects / Contact) ---------- */
+.about-nav {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.theme-toggle--bar {
+  position: absolute;
+  top: 50%;
+  right: calc(59 * var(--u));
+  translate: 0 -50%;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 700px) {
+  .theme-toggle--bar {
+    right: 16px;
+  }
+  /* icons only — the words don't fit next to the back button and logo */
+  .theme-toggle--bar .theme-opt {
+    padding: 6px 9px;
+    font-size: 0;
+    gap: 0;
+  }
+  .about-nav .navbar-logo {
+    left: 120px;
+  }
+  .about-nav .navbar-logo img {
+    width: 80px;
+    height: 20px;
+  }
+}
+
 /* ---------- Gate (pre-scan screen) ---------- */
 .gate-wrap {
   position: fixed;
-  inset: 0;
+  inset: var(--nav-h) 0 0;
   z-index: 40;
   background: var(--bg);
 }
 
 .gate {
-  --pass-w: clamp(210px, min(19vw, 34svh), 280px);
+  --gh: calc(100svh - var(--nav-h)); /* the screen height left under the bar */
+  --pass-w: clamp(200px, min(19vw, var(--gh) * 0.36), 280px);
   position: relative;
   width: 100%;
-  height: 100svh;
+  height: var(--gh);
   overflow: hidden;
   touch-action: none;
   background:
@@ -750,6 +789,84 @@
   border-radius: 14px;
 }
 
+/* handwritten notes around the pass — they hang off the card, so they swing with it */
+.gate-notes {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.gate-note {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  translate: 0 -18px;
+}
+
+.gate-note.is-left {
+  right: calc(100% - 10px);
+  flex-direction: row-reverse;
+}
+
+.gate-note.is-right {
+  left: calc(100% - 10px);
+}
+
+.gate-note-arrow {
+  flex: none;
+  width: 58px;
+  height: 34px;
+  margin-top: 4px;
+  overflow: visible;
+}
+
+.gate-note.is-right .gate-note-arrow {
+  scale: -1 1;
+}
+
+.gate-note-arrow path {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gate-note-text {
+  width: max-content;
+  max-width: 176px;
+  margin: 0;
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+  rotate: -3deg;
+}
+
+.gate-note.is-left .gate-note-text {
+  max-width: 150px;
+  text-align: right;
+  rotate: 2deg;
+}
+
+.gate-note-text small {
+  display: block;
+  margin-top: 3px;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.05;
+  color: var(--muted);
+}
+
+/* not enough room beside the pass on smaller screens */
+@media (max-width: 1100px), (max-height: 680px) {
+  .gate-notes {
+    display: none;
+  }
+}
+
 /* soft-touch matte grain, no gloss and no edge lines */
 .gate-matte {
   position: absolute;
@@ -824,6 +941,28 @@
   height: 7vh;
   border-top: 1px solid var(--line);
   background: linear-gradient(color-mix(in srgb, var(--ink) 3%, transparent), transparent);
+}
+
+/* back-wall lettering: huge, outlined, barely there — the pass and gate stand in front of it */
+.gate-wall {
+  position: absolute;
+  left: 50%;
+  bottom: calc(7vh - 0.12em);
+  margin: 0;
+  font-family: 'Titillium Web', var(--font);
+  font-size: min(21vw, var(--gh) * 0.46);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1.2px color-mix(in srgb, var(--ink) 9%, transparent);
+  background: linear-gradient(color-mix(in srgb, var(--ink) 0%, transparent) 30%, color-mix(in srgb, var(--ink) 3.5%, transparent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  translate: -50% 0;
+  user-select: none;
 }
 
 /* dotted arc from the pass to the reader */
@@ -965,10 +1104,10 @@
 /* overhead wayfinding sign hanging above the gate */
 .gate-overhead {
   position: absolute;
-  bottom: calc(100% + 9vh);
+  bottom: calc(100% + 5vh);
   left: 50%;
-  margin-left: -86px;
-  width: 172px;
+  margin-left: -150px;
+  width: 300px;
   transform-origin: 50% -40vh;
   animation: sign-sway 7s ease-in-out infinite;
 }
@@ -996,10 +1135,7 @@
 }
 
 .gate-overhead-board {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px 10px 10px;
+  padding: 10px;
   border-radius: 6px;
   background: linear-gradient(#22252b, #121418);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 16px 30px -14px rgba(0, 0, 0, 0.5);
@@ -1041,6 +1177,113 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   color: #ff4b3e;
+}
+
+.gate-overhead-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gate-overhead-live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-family: 'Titillium Web', var(--font);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.gate-overhead-live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff2a1a;
+  box-shadow: 0 0 6px #ff2a1a;
+  animation: chip-blink 1.4s ease-in-out infinite;
+}
+
+/* split-flap rows */
+.flap {
+  display: grid;
+  gap: 5px;
+  padding-top: 10px;
+}
+
+.flap-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flap-label {
+  width: 46px;
+  font-family: 'Titillium Web', var(--font);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ff4b3e;
+  animation: flap-label 0.5s ease both;
+}
+
+@keyframes flap-label {
+  from {
+    opacity: 0;
+  }
+}
+
+.flap-cells {
+  display: flex;
+  gap: 1.5px;
+}
+
+.flap-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 20px;
+  border-radius: 2px;
+  background: linear-gradient(#2b2f36 0 49%, #1f2228 51% 100%);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  font-family: 'Roboto Mono', ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  color: #f4f5f7;
+  transform-origin: 50% 50%;
+  animation: flap 0.42s cubic-bezier(0.3, 0, 0.2, 1) var(--d) both;
+}
+
+/* the hinge line across the middle of each tile */
+.flap-cell::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+@keyframes flap {
+  0% {
+    transform: perspective(60px) rotateX(-90deg);
+    color: transparent;
+  }
+  60% {
+    transform: perspective(60px) rotateX(12deg);
+  }
+  100% {
+    transform: none;
+  }
 }
 
 /* painted floor spot under the gate, reacts to the scan */
@@ -1104,7 +1347,7 @@
     linear-gradient(90deg, #555a61 0, #7e848b 4.5%, #eef0f2 5.5%, #c3c7cc 14%, #dfe2e5 34%, #eceef0 44%, #c9cdd2 66%, #d8dbdf 88%, #f4f5f7 94.5%, #8a9097 95.5%, #5a5f66 100%);
   position: relative;
   width: 152px;
-  height: calc(max(50svh, 380px) + 50px);
+  height: calc(max(var(--gh) * 0.52, 340px) + 50px);
   display: flex;
   flex-direction: column;
   filter: drop-shadow(0 26px 24px rgba(0, 0, 0, 0.22));
@@ -1474,7 +1717,7 @@
   }
   .pillar {
     width: 124px;
-    height: calc(max(40svh, 300px) + 50px);
+    height: calc(max(var(--gh) * 0.42, 280px) + 50px);
   }
   .pillar-reader {
     height: 44px;
@@ -1513,9 +1756,12 @@
     margin: 10px 0 12px;
     font-size: 16px;
   }
+  .gate-wall {
+    display: none;
+  }
   .pillar {
     width: 112px;
-    height: calc(max(38svh, 280px) + 40px);
+    height: calc(max(var(--gh) * 0.4, 260px) + 40px);
   }
 }
 
