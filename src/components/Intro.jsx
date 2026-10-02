@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion'
 
 /*
-  F1-style intro (~4s, timed by INTRO_DURATION in App):
+  F1-style intro (2s, timed by INTRO_DURATION in App):
   0.0s  red tiles slide in, alternating from the top and bottom, and lock together
-  1.0s  tiles blend into one red screen
-  1.2s  the white F1 logo slices in at the centre, with a speed line
-  3.2s  fades to black
+  0.5s  tiles blend into one red screen
+  0.6s  the white F1 logo slices in at the centre, with a speed line
+  1.6s  fades to black
   exit  black fades away, revealing the home page
 */
 const snap = [0.76, 0, 0.24, 1]
@@ -16,7 +16,7 @@ export default function Intro() {
     <motion.div
       className="intro"
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: 'easeInOut' }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
       {Array.from({ length: TILES }, (_, i) => (
         <motion.span
@@ -29,7 +29,7 @@ export default function Intro() {
           }}
           initial={{ y: i % 2 ? '100%' : '-100%' }}
           animate={{ y: 0 }}
-          transition={{ duration: 0.75, delay: 0.06 * i, ease: snap }}
+          transition={{ duration: 0.42, delay: 0.03 * i, ease: snap }}
         />
       ))}
 
@@ -37,7 +37,7 @@ export default function Intro() {
         className="intro-panel"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1 }}
+        transition={{ duration: 0.25, delay: 0.5 }}
       >
         <motion.img
           className="intro-logo"
@@ -45,13 +45,13 @@ export default function Intro() {
           alt="F1"
           initial={{ clipPath: 'inset(0 100% 0 0)', x: -40, scale: 1.08 }}
           animate={{ clipPath: 'inset(0 0% 0 0)', x: 0, scale: 1 }}
-          transition={{ duration: 0.7, delay: 1.2, ease: snap }}
+          transition={{ duration: 0.45, delay: 0.6, ease: snap }}
         />
         <motion.span
           className="intro-speedline"
           initial={{ scaleX: 0, opacity: 1 }}
           animate={{ scaleX: [0, 1, 1], opacity: [1, 1, 0] }}
-          transition={{ duration: 1.2, delay: 1.5, times: [0, 0.5, 1], ease: 'easeOut' }}
+          transition={{ duration: 0.7, delay: 0.75, times: [0, 0.5, 1], ease: 'easeOut' }}
         />
       </motion.div>
 
@@ -59,7 +59,7 @@ export default function Intro() {
         className="intro-fade"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 3.2, ease: 'easeInOut' }}
+        transition={{ duration: 0.35, delay: 1.6, ease: 'easeInOut' }}
       />
     </motion.div>
   )

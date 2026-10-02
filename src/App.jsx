@@ -1,34 +1,42 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useLayoutEffect, useState } from 'react'
 import { Routes, Route, useLocation, useNavigationType } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Intro from './components/Intro.jsx'
 import Navbar from './components/Navbar.jsx'
 import { SectionTransitionProvider } from './components/SectionTransition.jsx'
 import Home from './pages/Home.jsx'
-import About from './pages/About.jsx'
-import CaseLayout from './pages/cases/CaseLayout.jsx'
-import CaseList from './pages/cases/CaseList.jsx'
-import CaseDetail from './pages/cases/CaseDetail.jsx'
-import Projects from './pages/Projects.jsx'
-import Content from './pages/Content.jsx'
-import Contact from './pages/Contact.jsx'
-import Map from './pages/Map.jsx'
+
+// Home loads with the app; every other page is its own download, fetched quietly in the
+// background once home is up — so the first screen is light and later pages still open instantly.
+const pages = {
+  map: () => import('./pages/Map.jsx'),
+  about: () => import('./pages/About.jsx'),
+  caseLayout: () => import('./pages/cases/CaseLayout.jsx'),
+  caseList: () => import('./pages/cases/CaseList.jsx'),
+  caseDetail: () => import('./pages/cases/CaseDetail.jsx'),
+  projects: () => import('./pages/Projects.jsx'),
+  content: () => import('./pages/Content.jsx'),
+  contact: () => import('./pages/Contact.jsx'),
+}
+const Map = lazy(pages.map)
+const About = lazy(pages.about)
+const CaseLayout = lazy(pages.caseLayout)
+const CaseList = lazy(pages.caseList)
+const CaseDetail = lazy(pages.caseDetail)
+const Projects = lazy(pages.projects)
+const Content = lazy(pages.content)
+const Contact = lazy(pages.contact)
+
+function usePrefetchPages() {
+  useEffect(() => {
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200))
+    const id = idle(() => Object.values(pages).forEach((load) => load().catch(() => {})))
+    return () => (window.cancelIdleCallback || clearTimeout)(id)
+  }, [])
+}
 import useSmoothScroll from './hooks/useSmoothScroll.js'
 
-const INTRO_DURATION = 4000
-const INTRO_KEY = 'intro-seen'
-
-// The intro plays once per visit, and only when the visit starts on the home page.
-// Refreshes and deep links (e.g. /case-study/my-things) render the page straight away.
-function shouldPlayIntro() {
-  if (window.location.pathname !== '/') return false
-  try {
-    return !sessionStorage.getItem(INTRO_KEY)
-  } catch {
-    return true // storage blocked (private mode): decide by route only
-  }
-}
-
+const INTRO_DURATION = 2000
 // New pages start at the top; Back/Forward and refreshes keep the browser's own scroll restoration.
 function ScrollManager() {
   const { pathname } = useLocation()
@@ -44,15 +52,10 @@ function ScrollManager() {
 
 export default function App() {
   useSmoothScroll()
-  const [showIntro, setShowIntro] = useState(shouldPlayIntro)
-
-  useEffect(() => {
-    try {
-      sessionStorage.setItem(INTRO_KEY, '1')
-    } catch {
-      // ignore — storage blocked
-    }
-  }, [])
+  usePrefetchPages()
+  // The intro plays on every full page load: a refresh, a typed URL or an opened link.
+  // Moving around inside the site never replays it.
+  const [showIntro, setShowIntro] = useState(true)
 
   useEffect(() => {
     if (!showIntro) return
@@ -69,6 +72,7 @@ export default function App() {
           <ScrollManager />
           <Navbar />
           <main>
+            <Suspense fallback={null}>
             <Routes>
               <Route path="/" element={<Home />} />
               {/* the 3D garage (src/pages/Garage.jsx) is parked for now; START goes straight to the map */}
@@ -82,6 +86,7 @@ export default function App() {
               <Route path="/content" element={<Content />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>
+            </Suspense>
           </main>
         </SectionTransitionProvider>
       )}

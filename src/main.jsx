@@ -4,6 +4,15 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './styles/global.css'
 
+// Every full page load — a refresh, a typed URL or an opened link — restarts the site
+// from the beginning: home page, intro included, About pass reset.
+try {
+  sessionStorage.removeItem('about-pass')
+} catch {
+  // storage blocked — nothing to reset
+}
+if (window.location.pathname !== '/') window.history.replaceState(null, '', '/')
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
