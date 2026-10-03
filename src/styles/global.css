@@ -799,6 +799,626 @@ button {
   left: calc(59 * var(--u) + 110px);
 }
 
+/* ---- home background: pit garage drawn in code (components/home/GarageBackdrop.jsx) ---- */
+.hero-bg--garage {
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 55% at 82% 8%, rgba(225, 6, 0, 0.55), transparent 70%),
+    radial-gradient(ellipse 55% 60% at 8% 30%, rgba(150, 10, 30, 0.45), transparent 70%),
+    linear-gradient(#1b0b14, #0d0f1c 55%, #08141d);
+}
+
+.garage,
+.garage svg,
+.garage > span {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.garage-trails {
+  /* trails only show behind the driver, never across the text columns */
+  -webkit-mask-image: linear-gradient(90deg, transparent 28%, #000 40%, #000 60%, transparent 72%);
+  mask-image: linear-gradient(90deg, transparent 28%, #000 40%, #000 60%, transparent 72%);
+}
+
+.garage-trails i {
+  position: absolute;
+  left: 0;
+  top: var(--y);
+  width: 22%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 70, 55, 0.9) 70%, #fff);
+  filter: blur(1px);
+  opacity: 0;
+  animation: garage-trail var(--t) cubic-bezier(0.5, 0, 0.6, 1) var(--d) infinite;
+}
+
+@keyframes garage-trail {
+  0% {
+    translate: -30vw 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  28% {
+    translate: 110vw 0;
+    opacity: 0;
+  }
+  100% {
+    translate: 110vw 0;
+    opacity: 0;
+  }
+}
+
+/* brand glow over the scene, and a vignette to seat the driver */
+.garage-tint {
+  background:
+    radial-gradient(ellipse 50% 45% at 85% 5%, rgba(255, 60, 90, 0.35), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 45%, transparent 45%, rgba(4, 6, 12, 0.75));
+  mix-blend-mode: screen, normal;
+}
+
+.garage-grain {
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garage-trails {
+    display: none;
+  }
+}
+
+/* ---- home background: aura (components/home/AuraBackdrop.jsx) ---- */
+.hero-bg--aura {
+  overflow: hidden;
+  background: #07070b;
+}
+
+.aura,
+.aura > :where(span) {
+  position: absolute;
+  inset: 0;
+}
+
+.aura-field {
+  inset: auto;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+/* white-hot to red heat right behind the driver */
+.aura-core {
+  left: 50%;
+  top: 40%;
+  width: 62vmax;
+  height: 62vmax;
+  margin: -31vmax 0 0 -31vmax;
+  background: radial-gradient(circle, rgba(255, 92, 40, 0.95) 0%, rgba(240, 22, 10, 0.75) 22%, rgba(170, 0, 20, 0.35) 45%, transparent 68%);
+  animation: aura-breathe 9s ease-in-out infinite;
+}
+
+/* a hot orange flare drifting over the top right */
+.aura-flare {
+  right: -10vmax;
+  top: -18vmax;
+  width: 58vmax;
+  height: 50vmax;
+  background: radial-gradient(closest-side, rgba(255, 110, 70, 0.75), rgba(255, 30, 90, 0.38) 55%, transparent);
+  animation: aura-drift-a 22s ease-in-out infinite alternate;
+}
+
+/* deep ember pooling low on the left */
+.aura-ember {
+  left: -18vmax;
+  bottom: -26vmax;
+  width: 64vmax;
+  height: 54vmax;
+  background: radial-gradient(closest-side, rgba(200, 10, 40, 0.55), rgba(120, 0, 40, 0.25) 60%, transparent);
+  animation: aura-drift-b 26s ease-in-out infinite alternate;
+}
+
+/* cool navy and violet so the heat has something to burn against */
+.aura-cool {
+  left: -12vmax;
+  top: -14vmax;
+  width: 52vmax;
+  height: 48vmax;
+  background: radial-gradient(closest-side, rgba(35, 70, 210, 0.5), rgba(15, 25, 110, 0.22) 60%, transparent);
+  animation: aura-drift-b 30s ease-in-out infinite alternate-reverse;
+}
+
+.aura-violet {
+  right: -16vmax;
+  bottom: -28vmax;
+  width: 56vmax;
+  height: 50vmax;
+  background: radial-gradient(closest-side, rgba(110, 25, 170, 0.28), rgba(50, 10, 100, 0.14) 60%, transparent);
+  animation: aura-drift-a 28s ease-in-out infinite alternate-reverse;
+}
+
+/* a slow-turning conic sheen inside the core — the aura's shimmer */
+.aura-halo {
+  inset: auto;
+  left: 50%;
+  top: 40%;
+  width: 46vmax;
+  height: 46vmax;
+  margin: -23vmax 0 0 -23vmax;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, rgba(255, 170, 120, 0.22), transparent 30%, rgba(255, 60, 90, 0.18), transparent 60%, rgba(255, 200, 160, 0.16), transparent);
+  -webkit-mask-image: radial-gradient(circle, #000 20%, transparent 70%);
+  mask-image: radial-gradient(circle, #000 20%, transparent 70%);
+  animation: aura-spin 40s linear infinite;
+}
+
+/* heat-haze rings pulsing out from behind the driver */
+.aura-rings i {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 30vmax;
+  height: 30vmax;
+  margin: -15vmax 0 0 -15vmax;
+  border: 1px solid rgba(255, 180, 150, 0.22);
+  border-radius: 50%;
+  opacity: 0;
+  animation: aura-ring 9s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+.aura-rings i:nth-child(2) {
+  animation-delay: 3s;
+}
+
+.aura-rings i:nth-child(3) {
+  animation-delay: 6s;
+}
+
+.aura-grain {
+  opacity: 0.11;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* darker at the edges and the bottom, so the text and the name sit cleanly */
+.aura-vignette {
+  background:
+    linear-gradient(transparent 55%, rgba(5, 5, 9, 0.7)),
+    radial-gradient(ellipse 85% 75% at 50% 45%, transparent 50%, rgba(5, 5, 9, 0.6));
+}
+
+@keyframes aura-breathe {
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+}
+
+@keyframes aura-drift-a {
+  to {
+    transform: translate(-8vmax, 6vmax) scale(1.12);
+  }
+}
+
+@keyframes aura-drift-b {
+  to {
+    transform: translate(9vmax, -5vmax) scale(1.1);
+  }
+}
+
+@keyframes aura-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes aura-ring {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura * {
+    animation: none !important;
+  }
+}
+
+/* ---- home background: hyperspeed (components/home/HyperBackdrop.jsx) ---- */
+.hero-bg--hyper {
+  overflow: hidden;
+  background: #030306;
+}
+
+.hyper,
+.hyper canvas,
+.hyper-grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hyper canvas {
+  display: block;
+}
+
+.hyper-grain {
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- home background looks (components/home/StyleBackdrop.jsx) ---- */
+.hero-bg--look {
+  overflow: hidden;
+}
+
+.look,
+.look > :where(span, svg, div) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.look-grain {
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.look-vignette {
+  background:
+    linear-gradient(transparent 60%, rgba(0, 0, 0, 0.55)),
+    radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.55));
+}
+
+/* topo: midnight teal, gold rim light, contour lines */
+.look--topo {
+  background: radial-gradient(ellipse 70% 80% at 50% 40%, #0f4a52, #072a31 55%, #031418);
+}
+
+.look-topo path {
+  fill: none;
+  stroke: rgba(150, 230, 225, 0.12);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.look-topo path.is-major {
+  stroke: rgba(255, 200, 90, 0.28);
+}
+
+.look--topo .look-glow {
+  background:
+    radial-gradient(ellipse 30% 38% at 50% 38%, rgba(255, 196, 92, 0.45), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 85% 0%, rgba(80, 220, 210, 0.25), transparent 70%);
+}
+
+/* carbon: twill weave + papaya glow */
+.look--carbon {
+  background-color: #0b0b0c;
+  background-image:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.045) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.045) 75%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.045) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.045) 75%),
+    linear-gradient(-45deg, rgba(0, 0, 0, 0.5) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.5) 75%);
+  background-size: 14px 14px, 14px 14px, 14px 14px;
+  background-position: 0 0, 7px 7px, 0 0;
+}
+
+.look--carbon .look-glow {
+  background:
+    radial-gradient(ellipse 34% 42% at 50% 40%, rgba(255, 128, 0, 0.6), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 100% 100%, rgba(255, 90, 0, 0.35), transparent 70%),
+    linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.06) 50%, transparent 60%);
+}
+
+/* sun: deep navy, gold sunburst rays, halftone */
+.look--sun {
+  background: radial-gradient(ellipse 80% 80% at 50% 38%, #1b2a6b, #0b1440 55%, #050a22);
+}
+
+.look--sun .look-glow {
+  background:
+    repeating-conic-gradient(from 0deg at 50% 38%, rgba(255, 204, 0, 0.13) 0deg 4deg, transparent 4deg 12deg),
+    radial-gradient(ellipse 28% 34% at 50% 38%, rgba(255, 204, 0, 0.55), transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 38%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 70% at 50% 38%, #000 20%, transparent 75%);
+  animation: look-spin 120s linear infinite;
+}
+
+.look--sun .look-grain {
+  opacity: 0.35;
+  mix-blend-mode: normal;
+  background-image: radial-gradient(circle, rgba(255, 204, 0, 0.35) 1.2px, transparent 1.6px);
+  background-size: 12px 12px;
+  -webkit-mask-image: linear-gradient(transparent 55%, #000);
+  mask-image: linear-gradient(transparent 55%, #000);
+}
+
+@keyframes look-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* mono: black, giant outlined type drifting, one red accent */
+.look--mono {
+  background: #0a0a0a;
+}
+
+.look-type {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1vh;
+  rotate: -8deg;
+  scale: 1.25;
+}
+
+.look-type p {
+  display: flex;
+  margin: 0;
+  white-space: nowrap;
+  font-family: 'Titillium Web', var(--font);
+  font-size: 12vh;
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.07);
+  animation: look-row 60s linear infinite;
+  animation-direction: var(--dir, normal);
+}
+
+.look-type p:nth-child(even) {
+  --dir: reverse;
+}
+
+.look-type p:nth-child(2) {
+  -webkit-text-stroke-color: rgba(225, 6, 0, 0.3);
+}
+
+@keyframes look-row {
+  to {
+    translate: -50% 0;
+  }
+}
+
+.look--mono .look-glow {
+  background: radial-gradient(ellipse 30% 40% at 50% 40%, rgba(255, 255, 255, 0.14), transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .look * {
+    animation: none !important;
+  }
+}
+
+/* ---- live race: onboard readout + timing tower ---- */
+.hero-live-hud {
+  position: absolute;
+  z-index: 3;
+  left: calc(75 * var(--u));
+  top: calc(372 * var(--u));
+}
+
+.hero-live-tower {
+  position: absolute;
+  z-index: 3;
+  right: calc(75 * var(--u));
+  top: calc(345 * var(--u));
+  width: calc(250 * var(--u));
+}
+
+.race-hud,
+.race-tower {
+  font-family: 'Titillium Web', var(--font);
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.race-hud-tag,
+.race-tower-head span {
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--u));
+  font-size: calc(10 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.race-hud-tag i,
+.race-tower-head i {
+  width: calc(6 * var(--u));
+  height: calc(6 * var(--u));
+  border-radius: 50%;
+  background: #ff2a1a;
+  box-shadow: 0 0 6px #ff2a1a;
+  animation: race-blink 1.4s ease-in-out infinite;
+}
+
+@keyframes race-blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.race-hud-row {
+  display: flex;
+  align-items: flex-end;
+  gap: calc(18 * var(--u));
+  margin-top: calc(8 * var(--u));
+}
+
+.race-hud-speed,
+.race-hud-gear {
+  display: flex;
+  align-items: baseline;
+  gap: calc(5 * var(--u));
+  font-size: calc(34 * var(--u));
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+.race-hud-speed {
+  min-width: 3ch;
+}
+
+.race-hud-speed small,
+.race-hud-gear small {
+  font-size: calc(10 * var(--u));
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.race-hud-gear {
+  padding-left: calc(18 * var(--u));
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.race-hud-drs {
+  margin-bottom: calc(2 * var(--u));
+  padding: calc(3 * var(--u)) calc(7 * var(--u));
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: calc(3 * var(--u));
+  font-size: calc(10 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.race-hud-drs.is-on {
+  border-color: #1fd16a;
+  background: #1fd16a;
+  color: #04210f;
+}
+
+.race-hud-pedals {
+  display: grid;
+  gap: calc(3 * var(--u));
+  width: calc(190 * var(--u));
+  margin-top: calc(10 * var(--u));
+}
+
+.race-hud-pedals span {
+  height: calc(3 * var(--u));
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.race-hud-pedals i {
+  display: block;
+  height: 100%;
+  transform-origin: left;
+  transition: scale 0.12s linear;
+}
+
+.race-hud-pedals .is-throttle i {
+  background: #1fd16a;
+}
+
+.race-hud-pedals .is-brake i {
+  background: #ff2a1a;
+}
+
+.race-tower-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: calc(7 * var(--u));
+  font-size: calc(11 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.race-tower ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.race-tower li {
+  display: flex;
+  align-items: center;
+  gap: calc(9 * var(--u));
+  height: calc(27 * var(--u));
+  padding: 0 calc(8 * var(--u));
+  margin-bottom: calc(2 * var(--u));
+  border-radius: calc(3 * var(--u));
+  background: rgba(0, 0, 0, 0.32);
+  font-size: calc(13 * var(--u));
+  font-weight: 700;
+}
+
+.race-tower li.is-me {
+  background: rgba(255, 255, 255, 0.92);
+  color: #111;
+}
+
+.race-pos {
+  width: calc(12 * var(--u));
+  text-align: center;
+}
+
+.race-team {
+  width: calc(3 * var(--u));
+  height: calc(14 * var(--u));
+  border-radius: 1px;
+}
+
+.race-code {
+  letter-spacing: 0.06em;
+}
+
+.race-gap {
+  margin-left: auto;
+  font-size: calc(12 * var(--u));
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.is-me .race-gap {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.race-gap.is-purple {
+  padding: calc(1 * var(--u)) calc(6 * var(--u));
+  border-radius: calc(3 * var(--u));
+  background: #a020f0;
+  color: #fff;
+  font-size: calc(10 * var(--u));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 700px) {
+  .hero-live-hud,
+  .hero-live-tower {
+    display: none;
+  }
+}
+
 /* ---- theme touches: kerb mark, driver spec, start lights ---- */
 
 /* red/white kerb, like the edge of a corner */

@@ -2,6 +2,17 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import useParallax from '../hooks/useParallax.js'
+import { LiveHud, LiveTower } from '../components/home/Live.jsx'
+import AuraBackdrop from '../components/home/AuraBackdrop.jsx'
+import GarageBackdrop from '../components/home/GarageBackdrop.jsx'
+import HyperBackdrop from '../components/home/HyperBackdrop.jsx'
+import StyleBackdrop from '../components/home/StyleBackdrop.jsx'
+
+// which background the hero uses: 'hyper' (night tunnel at race speed — floors it on START),
+// 'aura' (glowing colour fields), 'garage' (pit garage drawn in code) or 'photo' (the
+// original blurred gradient image)
+const LOOKS = ['topo', 'carbon', 'sun', 'mono'] // StyleBackdrop looks
+const HERO_BG = new URLSearchParams(window.location.search).get('bg') || 'photo'
 
 const ease = [0.22, 1, 0.36, 1]
 
@@ -94,7 +105,21 @@ export default function Home() {
     <div className="home">
       <section className="hero" onMouseMove={parallax.onMouseMove} onMouseLeave={parallax.onMouseLeave}>
         <div className="hero-stage">
-          <motion.img className="hero-bg" src="/images/hero-bg-v2.webp" alt="" aria-hidden="true" style={{ x: parallax.x, y: parallax.y }} />
+          {HERO_BG === 'photo' ? (
+            <motion.img className="hero-bg" src="/images/hero-bg-v2.webp" alt="" aria-hidden="true" style={{ x: parallax.x, y: parallax.y }} />
+          ) : (
+            <motion.div className={`hero-bg hero-bg--${LOOKS.includes(HERO_BG) ? 'look' : HERO_BG}`} style={{ x: parallax.x, y: parallax.y }}>
+              {LOOKS.includes(HERO_BG) ? (
+                <StyleBackdrop look={HERO_BG} />
+              ) : HERO_BG === 'hyper' ? (
+                <HyperBackdrop boost={race.running} />
+              ) : HERO_BG === 'aura' ? (
+                <AuraBackdrop />
+              ) : (
+                <GarageBackdrop />
+              )}
+            </motion.div>
+          )}
 
           <motion.p
             className="hero-number"
@@ -122,6 +147,14 @@ export default function Home() {
               <br />
               Designer
             </p>
+          </motion.div>
+
+          {/* a race quietly running: onboard readout on the left, timing tower on the right */}
+          <motion.div className="hero-live-hud" {...rise(0.55)}>
+            <LiveHud />
+          </motion.div>
+          <motion.div className="hero-live-tower" {...rise(0.6)}>
+            <LiveTower />
           </motion.div>
 
           <motion.h1 className="hero-name" {...rise(0.5)}>

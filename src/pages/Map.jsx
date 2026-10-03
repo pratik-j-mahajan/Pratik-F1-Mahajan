@@ -172,21 +172,41 @@ export default function Map() {
       {/* Section card (bottom right) — shows the last section pointed at */}
       {!isList && (
         <div className="section-card">
-          <motion.div
-            key={card.id}
-            className="section-card-inner"
-            initial={{ opacity: 0.4, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="section-card-head">
-              <p className="section-card-title">{card.title}</p>
-              <p className="section-card-turn">
-                {card.turn.toUpperCase()} - {String(cardIndex + 1).padStart(2, '0')}
-              </p>
-            </div>
-            <p className="section-card-blurb">{card.blurb}</p>
-          </motion.div>
+          {/* the card itself stays put; only the words change — the name rolls like a timing board */}
+          <div className="section-card-head">
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.div
+                key={card.id}
+                className="section-card-roll"
+                initial={{ y: '105%' }}
+                animate={{ y: '0%' }}
+                exit={{ y: '-105%' }}
+                transition={{ duration: 0.38, ease: [0.7, 0, 0.2, 1] }}
+              >
+                {/* long names shrink to fit the strip (font size scales with the character count) */}
+                <p className="section-card-title" style={{ '--chars': card.title.length }}>
+                  {card.title}
+                </p>
+                <p className="section-card-turn">
+                  {card.turn.toUpperCase()} - {String(cardIndex + 1).padStart(2, '0')}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="section-card-body">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.p
+                key={card.id}
+                className="section-card-blurb"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.18 }}
+              >
+                {card.blurb}
+              </motion.p>
+            </AnimatePresence>
+          </div>
           <Link to={card.path} onClick={openSection(card)} className="section-card-open">
             Open Section <Chevron className="section-card-arrow" />
           </Link>

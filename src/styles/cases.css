@@ -1132,3 +1132,377 @@
     transition: none;
   }
 }
+
+/* ================================================================ 3D card stack (CaseList) */
+
+.sk {
+  position: relative;
+  background: #fff;
+}
+
+.sk-stage::before {
+  content: '';
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 70px;
+  background: linear-gradient(#fff 20%, rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.sk-stage {
+  position: sticky;
+  top: var(--nav);
+  height: calc(100svh - var(--nav));
+  overflow: hidden;
+  perspective: 1400px;
+  perspective-origin: 50% 45%;
+}
+
+/* minimal marks on the white */
+.sk-bg,
+.sk-bg svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sk-bg {
+  background-image: radial-gradient(circle, rgba(17, 18, 20, 0.08) 1px, transparent 1.3px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 50%, #000 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 50%, #000 30%, transparent 80%);
+}
+
+.sk-bg path {
+  fill: none;
+  stroke: rgba(17, 18, 20, 0.08);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.sk-bg .sk-bg-kerb {
+  stroke: var(--red);
+  stroke-width: 3;
+  stroke-dasharray: 18 18;
+  opacity: 0.35;
+}
+
+.sk-bg-word {
+  position: absolute;
+  z-index: 21;
+  left: var(--pad);
+  top: 22px;
+  font-family: var(--timing);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* the deck: every card sits in the middle; motion moves them up/down and back */
+.sk-deck {
+  position: absolute;
+  inset: 0 0 64px;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+}
+
+.sk-card {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  width: min(1000px, 90vw);
+  height: min(500px, 62svh);
+  padding: 10px;
+  border: 1px solid #ececec;
+  border-radius: 26px;
+  background: #fbfbfa;
+  box-shadow: 0 30px 70px -40px rgba(17, 18, 20, 0.35), 0 2px 6px rgba(17, 18, 20, 0.04);
+  will-change: transform, opacity;
+  cursor: pointer;
+  position: relative;
+}
+
+.sk-card[data-front='true'] {
+  cursor: default;
+}
+
+.sk-veil {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: #fff;
+  pointer-events: none;
+}
+
+.sk-shot {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #eceae5;
+  cursor: pointer;
+}
+
+.sk-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--settle);
+}
+
+.sk-card[data-front='true'] .sk-shot:hover img {
+  transform: scale(1.04);
+}
+
+.sk-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 18px 14px 12px 24px;
+}
+
+.sk-index {
+  font-family: var(--timing);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.sk-index b {
+  color: var(--accent);
+}
+
+.sk-name {
+  margin-top: auto;
+  font-size: clamp(26px, 2.6vw, 36px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.sk-about {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.sk-cat {
+  margin-top: 12px;
+  font-family: var(--timing);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 13px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: background 0.3s ease, gap 0.3s var(--settle);
+}
+
+.sk-btn:hover {
+  background: var(--accent);
+}
+
+/* bottom: thin line, small car */
+/* a white band at the bottom so the cards behind fade out before the progress line */
+.sk-stage::after {
+  content: '';
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 120px;
+  background: linear-gradient(rgba(255, 255, 255, 0), #fff 70%);
+  pointer-events: none;
+}
+
+.sk-progress {
+  position: absolute;
+  z-index: 21;
+  left: var(--pad);
+  right: calc(var(--pad) + 60px);
+  bottom: 30px;
+  height: 30px;
+}
+
+.sk-line,
+.sk-line-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 1px;
+  background: rgba(17, 18, 20, 0.15);
+}
+
+.sk-line-fill {
+  height: 2px;
+  background: var(--red);
+  transform-origin: left;
+}
+
+.sk-car {
+  position: absolute;
+  bottom: 2px;
+  width: 88px;
+}
+
+.sk-car svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.sk-car-body {
+  fill: var(--ink);
+}
+
+.sk-car-stripe {
+  fill: var(--red);
+}
+
+.sk-car-halo {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+.sk-car-tyre {
+  fill: #1a1a1c;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.sk-car-hub {
+  fill: #c9c9cc;
+}
+
+/* chequered finish at the end of the line */
+.sk-flag {
+  position: absolute;
+  right: -40px;
+  bottom: 4px;
+  width: 24px;
+  height: 16px;
+  background: conic-gradient(#111 25%, #fff 0 50%, #111 0 75%, #fff 0) 0 0 / 8px 8px;
+  box-shadow: 0 0 0 1px rgba(17, 18, 20, 0.15);
+}
+
+/* big outlined position behind the deck */
+.sk-bigpos {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  overflow: hidden;
+  font-family: var(--timing);
+  font-size: clamp(90px, 10vw, 170px);
+  font-weight: 700;
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(17, 18, 20, 0.1);
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+.sk-bigpos span {
+  display: block;
+}
+
+/* a few quiet theme marks on the card */
+.sk-index {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sk-tick {
+  width: 3px;
+  height: 14px;
+  margin-right: 4px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.sk-kerb {
+  width: 34px;
+  height: 5px;
+  margin-left: auto;
+  border-radius: 1px;
+  background: repeating-linear-gradient(-55deg, var(--red) 0 5px, #fff 5px 10px);
+  box-shadow: 0 0 0 1px rgba(17, 18, 20, 0.06);
+}
+
+/* thin chequered edge under the name */
+.sk-name::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 6px;
+  margin-top: 12px;
+  background: conic-gradient(#111 25%, #fff 0 50%, #111 0 75%, #fff 0) 0 0 / 6px 6px;
+  opacity: 0.8;
+}
+
+@media (max-width: 760px) {
+  .sk-card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    width: calc(100vw - 32px);
+    height: min(560px, 66svh);
+    border-radius: 20px;
+  }
+  .sk-info {
+    padding: 14px 8px 6px;
+  }
+  .sk-name {
+    margin-top: 6px;
+    font-size: 24px;
+  }
+  .sk-about {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+  .sk-cat,
+  .sk-bigpos {
+    display: none;
+  }
+  .sk-btn {
+    margin-top: 12px;
+  }
+  .sk-progress {
+    left: 16px;
+    right: 56px;
+    bottom: 18px;
+  }
+  .sk-car {
+    width: 68px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-shot img {
+    transition: none;
+  }
+}

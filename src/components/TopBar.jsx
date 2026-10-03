@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
+import { lapClock, markOvertake, speedAt } from './home/Live.jsx'
 
 // How long each state stays on air before the broadcast cuts to the other
 const NORMAL_MS = 7000
@@ -111,23 +112,27 @@ export default function TopBar() {
 function LiveBroadcast() {
   const [seg, setSeg] = useState(0)
   const [now, setNow] = useState(() => new Date())
-  const [speed, setSpeed] = useState(312)
-  const [order, setOrder] = useState(['VER', 'MAH', 'NOR'])
-  const [lap, setLap] = useState(() => 41 + Math.floor(Math.random() * 8))
+  // lap, order and speed come from the same race the home page shows (components/home/Live.jsx)
+  const [race, setRace] = useState(lapClock)
 
   useEffect(() => {
     const segments = setInterval(() => setSeg((s) => (s + 1) % SEGMENTS.length), SEGMENT_MS)
     const clock = setInterval(() => setNow(new Date()), 1000)
-    const trap = setInterval(() => setSpeed(288 + Math.round(Math.random() * 46)), 450)
-    const laps = setInterval(() => setLap((l) => Math.min(58, l + 1)), 5500)
-    return () => [segments, clock, trap, laps].forEach(clearInterval)
+    const trap = setInterval(() => setRace(lapClock()), 450)
+    return () => [segments, clock, trap].forEach(clearInterval)
   }, [])
 
   // the overtake happens on screen when its graphic comes up
   const current = SEGMENTS[seg]
   useEffect(() => {
-    if (current.overtake) setOrder(['MAH', 'VER', 'NOR'])
+    if (current.overtake) {
+      markOvertake()
+      setRace(lapClock())
+    }
   }, [current])
+
+  const { lap, order } = race
+  const speed = Math.round(speedAt(race.p))
 
   const time = now.toLocaleTimeString('en-GB', { hour12: false })
 

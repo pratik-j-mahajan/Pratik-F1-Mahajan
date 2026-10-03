@@ -523,40 +523,52 @@
   backdrop-filter: blur(10px);
 }
 
-.section-card-inner {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.section-card-head {
+  position: relative;
+  flex: none;
+  height: calc(64 * var(--u));
+  overflow: hidden;
+  background: var(--red);
+  container-type: inline-size;
 }
 
-.section-card-head {
-  height: calc(64 * var(--u));
-  padding-top: calc(12 * var(--u));
-  background: var(--red);
+.section-card-roll {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(5 * var(--u));
+  padding: 0 calc(12 * var(--u));
   text-align: center;
 }
 
 .section-card-title {
-  font-size: calc(30 * var(--u));
+  max-width: 100%;
+  /* 30px in the design; a long name gets smaller so it always fits on one line */
+  font-size: min(calc(30 * var(--u)), (100cqi - 24 * var(--u)) / (var(--chars, 8) * 0.56));
   font-weight: 500;
-  line-height: 0.97;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
 .section-card-turn {
-  margin-top: calc(8 * var(--u));
   font-family: 'Quantico', var(--font);
   font-size: calc(10 * var(--u));
-  line-height: 0.97;
-  letter-spacing: -0.01em;
-  color: #cfcfcf;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.78);
 }
 
-.section-card-blurb {
+.section-card-body {
   flex: 1;
   display: grid;
   place-items: center;
   padding: 0 calc(18 * var(--u));
+}
+
+.section-card-blurb {
   font-size: calc(12 * var(--u));
   line-height: 1.5;
   text-align: center;
