@@ -691,17 +691,61 @@ button {
   position: absolute;
   inset: 0;
   display: block;
-  border-radius: calc(12 * var(--u));
+  overflow: hidden;
+  /* Figma "Rectangle 24213": only the top-left corner is rounded */
+  border-radius: calc(38 * var(--u)) 0 0 0;
 }
 
+/* red gradient plate with the grey rim, straight from the Figma vector */
 .hero-card-bg {
   position: absolute;
   inset: 0;
-  border: 2px solid #727171;
-  border-radius: calc(12 * var(--u));
-  background: linear-gradient(90deg, #000, #494949);
-  opacity: 0.48;
-  transition: opacity 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  background: url('/images/start-btn.svg') center / 100% 100% no-repeat;
+  transition: filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* hover: two slanted white strips flash across the button */
+.hero-start::before,
+.hero-start::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: calc(26 * var(--u));
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0));
+  transform: translateX(-160%) skewX(-24deg);
+  pointer-events: none;
+}
+
+.hero-start::after {
+  width: calc(10 * var(--u));
+  margin-left: calc(34 * var(--u));
+  opacity: 0.9;
+}
+
+.hero-start:hover::before,
+.hero-start:hover::after,
+.hero-start:focus-visible::before,
+.hero-start:focus-visible::after {
+  animation: start-flash 0.75s cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+
+.hero-start:hover::after,
+.hero-start:focus-visible::after {
+  animation-delay: 0.06s;
+}
+
+@keyframes start-flash {
+  to {
+    transform: translateX(calc(330 * var(--u))) skewX(-24deg);
+  }
+}
+
+.hero-card-logo,
+.hero-start-label {
+  z-index: 2;
 }
 
 .hero-card-logo {
@@ -728,9 +772,11 @@ button {
 
 .hero-start:hover .hero-card-bg,
 .hero-start:focus-visible .hero-card-bg {
-  opacity: 0.85;
-  border-color: #e10600;
-  box-shadow: 0 0 24px rgba(225, 6, 0, 0.45);
+  filter: brightness(1.08);
+}
+
+.hero-card:hover {
+  filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.45));
 }
 
 .hero-start:hover .hero-start-label,
@@ -1544,11 +1590,12 @@ button {
   }
 }
 
-.hero-start::after {
+/* the idle pulse sits on the card (outside the button's clip), same shape as the button */
+.hero-card::after {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: calc(12 * var(--u));
+  border-radius: calc(38 * var(--u)) 0 0 0;
   box-shadow: 0 0 0 0 rgba(225, 6, 0, 0.55);
   animation: hero-pulse 3.2s ease-out 2.4s infinite;
   pointer-events: none;
@@ -1564,7 +1611,7 @@ button {
   }
 }
 
-.hero-card.is-starting .hero-start::after,
+.hero-card.is-starting::after,
 .hero-card.is-starting .hero-chevrons i {
   animation: none;
 }
@@ -1852,8 +1899,8 @@ button {
     width: auto;
     height: 56px;
   }
-  .hero-card-bg {
-    border-radius: 12px;
+  .hero-start {
+    border-radius: 22px 0 0 0;
   }
   .hero-card-logo {
     left: 16px;
