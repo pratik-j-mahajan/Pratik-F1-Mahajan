@@ -1,29 +1,35 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { animate, motion, useInView, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, LayoutGroup, animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import { LINKEDIN_PROFILE, author, posts, season } from '../data/content.js'
 import BackButton from '../components/BackButton.jsx'
-import { Lines, Rise, ease, settle } from '../components/reveal.jsx'
+import { Rise, settle } from '../components/reveal.jsx'
 import '../styles/cases.css'
 import '../styles/content.css'
 
 /*
-  Content — the LinkedIn season, read like F1 telemetry. The headline number, then the whole
-  season as a trace you can scrub week by week (total on top, weekly impressions below, the
-  featured posts pinned where they went out), then the posts themselves. Pointing at a post
-  finds it on the trace, and the other way round.
+  Content — the LinkedIn season, built around the sticker (photo + blue cut-out border).
+  Hero: the sticker at full resolution, with the season scrolling behind it and live-feeling
+  LinkedIn bits floating round it (headline + counter, an analytics card, a notification
+  stack that keeps ticking, a profile card). Tap the sticker and it throws reactions.
+  Then the feed (Top / Latest / All, likeable cards), a lap-by-lap chart of the season,
+  and a follow banner. Everything is read from src/data/content.js.
 */
-const WEEK = 7 * 24 * 3600 * 1000
-const start = new Date(`${season.startedOn}T00:00:00`)
-const weekStart = (i) => new Date(start.getTime() + i * WEEK)
-const fmtDate = (d, opts = { day: 'numeric', month: 'short' }) => d.toLocaleDateString('en-GB', opts)
+const fmtDate = (d) => new Date(`${d}T00:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 const compact = (n) =>
   n >= 1e6 ? `${(n / 1e6).toFixed(n % 1e6 ? 2 : 0)}M` : n >= 1e3 ? `${(n / 1e3).toFixed(n >= 1e5 ? 0 : 1)}K` : String(n)
-const cumulative = season.weekly.reduce((acc, v) => [...acc, (acc.at(-1) || 0) + v], [])
 const postUrl = (p) => p.url || LINKEDIN_PROFILE
+const score = (p) => p.impressions + p.reactions * 20 + p.comments * 60
+
+const REACTIONS = [
+  { k: 'like', icon: '👍', bg: '#378fe9' },
+  { k: 'celebrate', icon: '👏', bg: '#6dae4f' },
+  { k: 'love', icon: '❤️', bg: '#df704d' },
+  { k: 'insight', icon: '💡', bg: '#f5bb5c' },
+  { k: 'funny', icon: '😄', bg: '#44bfd3' },
+]
 
 export default function Content() {
-  const [active, setActive] = useState(null)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -34,7 +40,7 @@ export default function Content() {
   }, [])
 
   return (
-    <div className="cw ct">
+    <div className="cw lk">
       <header className={`cw-nav${scrolled ? ' is-scrolled' : ''}`}>
         <div className="cw-nav-left">
           <BackButton />
@@ -51,27 +57,9 @@ export default function Content() {
       </header>
 
       <Hero />
-      <Posts active={active} setActive={setActive} />
-      <section className="ct-journey" aria-labelledby="ct-journey-title">
-        <div className="ct-sec-head">
-          <p className="ph-label">
-            <b>The journey</b> · since {fmtDate(start, { day: 'numeric', month: 'short', year: 'numeric' })}
-          </p>
-          <Lines as="h2" id="ct-journey-title" className="ct-h2" lines={['Three months, week by week']} />
-        </div>
-        <Telemetry active={active} setActive={setActive} />
-      </section>
+      <Work />
+      <FollowCard />
 
-      <section className="ct-follow">
-        <Rise as="p" className="ct-follow-line">
-          The season’s still running — a new post most weeks, on design, UX and building in public.
-        </Rise>
-        <Rise delay={0.1}>
-          <a className="ph-btn" href={LINKEDIN_PROFILE} target="_blank" rel="noreferrer">
-            Follow on LinkedIn <span aria-hidden="true">↗</span>
-          </a>
-        </Rise>
-      </section>
       <nav className="ct-foot" aria-label="Continue">
         <Link to="/case-study" className="cw-link">
           <span aria-hidden="true">←</span> Case studies
@@ -84,9 +72,77 @@ export default function Content() {
   )
 }
 
-/* ------------------------------------------------------------------ hero: the number, then the work */
+/* ------------------------------------------------------------------ hero */
 
 function Hero() {
+  const reduce = useReducedMotion()
+  const mx = useMotionValue(0)
+  const my = useMotionValue(0)
+  const sx = useSpring(mx, { stiffness: 80, damping: 18 })
+  const sy = useSpring(my, { stiffness: 80, damping: 18 })
+  // only the photo follows the cursor; everything else stays put
+  const picX = useTransform(sx, (v) => v * 16)
+  const picY = useTransform(sy, (v) => v * 10)
+
+  const onMove = (e) => {
+    if (reduce) return
+    const r = e.currentTarget.getBoundingClientRect()
+    mx.set(((e.clientX - r.left) / r.width - 0.5) * 2)
+    my.set(((e.clientY - r.top) / r.height - 0.5) * 2)
+  }
+  const onLeave = () => {
+    mx.set(0)
+    my.set(0)
+  }
+
+  return (
+    <section className="lk-hero" onPointerMove={onMove} onPointerLeave={onLeave} aria-labelledby="lk-title">
+      <div className="lk-marquee" aria-hidden="true">
+        {['1M+ IMPRESSIONS · DESIGN · UX · BUILDING IN PUBLIC · ', '38 POSTS · 13 WEEKS · SEASON 01 · PUNE → THE FEED · '].map((t, i) => (
+          <div key={i} className={`lk-marquee-row${i ? ' is-rev' : ''}`}>
+            <span>{t.repeat(4)}</span>
+            <span>{t.repeat(4)}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="lk-stage">
+        <div className="lk-col lk-col--left">
+          <Headline />
+          <Analytics />
+        </div>
+
+        <div className="lk-centre">
+          <Sticker x={picX} y={picY} />
+        </div>
+
+        <div className="lk-col lk-col--right">
+          <Notifications />
+          <Profile />
+        </div>
+      </div>
+
+      <motion.dl
+        className="lk-bar"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.55, ease: settle }}
+      >
+        {season.totals.map((t, i) => (
+          <div key={t.label}>
+            <dt>
+              <b>S{i + 1}</b> {t.label}
+            </dt>
+            <dd>{t.value}</dd>
+          </div>
+        ))}
+      </motion.dl>
+      <span className="lk-hero-kerb" aria-hidden="true" />
+    </section>
+  )
+}
+
+function Headline() {
   const num = useRef(null)
   const reduce = useReducedMotion()
 
@@ -98,77 +154,492 @@ function Hero() {
       return
     }
     const run = animate(0, season.impressions, {
-      duration: 2.2,
-      delay: 0.25,
+      duration: 2.4,
+      delay: 0.5,
       ease: [0.16, 1, 0.3, 1],
       onUpdate: (v) => (el.textContent = fmt(v)),
     })
     return () => run.stop()
   }, [reduce])
 
-  // newest first, repeated so the strip loops seamlessly
-  const strip = [...posts].sort((a, b) => b.date.localeCompare(a.date))
+  return (
+    <div className="lk-head">
+      <Rise as="p" className="lk-label" play>
+        <i className="lk-live" /> LinkedIn · Season 01
+      </Rise>
+      <h1 id="lk-title" className="lk-big" aria-label={`${season.impressions.toLocaleString('en-US')}+ impressions in 3 months`}>
+        <Rise as="span" play delay={0.08} aria-hidden="true">
+          1M<em>+</em>
+        </Rise>
+      </h1>
+      <Rise as="p" className="lk-sub" play delay={0.16}>
+        <b>impressions</b> in my first three months of posting about design.
+      </Rise>
+      <Rise as="div" className="lk-counter" play delay={0.24} aria-hidden="true">
+        <span className="lk-counter-num" ref={num}>
+          0
+        </span>
+        <span className="lk-counter-tag">
+          <i className="lk-live" /> live
+        </span>
+      </Rise>
+    </div>
+  )
+}
+
+// tiny sparkline of the season, drawn in on load
+function Analytics() {
+  const w = 240
+  const h = 64
+  const max = Math.max(...season.weekly)
+  const pts = season.weekly.map((v, i) => [(i / (season.weekly.length - 1)) * w, h - 4 - (v / max) * (h - 12)])
+  const d = pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ')
+  const last = season.weekly.at(-1)
+  const avg = season.weekly.reduce((a, b) => a + b, 0) / season.weekly.length
+  const best = season.weekly.indexOf(max)
+  const up = Math.round(((last - avg) / avg) * 100)
 
   return (
-    <section className="ct-hero" aria-labelledby="ct-title">
-      <div className="ct-hero-top">
+    <Rise className="lk-float lk-analytics" play delay={0.5}>
+      <p className="lk-float-top">
+        <span>Analytics · weekly</span>
+        <b className="lk-chip">Peak W{best + 1}</b>
+      </p>
+      <svg viewBox={`0 0 ${w} ${h}`} className="lk-spark" aria-hidden="true">
+        <defs>
+          <linearGradient id="lk-spark-fill" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stopColor="#0085ff" stopOpacity="0.22" />
+            <stop offset="1" stopColor="#0085ff" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {[0.33, 0.66].map((f) => (
+          <line key={f} x1="0" x2={w} y1={h * f} y2={h * f} className="lk-spark-grid" />
+        ))}
+        <motion.path
+          d={`${d} L${w},${h} L0,${h} Z`}
+          fill="url(#lk-spark-fill)"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 0.6 }}
+        />
+        <motion.path
+          d={d}
+          fill="none"
+          stroke="#0085ff"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ delay: 0.7, duration: 1.4, ease: settle }}
+        />
+        <circle cx={pts[best][0]} cy={pts[best][1]} r="4" fill="#fff" stroke="#e10600" strokeWidth="2.2" />
+      </svg>
+      <p className="lk-float-foot">
+        <span>
+          <b>{compact(last)}</b> last week
+        </span>
+        <span className={up >= 0 ? 'is-up' : 'is-down'}>
+          {up >= 0 ? '▲' : '▼'} {Math.abs(up)}% vs avg
+        </span>
+      </p>
+    </Rise>
+  )
+}
+
+// the notification bell keeps ringing — one new item every few seconds
+const NOTES = (() => {
+  const top = [...posts].sort((a, b) => b.impressions - a.impressions)
+  return [
+    { icon: '🔥', bg: '#fff1e6', text: <>Your post is trending — <b>{compact(top[0].impressions)}</b> impressions</> },
+    { icon: '👏', bg: '#eaf6e4', text: <>Aman and <b>{(top[1].reactions - 1).toLocaleString('en-US')}</b> others reacted to your post</> },
+    { icon: '➕', bg: '#e8f1fb', text: <><b>{season.totals.find((t) => t.label === 'New followers')?.value || '+6.8K'}</b> new followers this season</> },
+    { icon: '💬', bg: '#f1ecfb', text: <><b>{top[0].comments}</b> comments on your case study post</> },
+    { icon: '🔁', bg: '#e6f7f4', text: <>Your post was reposted <b>34</b> times</> },
+    { icon: '👀', bg: '#fdf3d9', text: <>Recruiters from <b>12</b> companies viewed your profile</> },
+  ]
+})()
+
+function Notifications() {
+  const reduce = useReducedMotion()
+  const [n, setN] = useState(3)
+
+  useEffect(() => {
+    if (reduce) return
+    const t = setInterval(() => setN((v) => v + 1), 3200)
+    return () => clearInterval(t)
+  }, [reduce])
+
+  const shown = [0, 1, 2].map((k) => ({ id: n - k, ...NOTES[(n - k) % NOTES.length] }))
+
+  return (
+    <div className="lk-float lk-notes" aria-hidden="true">
+      <p className="lk-float-top">
+        <span>Notifications</span>
+        <b className="lk-bell">
+          <motion.i key={n} initial={{ scale: 1.6 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 400, damping: 12 }}>
+            {(n % 9) + 1}
+          </motion.i>
+        </b>
+      </p>
+      <ul>
+        <AnimatePresence initial={false} mode="popLayout">
+          {shown.map((s, i) => (
+            <motion.li
+              key={s.id}
+              layout
+              className={i === 0 ? 'is-new' : ''}
+              initial={{ opacity: 0, y: -18, scale: 0.96 }}
+              animate={{ opacity: 1 - i * 0.3, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 14, transition: { duration: 0.2 } }}
+              transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+            >
+              <span className="lk-note-icon" style={{ background: s.bg }}>
+                {s.icon}
+              </span>
+              <span className="lk-note-text">{s.text}</span>
+              {i === 0 && <em>now</em>}
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </ul>
+    </div>
+  )
+}
+
+function Profile() {
+  const followers = season.totals.find((t) => t.label === 'New followers')?.value
+  const postCount = season.totals.find((t) => t.label === 'Posts')?.value
+  return (
+    <Rise className="lk-float lk-profile" play delay={0.65}>
+      <div className="lk-profile-cover" aria-hidden="true">
+        <span className="lk-kerb" />
+      </div>
+      <div className="lk-profile-row">
+        <img className="lk-profile-avatar" src={author.avatar} alt="" />
+        <span className="lk-open" aria-hidden="true">
+          <i /> Open to work
+        </span>
+      </div>
+      <p className="lk-profile-name">
+        {author.name} <span className="lk-verified" aria-hidden="true">✓</span>
+      </p>
+      <p className="lk-profile-role">Product Designer · Pune, India</p>
+      <dl className="lk-profile-stats">
         <div>
-          <Rise as="p" className="ph-label" play>
-            <b>LinkedIn</b> · Season 01 · {fmtDate(start, { month: 'short', year: 'numeric' })} — today
-          </Rise>
-          <h1 id="ct-title" className="ct-title" aria-label={`${season.impressions.toLocaleString('en-US')}+ impressions in 3 months`}>
-            <Rise as="span" className="ct-num" play delay={0.1} aria-hidden="true">
-              <span ref={num}>0</span>
-              <i>+</i>
-            </Rise>
-          </h1>
+          <dt>Posts</dt>
+          <dd>{postCount}</dd>
         </div>
-        <Rise className="ct-hero-side" play delay={0.35}>
-          <p className="ct-sub">impressions in my first three months of posting — about design, UX and building in public.</p>
-          <dl className="ct-mini">
-            {season.totals.map((t) => (
-              <div key={t.label}>
-                <dt>{t.label}</dt>
-                <dd>{t.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </Rise>
+        <div>
+          <dt>Followers</dt>
+          <dd>{followers}</dd>
+        </div>
+        <div>
+          <dt>Reach</dt>
+          <dd>1M+</dd>
+        </div>
+      </dl>
+      <a className="lk-btn" href={LINKEDIN_PROFILE} target="_blank" rel="noreferrer">
+        <InIcon /> Follow
+      </a>
+    </Rise>
+  )
+}
+
+/* the sticker: photo + border baked into one image, with the Figma "!" lines and badge */
+function Sticker({ x, y }) {
+  const reduce = useReducedMotion()
+  const [bursts, setBursts] = useState([])
+  const [count, setCount] = useState(0)
+  const id = useRef(0)
+
+  const react = (e) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX ? e.clientX - r.left : r.width / 2
+    const y = e.clientY ? e.clientY - r.top : r.height / 3
+    const batch = Array.from({ length: reduce ? 1 : 7 }, (_, i) => ({
+      id: ++id.current,
+      x,
+      y,
+      dx: (Math.random() - 0.5) * 220,
+      dy: -120 - Math.random() * 160,
+      r: (Math.random() - 0.5) * 60,
+      re: REACTIONS[(id.current + i) % REACTIONS.length],
+    }))
+    setBursts((b) => [...b.slice(-28), ...batch])
+    setCount((c) => c + 1)
+  }
+
+  return (
+    <div className="lk-sticker">
+      <span className="lk-halo" aria-hidden="true">
+        <i />
+      </span>
+      <span className="lk-floor" aria-hidden="true" />
+      <motion.div className="lk-sticker-move" style={{ x, y }}>
+      <motion.button
+        type="button"
+        className="lk-sticker-hit"
+        onClick={react}
+        aria-label="Send a reaction"
+        whileHover={reduce ? undefined : { scale: 1.02 }}
+        whileTap={reduce ? undefined : { scale: 0.97 }}
+        initial={{ opacity: 0, y: 40, scale: 0.92 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: 'spring', stiffness: 140, damping: 16, delay: 0.2 }}
+      >
+        <img
+          className="lk-sticker-pic"
+          src="/images/content/pratik-sticker-full.webp"
+          width="1396"
+          height="1602"
+          alt="Pratik Mahajan"
+          fetchPriority="high"
+          draggable="false"
+        />
+      </motion.button>
+      </motion.div>
+
+      {/* Figma "Line 279–281": the excited marks above the head */}
+      <span className="lk-sticker-lines" aria-hidden="true">
+        {[0, 1, 2].map((i) => (
+          <motion.img
+            key={i}
+            src={`/images/content/line-${i + 1}.svg`}
+            alt=""
+            style={{ rotate: [-70, -59, -49][i] }}
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ duration: 0.3, delay: 0.75 + i * 0.08, ease: settle }}
+          />
+        ))}
+      </span>
+
+      <motion.span
+        className="lk-sticker-badge"
+        aria-hidden="true"
+        initial={{ opacity: 0, scale: 0.4, rotate: -20 }}
+        animate={{ opacity: 1, scale: 1, rotate: 10.79 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 12, delay: 0.95 }}
+        whileHover={{ rotate: -6, scale: 1.08 }}
+      >
+        <img src="/images/content/linkedin-badge.svg" alt="" />
+      </motion.span>
+
+      <motion.p
+        className="lk-sticker-hint"
+        aria-hidden="true"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: count ? 0 : 1 }}
+        transition={{ delay: count ? 0 : 1.8 }}
+      >
+        <svg viewBox="0 0 60 40">
+          <path d="M4 34 C 18 30, 34 22, 50 8" />
+          <path d="M40 8 L 50 8 L 49 18" />
+        </svg>
+        tap to react
+      </motion.p>
+
+      <AnimatePresence>
+        {count > 0 && (
+          <motion.p
+            key="count"
+            className="lk-sticker-count"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            aria-live="polite"
+          >
+            <span className="lk-reacts">
+              {REACTIONS.slice(0, 3).map((r) => (
+                <i key={r.k} style={{ background: r.bg }}>
+                  {r.icon}
+                </i>
+              ))}
+            </span>
+            You and <b>{(21400 + count).toLocaleString('en-US')}</b> others
+          </motion.p>
+        )}
+      </AnimatePresence>
+
+      <span className="lk-bursts" aria-hidden="true">
+        <AnimatePresence>
+          {bursts.map((b) => (
+            <motion.i
+              key={b.id}
+              style={{ left: b.x, top: b.y, background: b.re.bg }}
+              initial={{ x: '-50%', y: '-50%', scale: 0.3, opacity: 1 }}
+              animate={{ x: `calc(-50% + ${b.dx}px)`, y: `calc(-50% + ${b.dy}px)`, scale: 1, rotate: b.r, opacity: 0 }}
+              transition={{ duration: 1.1, ease: [0.2, 0.7, 0.3, 1] }}
+              onAnimationComplete={() => setBursts((all) => all.filter((x) => x.id !== b.id))}
+            >
+              {b.re.icon}
+            </motion.i>
+          ))}
+        </AnimatePresence>
+      </span>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ the work: the posts themselves */
+
+function Work() {
+  const topics = useMemo(() => ['All', ...new Set(posts.map((p) => p.topic))], [])
+  const [topic, setTopic] = useState('All')
+  const list = useMemo(
+    () => [...posts].sort((a, b) => b.date.localeCompare(a.date)).filter((p) => topic === 'All' || p.topic === topic),
+    [topic],
+  )
+  // the newest post runs double-width only when that leaves the three-column grid with full rows
+  const featured = topic === 'All' && list.length % 3 === 2
+
+  return (
+    <section className="lk-sec lk-work" aria-labelledby="lk-work-title">
+      <SecHead n="01" label="The work" sub="carousels, breakdowns and notes from the feed" title="Posts I’ve made" id="lk-work-title" />
+
+      <div className="lk-chips" role="tablist" aria-label="Filter posts by topic">
+        <LayoutGroup id="lk-chips">
+          {topics.map((t) => (
+            <button key={t} type="button" role="tab" aria-selected={topic === t} className={topic === t ? 'is-on' : ''} onClick={() => setTopic(t)}>
+              {topic === t && <motion.span layoutId="lk-chip-pill" className="lk-chip-pill" transition={{ type: 'spring', stiffness: 420, damping: 34 }} />}
+              <span>{t}</span>
+            </button>
+          ))}
+        </LayoutGroup>
       </div>
 
-      {/* the posts themselves, running past */}
-      <Rise className="ct-strip" play delay={0.5} y={40}>
-        <div className="ct-strip-track">
-          {[0, 1].map((k) => (
-            <ul key={k} className="ct-strip-set" aria-hidden={k === 1 ? 'true' : undefined}>
-              {strip.map((p) => (
-                <li key={p.id}>
-                  <a
-                    href={postUrl(p)}
-                    target="_blank"
-                    rel="noreferrer"
-                    tabIndex={k === 1 ? -1 : undefined}
-                    aria-label={`${p.hook} — open on LinkedIn`}
-                  >
-                    <Thumb p={p} />
-                    <span className="ct-strip-views">
-                      <EyeIcon /> {compact(p.impressions)}
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+      <motion.ul layout className={`lk-wall${featured ? ' is-featured' : ''}`}>
+        <AnimatePresence mode="popLayout" initial={false}>
+          {list.map((p, i) => (
+            <motion.li
+              key={p.id}
+              layout
+              className={featured && i === 0 ? 'is-big' : ''}
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.18 } }}
+              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+            >
+              <PostTile p={p} big={featured && i === 0} delay={i * 0.06} />
+            </motion.li>
           ))}
-        </div>
-      </Rise>
+        </AnimatePresence>
+      </motion.ul>
     </section>
   )
 }
 
-const EyeIcon = () => (
-  <svg viewBox="0 0 16 16" aria-hidden="true" className="ct-eye">
-    <path d="M1 8s2.6-5 7-5 7 5 7 5-2.6 5-7 5-7-5-7-5Z" />
-    <circle cx="8" cy="8" r="2.2" />
+function PostTile({ p, big, delay }) {
+  return (
+    <Rise className="lk-tile-wrap" delay={delay}>
+      <a className={`lk-tile${big ? ' is-big' : ''} is-${p.format}`} href={postUrl(p)} target="_blank" rel="noreferrer" aria-label={`${p.hook} — open on LinkedIn`}>
+        <span className="lk-tile-frame">
+          {/* a carousel peeks its next slides out from behind */}
+          {p.format === 'carousel' && (
+            <>
+              <span className="lk-tile-peek lk-tile-peek--2" aria-hidden="true" />
+              <span className="lk-tile-peek lk-tile-peek--1" aria-hidden="true" />
+            </>
+          )}
+          <span className="lk-tile-cover">
+            <Thumb p={p} />
+            <span className="lk-tile-open" aria-hidden="true">
+              <InIcon /> View post
+            </span>
+          </span>
+        </span>
+        <span className="lk-tile-meta">
+          <span className="lk-tile-tag">
+            <i className={`lk-topic lk-topic--${COVERS[posts.indexOf(p) % COVERS.length]}`} />
+            {p.topic}
+          </span>
+          <span className="lk-tile-date">{fmtDate(p.date)}</span>
+        </span>
+        <span className="lk-tile-hook">{p.hook}</span>
+      </a>
+    </Rise>
+  )
+}
+
+/* ------------------------------------------------------------------ 04 · follow */
+
+function FollowCard() {
+  const fan = [...posts].sort((a, b) => score(b) - score(a)).slice(0, 3)
+  return (
+    <section className="lk-sec lk-sec--last">
+      <div className="lk-cta">
+        <span className="lk-cta-chequer" aria-hidden="true" />
+        <div className="lk-cta-copy">
+          <p className="lk-label lk-label--light">
+            <i className="lk-live" /> Season 01 · still running
+          </p>
+          <Rise as="h2" className="lk-cta-title">
+            Next post drops <em>this week.</em>
+          </Rise>
+          <Rise as="p" className="lk-cta-sub" delay={0.05}>
+            Design breakdowns, UX teardowns and the honest bits of building in public. Grab a seat on the grid.
+          </Rise>
+          <Rise className="lk-cta-btns" delay={0.1}>
+            <a className="lk-btn lk-btn--light" href={LINKEDIN_PROFILE} target="_blank" rel="noreferrer">
+              <InIcon /> Follow on LinkedIn
+            </a>
+            <span className="lk-cta-meta">
+              <span className="lk-reacts" aria-hidden="true">
+                {REACTIONS.slice(0, 3).map((r) => (
+                  <i key={r.k} style={{ background: r.bg }}>
+                    {r.icon}
+                  </i>
+                ))}
+              </span>
+              {season.totals.find((t) => t.label === 'New followers')?.value} joined this season
+            </span>
+          </Rise>
+        </div>
+        <div className="lk-cta-fan" aria-hidden="true">
+          {fan.map((p, i) => (
+            <motion.span
+              key={p.id}
+              className={`lk-cta-card lk-cta-card--${i}`}
+              initial={{ opacity: 0, y: 40, rotate: 0 }}
+              whileInView={{ opacity: 1, y: 0, rotate: [-9, 2, 11][i] }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ type: 'spring', stiffness: 120, damping: 16, delay: i * 0.08 }}
+              whileHover={{ y: -12, rotate: 0, zIndex: 5 }}
+            >
+              <Thumb p={p} />
+            </motion.span>
+          ))}
+          <img className="lk-cta-face" src="/images/content/pratik-sticker-full.webp" alt="" loading="lazy" />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* shared section heading: number, label, title, and anything on the right */
+function SecHead({ n, label, sub, title, id, children }) {
+  return (
+    <div className="lk-sec-head">
+      <div>
+        <p className="lk-label">
+          <span className="lk-sec-n">{n}</span>
+          <b>{label}</b>
+          <span className="lk-label-sub">· {sub}</span>
+        </p>
+        <h2 id={id} className="lk-h2">
+          {title}
+        </h2>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ bits */
+
+const InIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="lk-in">
+    <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.06c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.67 4.8 6.13V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4V9.75Z" />
   </svg>
 )
 
@@ -200,338 +671,5 @@ function Thumb({ p }) {
         )}
       </span>
     </span>
-  )
-}
-
-/* ------------------------------------------------------------------ telemetry */
-
-// smooth line through points (Catmull-Rom as cubic Béziers)
-function smooth(pts) {
-  return pts.reduce((d, p, i, a) => {
-    if (i === 0) return `M${p[0]},${p[1]}`
-    const p0 = a[i - 2] || a[i - 1]
-    const p1 = a[i - 1]
-    const p2 = p
-    const p3 = a[i + 1] || p
-    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6]
-    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6]
-    return `${d} C${c1[0]},${c1[1]} ${c2[0]},${c2[1]} ${p2[0]},${p2[1]}`
-  }, '')
-}
-
-function useWidth(ref) {
-  const [w, setW] = useState(0)
-  useLayoutEffect(() => {
-    const el = ref.current
-    const ro = new ResizeObserver(([e]) => setW(Math.round(e.contentRect.width)))
-    ro.observe(el)
-    setW(el.clientWidth)
-    return () => ro.disconnect()
-  }, [ref])
-  return w
-}
-
-const MILESTONES = [250000, 500000, 750000, 1000000]
-
-function Telemetry({ active, setActive }) {
-  const box = useRef(null)
-  const w = useWidth(box)
-  const reduce = useReducedMotion()
-  const seen = useInView(box, { once: true, amount: 0.35 })
-  const n = season.weekly.length
-  const [cursor, setCursor] = useState(n - 1)
-
-  const narrow = w < 640
-  const H = narrow ? 340 : 440
-  const L = 4
-  const R = narrow ? 46 : 70
-  const T = narrow ? 70 : 84 // headroom for the readout, so it never covers the trace
-  const lineB = Math.round(H * 0.64)
-  const barT = lineB + 34
-  const barB = H - 30
-  const top = 1050000
-  const maxWeek = Math.max(...season.weekly)
-  const step = (w - L - R) / (n - 1)
-  const x = (i) => L + i * step
-  const y = (v) => T + (1 - v / top) * (lineB - T)
-
-  const geo = useMemo(() => {
-    if (!w) return null
-    const pts = cumulative.map((v, i) => [x(i), y(v)])
-    const line = smooth(pts)
-    return { line, area: `${line} L${x(n - 1)},${lineB} L${x(0)},${lineB} Z` }
-  }, [w]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // pointing at a post card moves the cursor to its week
-  const activePost = posts.find((p) => p.id === active)
-  const shown = activePost ? activePost.week - 1 : cursor
-  const crossed = cumulative.findIndex((v) => v >= 1000000)
-
-  const onMove = (e) => {
-    const r = box.current.getBoundingClientRect()
-    const i = Math.round((e.clientX - r.left - L) / step)
-    setCursor(Math.min(n - 1, Math.max(0, i)))
-    if (active) setActive(null)
-  }
-  const onKey = (e) => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return
-    e.preventDefault()
-    setActive(null)
-    setCursor((c) => Math.min(n - 1, Math.max(0, c + (e.key === 'ArrowRight' ? 1 : -1))))
-  }
-
-  const on = seen || reduce
-  const sweep = { duration: reduce ? 0 : 1.8, ease }
-  const readoutLeft = w ? Math.min(Math.max(x(shown), 90), w - 90) : 0
-
-  return (
-    <section className="ct-tele" aria-label="Impressions over the season">
-      <div className="ct-tele-head">
-        <p className="ph-label">
-          <b>Telemetry</b> · impressions by week
-        </p>
-        <p className="ct-legend" aria-hidden="true">
-          <span className="ct-key ct-key--total" /> Total
-          <span className="ct-key ct-key--week" /> Per week
-          <span className="ct-key ct-key--post" /> Featured post
-        </p>
-      </div>
-
-      <div
-        ref={box}
-        className="ct-chart"
-        style={{ height: H }}
-        onPointerMove={onMove}
-        onPointerLeave={() => setCursor(n - 1)}
-        onKeyDown={onKey}
-        tabIndex={0}
-        role="group"
-        aria-label={`Week ${shown + 1}: ${cumulative[shown].toLocaleString('en-US')} total impressions. Use left and right arrows to move through the season.`}
-      >
-        {geo && (
-          <svg width={w} height={H} className="ct-svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="ct-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#e10600" stopOpacity="0.16" />
-                <stop offset="1" stopColor="#e10600" stopOpacity="0" />
-              </linearGradient>
-              <clipPath id="ct-sweep">
-                <motion.rect
-                  x="0"
-                  y="0"
-                  height={H}
-                  initial={{ width: reduce ? w : 0 }}
-                  animate={{ width: on ? w : 0 }}
-                  transition={sweep}
-                />
-              </clipPath>
-            </defs>
-
-            {/* milestones */}
-            {MILESTONES.map((m) => (
-              <g key={m} className={`ct-mile${m === 1000000 ? ' is-million' : ''}`}>
-                <line x1={L} x2={w - R + 6} y1={y(m)} y2={y(m)} />
-                <text x={w - R + 12} y={y(m) + 4}>
-                  {compact(m)}
-                </text>
-              </g>
-            ))}
-
-            <g clipPath="url(#ct-sweep)">
-              <path d={geo.area} fill="url(#ct-fill)" />
-              <path d={geo.line} className="ct-line" />
-              {/* weekly impressions, like a throttle trace under the speed trace */}
-              {season.weekly.map((v, i) => {
-                const h = (v / maxWeek) * (barB - barT)
-                const bw = Math.max(4, step * 0.42)
-                return (
-                  <rect key={i} className={`ct-bar${i === shown ? ' is-on' : ''}`} x={x(i) - bw / 2} y={barB - h} width={bw} height={h} />
-                )
-              })}
-            </g>
-            <line className="ct-base" x1={L} x2={w - R + 6} y1={barB} y2={barB} />
-
-            {/* chequered flag where the season crossed a million */}
-            {crossed >= 0 && on && (
-              <motion.g
-                className="ct-flag"
-                initial={reduce ? false : { opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: reduce ? 0 : 1.7, ease: settle }}
-              >
-                <line x1={x(crossed)} x2={x(crossed)} y1={y(cumulative[crossed])} y2={y(1000000) - 26} />
-                <rect x={x(crossed) + 1} y={y(1000000) - 28} width="18" height="12" fill="url(#ct-check)" />
-              </motion.g>
-            )}
-            <defs>
-              <pattern id="ct-check" width="6" height="6" patternUnits="userSpaceOnUse">
-                <rect width="6" height="6" fill="#fff" />
-                <rect width="3" height="3" fill="#111214" />
-                <rect x="3" y="3" width="3" height="3" fill="#111214" />
-              </pattern>
-            </defs>
-
-            {/* cursor */}
-            <line className="ct-cursor" x1={x(shown)} x2={x(shown)} y1={T - 8} y2={barB} />
-            <circle className="ct-cursor-dot" cx={x(shown)} cy={y(cumulative[shown])} r="5" />
-
-            {/* featured posts, pinned where they went out */}
-            {posts.map((p, k) => {
-              const i = p.week - 1
-              const hot = active === p.id
-              return (
-                <motion.g
-                  key={p.id}
-                  className={`ct-pin${hot ? ' is-hot' : ''}`}
-                  initial={reduce ? false : { opacity: 0, scale: 0.4 }}
-                  animate={on ? { opacity: 1, scale: 1 } : undefined}
-                  transition={{ duration: 0.4, delay: reduce ? 0 : 0.5 + (i / n) * 1.3, ease: settle }}
-                  style={{ transformOrigin: `${x(i)}px ${y(cumulative[i])}px` }}
-                  onPointerEnter={() => setActive(p.id)}
-                >
-                  <circle cx={x(i)} cy={y(cumulative[i])} r={hot ? 13 : 10} />
-                  <text x={x(i)} y={y(cumulative[i]) + 4}>
-                    {k + 1}
-                  </text>
-                </motion.g>
-              )
-            })}
-
-            {/* week labels */}
-            {season.weekly.map((_, i) =>
-              narrow && i % 2 ? null : (
-                <text key={i} className={`ct-week${i === shown ? ' is-on' : ''}`} x={x(i)} y={H - 8}>
-                  W{i + 1}
-                </text>
-              ),
-            )}
-          </svg>
-        )}
-
-        {/* readout that follows the cursor */}
-        {w > 0 && (
-          <div className="ct-readout" style={{ left: readoutLeft }} aria-hidden="true">
-            <p className="ct-readout-week">
-              Week {shown + 1} · {fmtDate(weekStart(shown))}
-            </p>
-            <p className="ct-readout-total">{cumulative[shown].toLocaleString('en-US')}</p>
-            <p className="ct-readout-delta">
-              <b>+{compact(season.weekly[shown])}</b> this week
-            </p>
-          </div>
-        )}
-      </div>
-      <p className="ct-hint">Move across the trace to scrub the season · ← → on a keyboard</p>
-    </section>
-  )
-}
-
-/* ------------------------------------------------------------------ posts */
-
-// best = views, with engagement weighted in (a comment is worth more than a reaction)
-const score = (p) => p.impressions + p.reactions * 20 + p.comments * 60
-const LATEST = [...posts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
-const BEST = [...posts].sort((a, b) => score(b) - score(a)).slice(0, 3)
-const TODAY = new Date()
-const ago = (iso) => {
-  const days = Math.max(0, Math.round((TODAY - new Date(`${iso}T00:00:00`)) / 864e5))
-  return days < 1 ? 'Today' : days < 7 ? `${days}d` : days < 60 ? `${Math.round(days / 7)}w` : `${Math.round(days / 30)}mo`
-}
-
-function Posts({ active, setActive }) {
-  return (
-    <section className="ct-posts" aria-labelledby="ct-posts-title">
-      <div className="ct-sec-head ct-sec-head--row">
-        <div>
-          <p className="ph-label">
-            <b>On the feed</b> · updates as I post
-          </p>
-          <Lines as="h2" id="ct-posts-title" className="ct-h2" lines={['The posts']} />
-        </div>
-        <a className="cw-link" href={LINKEDIN_PROFILE} target="_blank" rel="noreferrer">
-          All posts on LinkedIn <span aria-hidden="true">↗</span>
-        </a>
-      </div>
-
-      <PostRow label="Latest" note="The three newest" list={LATEST} active={active} setActive={setActive} />
-      <PostRow label="Best performing" note="Ranked by views and engagement" list={BEST} ranked active={active} setActive={setActive} />
-    </section>
-  )
-}
-
-function PostRow({ label, note, list, ranked = false, active, setActive }) {
-  return (
-    <div className="ct-row">
-      <p className="ct-row-head">
-        <b>{label}</b> {note}
-      </p>
-      <ol className="ct-grid" onPointerLeave={() => setActive(null)}>
-        {list.map((p, i) => (
-          <li key={p.id}>
-            <PostCard
-              p={p}
-              rank={ranked ? i + 1 : null}
-              fresh={!ranked && i === 0}
-              hot={active === p.id}
-              onHot={() => setActive(p.id)}
-              delay={i * 0.08}
-            />
-          </li>
-        ))}
-      </ol>
-    </div>
-  )
-}
-
-// a LinkedIn post, set in the site's type: author, first line, the visual, the numbers
-function PostCard({ p, rank, fresh, hot, onHot, delay }) {
-  return (
-    <Rise
-      as="a"
-      href={postUrl(p)}
-      target="_blank"
-      rel="noreferrer"
-      className={`ln${hot ? ' is-hot' : ''}`}
-      onPointerEnter={onHot}
-      onFocus={onHot}
-      delay={delay}
-      aria-label={`${p.hook} — ${p.impressions.toLocaleString('en-US')} impressions. Open on LinkedIn`}
-    >
-      <span className="ln-head">
-        <img className="ln-avatar" src={author.avatar} alt="" />
-        <span className="ln-who">
-          <b>{author.name}</b>
-          <small>
-            {author.role} · {ago(p.date)}
-          </small>
-        </span>
-        {rank ? (
-          <span className={`ln-rank${rank === 1 ? ' is-p1' : ''}`}>{rank === 1 ? 'P1 · Fastest lap' : `P${rank}`}</span>
-        ) : (
-          fresh && <span className="ln-new">New</span>
-        )}
-      </span>
-      <span className="ln-hook">{p.hook}</span>
-      <span className="ln-media">
-        <Thumb p={p} />
-      </span>
-      <span className="ln-foot">
-        <span className="ln-react">
-          <span className="ln-dots" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
-          {compact(p.reactions)}
-        </span>
-        <span>{compact(p.comments)} comments</span>
-        <span className="ln-views">
-          <EyeIcon /> {compact(p.impressions)}
-        </span>
-      </span>
-      <span className="ln-open">
-        View on LinkedIn <i aria-hidden="true">↗</i>
-      </span>
-    </Rise>
   )
 }
