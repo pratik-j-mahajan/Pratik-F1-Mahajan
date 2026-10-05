@@ -24,7 +24,7 @@ const caseStudies = [
     role: 'Product designer',
     timeline: '8 weeks',
     year: '2025',
-    cover: '/images/cases/my-things.jpg',
+    cover: '/images/cases/my-things.webp',
     accent: '#1f6bff',
     streak: '58%',
     focus: '50% 40%',

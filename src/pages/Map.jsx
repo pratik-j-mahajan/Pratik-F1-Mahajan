@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import sections from '../data/sections.js'
 import useParallax from '../hooks/useParallax.js'
 import useMusic from '../hooks/useMusic.js'
-import { prefetchSectionVideo, useSectionTransition } from '../components/SectionTransition.jsx'
+import { prefetchAllSectionVideos, prefetchSectionVideo, useSectionTransition } from '../components/SectionTransition.jsx'
 import {
   ArrowIcon,
   ListIcon,
@@ -27,6 +27,12 @@ export default function Map() {
   // the section card keeps showing the last section you pointed at
   const [cardId, setCardId] = useState(sections[0].id)
   const navigate = useNavigate()
+
+  // once the map has settled, start downloading the section videos in the background
+  useEffect(() => {
+    const t = setTimeout(() => prefetchAllSectionVideos(sections.map((s) => s.video)), 1500)
+    return () => clearTimeout(t)
+  }, [])
   const music = useMusic()
   const parallax = useParallax(MAP_SHIFT)
   const playTransition = useSectionTransition()

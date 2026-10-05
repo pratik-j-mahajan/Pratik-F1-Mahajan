@@ -18,15 +18,32 @@ const readMuted = () => {
 
 const TransitionContext = createContext(() => {})
 
-// Warm the browser cache with a section's video (on hover), so it starts instantly on click.
+// Phones and slow / data-saver connections get the lighter 720p cut of each video.
+const lightVideo = () => {
+  if (typeof window === 'undefined') return false
+  const c = navigator.connection
+  return window.matchMedia('(max-width: 900px)').matches || c?.saveData || /(^|-)2g/.test(c?.effectiveType || '')
+}
+export const videoFor = (src) => (src && lightVideo() ? src.replace(/\.mp4$/, '-720.mp4') : src)
+
+// Warm the browser cache with a section's video, so it starts instantly on click.
 const warmed = new Set()
 export function prefetchSectionVideo(src) {
-  if (!src || warmed.has(src)) return
-  warmed.add(src)
-  fetch(src, { priority: 'low' }).catch(() => warmed.delete(src))
+  const url = videoFor(src)
+  if (!url || warmed.has(url)) return Promise.resolve()
+  warmed.add(url)
+  return fetch(url, { priority: 'low' })
+    .then((r) => r.blob())
+    .catch(() => warmed.delete(url))
 }
 
-const STALL_MS = 4000 // if the video hasn't started by then, go straight to the section
+// Quietly fetch every section video one after another, once the page has settled.
+export function prefetchAllSectionVideos(srcs) {
+  if (navigator.connection?.saveData) return
+  srcs.filter(Boolean).reduce((chain, src) => chain.then(() => prefetchSectionVideo(src)), Promise.resolve())
+}
+
+const STALL_MS = 8000 // if the video still hasn't started by then, go straight to the section
 
 // Call with a section to play its video, then open the section page.
 export const useSectionTransition = () => useContext(TransitionContext)
@@ -111,7 +128,7 @@ export function SectionTransitionProvider({ children }) {
           >
             <video
               ref={videoRef}
-              src={section.video}
+              src={videoFor(section.video)}
               playsInline
               preload="auto"
               onEnded={finish}
