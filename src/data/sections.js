@@ -31,7 +31,7 @@ const sections = [
     path: '/projects',
     video: '/videos/projects.mp4',
     blurb: 'Product, visual and front-end work at full speed.',
-    pin: { x: 57.5, y: 76.2 },
+    pin: { x: 27.3, y: 55.5, align: 'start' }, // on the main straight (DRS zone)
   },
   {
     id: 'content',
@@ -48,7 +48,7 @@ const sections = [
     path: '/contact',
     video: '/videos/contact.mp4',
     blurb: 'Pull into the pits and let’s talk.',
-    pin: { x: 31.3, y: 50.2, align: 'start' },
+    pin: { x: 61, y: 72.3 }, // just inside the track, on the service road
   },
 ].map((s) => ({ video: DEFAULT_VIDEO, ...s }))
 
