@@ -41,6 +41,6 @@ export const disciplines = [
 // Social links shown in the footer. Empty ones are hidden.
 export const links = {
   linkedin: 'https://www.linkedin.com/in/pratik-j-mahajan/',
-  behance: 'https://www.behance.net/',
-  instagram: '',
+  behance: '', // ← paste your Behance profile URL here; empty links are hidden
+  instagram: 'https://www.instagram.com/pratikjmahajan/',
 }

@@ -61,6 +61,14 @@ export default function Contact() {
       quip: 'A million impressions found me there. You’re welcome to be one more.',
       external: true,
     },
+    links.instagram && {
+      k: 'instagram',
+      label: 'Instagram',
+      value: '@pratikjmahajan',
+      href: links.instagram,
+      quip: 'The less serious side. Still pixel-perfect, obviously.',
+      external: true,
+    },
     {
       k: 'resume',
       label: 'Résumé',

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import sections from '../data/sections.js'
+import { links } from '../data/about.js'
 import useParallax from '../hooks/useParallax.js'
 import useMusic from '../hooks/useMusic.js'
 import { prefetchAllSectionVideos, prefetchSectionVideo, useSectionTransition } from '../components/SectionTransition.jsx'
@@ -19,6 +20,12 @@ import '../styles/map.css'
 // How far (px) the map drifts at the screen edges.
 const MAP_SHIFT = 14
 const ease = [0.22, 1, 0.36, 1]
+
+const SOCIAL = [
+  ['LinkedIn', links.linkedin, '/images/icons/linkedin.svg'],
+  ['Behance', links.behance, '/images/icons/behance.svg'],
+  ['Instagram', links.instagram, '/images/icons/instagram.svg'],
+].filter(([, url]) => url)
 
 export default function Map() {
   const [night, setNight] = useState(false)
@@ -178,18 +185,12 @@ export default function Map() {
         </a>
 
         <div className="social-row">
-          <a className="social-chip" href="#" target="_blank" rel="noreferrer">
-            <img src="/images/icons/linkedin.svg" alt="" />
-            Linkedin
-          </a>
-          <a className="social-chip" href="#" target="_blank" rel="noreferrer">
-            <img src="/images/icons/behance.svg" alt="" />
-            Behance
-          </a>
-          <a className="social-chip" href="#" target="_blank" rel="noreferrer">
-            <img src="/images/icons/instagram.svg" alt="" />
-            instagram
-          </a>
+          {SOCIAL.map(([name, url, icon]) => (
+            <a key={name} className="social-chip" href={url} target="_blank" rel="noreferrer">
+              <img src={icon} alt="" />
+              {name}
+            </a>
+          ))}
         </div>
       </aside>
 

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
-import caseStudies, { BEHANCE_PROFILE, getCaseStudy } from '../../data/caseStudies.js'
+import { BEHANCE_PROFILE, getCaseStudy, realCaseStudies as caseStudies } from '../../data/caseStudies.js'
 import { Lines, Rise, ease } from '../../components/reveal.jsx'
 import { CoverFlight, rectOf, useOpenCase } from './flight.jsx'
 

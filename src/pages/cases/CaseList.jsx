@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import caseStudies from '../../data/caseStudies.js'
 import { useOpenCase } from './flight.jsx'
@@ -24,6 +25,7 @@ export default function CaseList() {
 
   useEffect(() => {
     caseStudies.forEach((c) => {
+      if (!c.cover) return
       const img = new Image()
       img.src = c.cover
     })
@@ -59,6 +61,12 @@ export default function CaseList() {
 
 function Card({ study, i, pos, onFocus }) {
   const open = useOpenCase()
+  const navigate = useNavigate()
+  const goTo = (to) => (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+    e.preventDefault()
+    navigate(to)
+  }
   const shot = useRef(null)
   const ref = useRef(null)
   // d: how far this card is from the front (0 = in front, ±1 = one step above/below)
@@ -78,8 +86,10 @@ function Card({ study, i, pos, onFocus }) {
 
   // a case with its own `link` opens that straight away, in a new tab
   const href = study.link || `/case-study/${study.slug}`
-  const ext = study.link ? { target: '_blank', rel: 'noreferrer' } : {}
-  const openIt = study.link ? undefined : open(study, () => shot.current)
+  const external = /^https?:/.test(href)
+  const ext = external ? { target: '_blank', rel: 'noreferrer' } : {}
+  // external links open in a new tab; the coming-soon card goes to its page here; the rest play the open animation
+  const openIt = external ? undefined : study.link ? goTo(href) : open(study, () => shot.current)
 
   return (
     <motion.article
@@ -96,7 +106,20 @@ function Card({ study, i, pos, onFocus }) {
       }}
     >
       <a href={href} className="sk-shot" onClick={openIt} tabIndex={-1} aria-hidden="true" {...ext}>
-        <img ref={shot} src={study.cover} alt="" style={{ objectPosition: study.focus }} />
+        {study.comingSoon ? (
+          <span className="sk-soon">
+            <span className="sk-soon-flag" />
+            <span className="sk-soon-tag">In the garage</span>
+            <span className="sk-soon-title">
+              Coming
+              <br />
+              soon<i>.</i>
+            </span>
+            <span className="sk-soon-note">Case study 03 · 2026</span>
+          </span>
+        ) : (
+          <img ref={shot} src={study.cover} alt="" style={{ objectPosition: study.focus }} />
+        )}
       </a>
       <div className="sk-info">
         <p className="sk-index">
@@ -111,7 +134,7 @@ function Card({ study, i, pos, onFocus }) {
           {study.category} · {study.year}
         </p>
         <a href={href} className="sk-btn" onClick={openIt} {...ext}>
-          View case study <span aria-hidden="true">{study.link ? '↗' : '→'}</span>
+          {study.comingSoon ? 'Take a peek' : 'View case study'} <span aria-hidden="true">{external ? '↗' : '→'}</span>
         </a>
       </div>
       <motion.span className="sk-veil" style={{ opacity: veil }} aria-hidden="true" />

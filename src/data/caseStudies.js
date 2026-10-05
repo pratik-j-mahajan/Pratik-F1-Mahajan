@@ -3,7 +3,8 @@
 
   All copy below is placeholder written to be replaced — keep it short; the pages are
   overviews, not articles. Full write-ups live on Behance (paste each link into `behance`).
-  `link`: when set, the card's "View case study" opens that URL in a new tab instead of the page here.
+  `link`: when set, the card's "View case study" opens that URL (external links open in a new tab).
+  `comingSoon`: a placeholder card with no cover; its `link` goes to the 404 page for now.
 
   `cover`    the project's key visual (in /public/images/cases), shown at 16:10
   `accent`   the project's colour
@@ -16,8 +17,38 @@ export const BEHANCE_PROFILE = 'https://www.behance.net/' // ← your Behance pr
 
 const caseStudies = [
   {
-    slug: 'my-things',
+    slug: 'united-upi',
     index: '01',
+    name: 'United UPI',
+    category: 'Fintech · UX case study',
+    oneLiner: 'One view of spending across every UPI app.',
+    headline: 'Digital India pays widely. But tracks partially.',
+    role: 'UX designer',
+    timeline: '10 weeks',
+    year: '2026',
+    cover: '/images/cases/united-upi.webp',
+    accent: '#ff6a1a',
+    streak: '66%',
+    focus: '54% 45%',
+    behance: 'https://pratik-j-mahajan.github.io/UNITED-UPI---Case-Study/',
+    link: 'https://pratik-j-mahajan.github.io/UNITED-UPI---Case-Study/', // the card's "View case study" opens this directly
+    problem:
+      'Payments are spread across PhonePe, Google Pay, BHIM and more. Nobody has a clear picture of what they spent, what they owe or which cashback is about to expire.',
+    approach: {
+      intro: 'Designed around three everyday jobs.',
+      decisions: [
+        { title: 'See everything', body: 'Clear visibility of money spent across all UPI apps, in one timeline.' },
+        { title: 'Split across apps', body: 'Easy, seamless bill splitting — whichever app your friends use.' },
+        { title: 'Never miss cashback', body: 'Timely cashback awareness before it expires.' },
+      ],
+    },
+    screens: [],
+    outcome:
+      'A single place to see, split and track money across every UPI app — built on real payment behaviour in India.',
+  },
+  {
+    slug: 'my-things',
+    index: '02',
     name: 'My Things',
     category: 'Mobile app · Product design',
     oneLiner: 'A simple way to remember everything you own.',
@@ -46,66 +77,22 @@ const caseStudies = [
       'A focused, low-effort way to catalogue belongings and find them again — designed end to end, from first capture to reminders.',
   },
   {
-    slug: 'clario',
-    index: '02',
-    name: 'Clario',
-    category: 'Dashboard · Conceptual',
-    oneLiner: 'A minimal productivity dashboard for creatives.',
-    headline: 'Focus, projects and time — without the clutter.',
-    role: 'Product designer',
-    timeline: '6 weeks',
-    year: '2025',
-    cover: '/images/cases/clario.webp',
-    accent: '#35b88f',
-    streak: '30%',
-    focus: '50% 50%',
-    behance: '',
-    problem:
-      'Most productivity tools are built for managers. Creatives end up juggling boards, timers and notes that pull attention away from the work itself.',
-    approach: {
-      intro: 'Three decisions shaped the dashboard.',
-      decisions: [
-        { title: 'One screen, one day', body: 'The home view answers a single question: what am I making today?' },
-        { title: 'Time as a material', body: 'Focus sessions sit next to the projects they belong to, not in a separate tool.' },
-        { title: 'Calm visual system', body: 'Soft colour, generous type and almost no chrome keep the interface out of the way.' },
-      ],
-    },
-    screens: [],
-    outcome:
-      'A minimal dashboard concept that keeps attention on creative work — from information architecture to the visual language.',
-  },
-  {
-    slug: 'united-upi',
+    // placeholder card: no page yet — its button leads to the 404 page
+    slug: 'coming-soon',
     index: '03',
-    name: 'United UPI',
-    category: 'Fintech · UX case study',
-    oneLiner: 'One view of spending across every UPI app.',
-    headline: 'Digital India pays widely. But tracks partially.',
-    role: 'UX designer',
-    timeline: '10 weeks',
+    comingSoon: true,
+    name: 'Coming soon',
+    category: 'Case study · In the garage',
+    oneLiner: 'Something new is being built in the garage. Check back soon.',
     year: '2026',
-    cover: '/images/cases/united-upi.webp',
-    accent: '#ff6a1a',
-    streak: '66%',
-    focus: '54% 45%',
-    behance: 'https://pratik-j-mahajan.github.io/UNITED-UPI---Case-Study/',
-    link: 'https://pratik-j-mahajan.github.io/UNITED-UPI---Case-Study/', // the card's "View case study" opens this directly
-    problem:
-      'Payments are spread across PhonePe, Google Pay, BHIM and more. Nobody has a clear picture of what they spent, what they owe or which cashback is about to expire.',
-    approach: {
-      intro: 'Designed around three everyday jobs.',
-      decisions: [
-        { title: 'See everything', body: 'Clear visibility of money spent across all UPI apps, in one timeline.' },
-        { title: 'Split across apps', body: 'Easy, seamless bill splitting — whichever app your friends use.' },
-        { title: 'Never miss cashback', body: 'Timely cashback awareness before it expires.' },
-      ],
-    },
-    screens: [],
-    outcome:
-      'A single place to see, split and track money across every UPI app — built on real payment behaviour in India.',
+    cover: '',
+    accent: '#e10600',
+    link: '/coming-soon',
   },
 ]
 
-export const getCaseStudy = (slug) => caseStudies.find((c) => c.slug === slug)
+export const getCaseStudy = (slug) => caseStudies.find((c) => c.slug === slug && !c.comingSoon)
+// the case pages (prev / next) only step through real case studies
+export const realCaseStudies = caseStudies.filter((c) => !c.comingSoon)
 
 export default caseStudies

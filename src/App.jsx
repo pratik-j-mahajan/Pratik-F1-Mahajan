@@ -18,6 +18,7 @@ const pages = {
   content: () => import('./pages/Content.jsx'),
   contact: () => import('./pages/Contact.jsx'),
   resume: () => import('./pages/Resume.jsx'),
+  notFound: () => import('./pages/NotFound.jsx'),
 }
 const Map = lazy(pages.map)
 const About = lazy(pages.about)
@@ -28,6 +29,7 @@ const Projects = lazy(pages.projects)
 const Content = lazy(pages.content)
 const Contact = lazy(pages.contact)
 const Resume = lazy(pages.resume)
+const NotFound = lazy(pages.notFound)
 
 function usePrefetchPages() {
   useEffect(() => {
@@ -88,6 +90,7 @@ export default function App() {
               <Route path="/content" element={<Content />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/resume" element={<Resume />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
             </Suspense>
           </main>

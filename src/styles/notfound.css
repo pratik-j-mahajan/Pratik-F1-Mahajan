@@ -1,0 +1,162 @@
+/* 404 (pages/NotFound.jsx) — red flag, DNF on the timing board */
+.nf {
+  min-height: 100svh;
+  background:
+    radial-gradient(ellipse 50% 45% at 50% 30%, rgba(225, 6, 0, 0.08), transparent 70%),
+    radial-gradient(circle, rgba(17, 18, 20, 0.06) 1px, transparent 1.3px) 0 0 / 24px 24px,
+    #fff;
+}
+
+.nf-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(36px, 7vh, 80px) var(--pad) 64px;
+  text-align: center;
+}
+
+.nf-board {
+  width: min(100%, 520px);
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--ink);
+  color: #fff;
+  box-shadow: 0 30px 60px -30px rgba(17, 18, 20, 0.5);
+}
+
+.nf-flag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: var(--red);
+  font-family: var(--timing);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nf-flag i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  animation: nf-blink 1s steps(2, start) infinite;
+}
+
+@keyframes nf-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.nf-code {
+  padding: 18px 0 6px;
+  font-family: var(--timing);
+  font-size: clamp(96px, 16vw, 168px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.nf-code span {
+  color: var(--red);
+}
+
+.nf-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  margin: 12px 16px 16px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  font-family: var(--timing);
+  font-weight: 700;
+  text-align: left;
+}
+
+.nf-pos {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--red);
+  font-size: 13px;
+}
+
+.nf-name {
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.nf-status {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.nf-title {
+  margin-top: clamp(32px, 5vh, 48px);
+  font-size: clamp(32px, 4.6vw, 56px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.nf-sub {
+  max-width: 480px;
+  margin-top: 14px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.nf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 24px;
+  margin-top: 28px;
+}
+
+.nf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.nf-btn:hover {
+  background: #b80500;
+  transform: translateY(-1px);
+}
+
+.nf-link {
+  padding-bottom: 2px;
+  border-bottom: 1.5px solid currentColor;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-flag i {
+    animation: none;
+  }
+}
