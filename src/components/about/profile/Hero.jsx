@@ -78,6 +78,15 @@ export default function Hero({ from, delay = 0 }) {
             <dt>Currently</dt>
             <dd>{profile.now}</dd>
           </div>
+          <div className="abx-facts-edu">
+            <dt>Education</dt>
+            <dd>
+              {profile.education.degree}
+              <small>
+                {profile.education.school} · Batch of {profile.education.batch}
+              </small>
+            </dd>
+          </div>
         </Rise>
       </div>
 

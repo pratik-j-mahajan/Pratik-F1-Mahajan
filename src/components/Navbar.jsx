@@ -5,7 +5,7 @@ import BackButton from './BackButton.jsx'
 export default function Navbar() {
   const { pathname } = useLocation()
   // About, Content, Resume and Case Study are full-screen with their own headers
-  if (pathname === '/about' || pathname === '/content' || pathname === '/resume' || pathname.startsWith('/case-study')) return null
+  if (pathname === '/about' || pathname === '/content' || pathname === '/resume' || pathname === '/contact' || pathname.startsWith('/case-study')) return null
 
   const home = pathname === '/'
   // The map keeps only the white strip — its logo lives in the sidebar

@@ -276,6 +276,21 @@
   font-variant-numeric: tabular-nums;
 }
 
+.abx-facts-edu {
+  grid-column: 1 / -1;
+}
+
+.abx-facts-edu dd {
+  display: grid;
+  gap: 2px;
+}
+
+.abx-facts-edu small {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
 .abx-live {
   width: 6px;
   height: 6px;
