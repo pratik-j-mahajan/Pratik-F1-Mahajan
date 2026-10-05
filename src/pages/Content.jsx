@@ -249,15 +249,16 @@ function Analytics() {
 
 // the notification bell keeps ringing — one new item every few seconds
 const NOTES = (() => {
-  const top = [...posts].sort((a, b) => b.impressions - a.impressions)
+  const latest = [...posts].sort((a, b) => b.date.localeCompare(a.date))[0]
+  const short = latest ? latest.hook.replace(/[“”"]/g, '').slice(0, 30).trim() + '…' : ''
+  const followers = season.totals.find((t) => t.label === 'New followers')?.value
   return [
-    { icon: '🔥', bg: '#fff1e6', text: <>Your post is trending — <b>{compact(top[0].impressions)}</b> impressions</> },
-    { icon: '👏', bg: '#eaf6e4', text: <>Aman and <b>{(top[1].reactions - 1).toLocaleString('en-US')}</b> others reacted to your post</> },
-    { icon: '➕', bg: '#e8f1fb', text: <><b>{season.totals.find((t) => t.label === 'New followers')?.value || '+6.8K'}</b> new followers this season</> },
-    { icon: '💬', bg: '#f1ecfb', text: <><b>{top[0].comments}</b> comments on your case study post</> },
-    { icon: '🔁', bg: '#e6f7f4', text: <>Your post was reposted <b>34</b> times</> },
-    { icon: '👀', bg: '#fdf3d9', text: <>Recruiters from <b>12</b> companies viewed your profile</> },
-  ]
+    latest && { icon: '👏', bg: '#eaf6e4', text: <><b>{latest.reactions.toLocaleString('en-US')}</b> people reacted to your latest post</> },
+    latest && { icon: '💬', bg: '#f1ecfb', text: <><b>{latest.comments}</b> comments on “{short}”</> },
+    followers && { icon: '➕', bg: '#e8f1fb', text: <><b>{followers}</b> new followers this season</> },
+    { icon: '🔥', bg: '#fff1e6', text: <>Your posts passed <b>1M</b> impressions</> },
+    { icon: '✍️', bg: '#fdf3d9', text: <>New post: <b>{latest ? latest.topic : 'design'}</b> — out now</> },
+  ].filter(Boolean)
 })()
 
 function Notifications() {
@@ -491,12 +492,14 @@ function Work() {
     [topic],
   )
   // the newest post runs double-width only when that leaves the three-column grid with full rows
-  const featured = topic === 'All' && list.length % 3 === 2
+  const hasEmbeds = posts.some((p) => p.embed)
+  const featured = !hasEmbeds && topic === 'All' && list.length % 3 === 2
 
   return (
     <section className="lk-sec lk-work" aria-labelledby="lk-work-title">
       <SecHead n="01" label="The work" sub="carousels, breakdowns and notes from the feed" title="Posts I’ve made" id="lk-work-title" />
 
+      {topics.length > 2 && (
       <div className="lk-chips" role="tablist" aria-label="Filter posts by topic">
         <LayoutGroup id="lk-chips">
           {topics.map((t) => (
@@ -507,8 +510,9 @@ function Work() {
           ))}
         </LayoutGroup>
       </div>
+      )}
 
-      <motion.ul layout className={`lk-wall${featured ? ' is-featured' : ''}`}>
+      <motion.ul layout className={`lk-wall${featured ? ' is-featured' : ''}${hasEmbeds ? ' has-embeds' : ''}`}>
         <AnimatePresence mode="popLayout" initial={false}>
           {list.map((p, i) => (
             <motion.li
@@ -520,12 +524,65 @@ function Work() {
               exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.18 } }}
               transition={{ type: 'spring', stiffness: 260, damping: 28 }}
             >
-              <PostTile p={p} big={featured && i === 0} delay={i * 0.06} />
+              {p.embed ? <EmbedTile p={p} delay={i * 0.06} /> : <PostTile p={p} big={featured && i === 0} delay={i * 0.06} />}
             </motion.li>
           ))}
         </AnimatePresence>
       </motion.ul>
     </section>
+  )
+}
+
+// the real LinkedIn post as a preview card: LinkedIn's collapsed view (two lines of text + the
+// image), rendered at its native 504px and scaled to the card, clipped to one height; click opens the post
+const EMBED_W = 504
+const collapsed = (src) => (src.includes('collapsed=') ? src : `${src}${src.includes('?') ? '&' : '?'}collapsed=1`)
+
+function EmbedTile({ p, delay }) {
+  const box = useRef(null)
+  const [ready, setReady] = useState(false)
+  const [scale, setScale] = useState(0)
+
+  useEffect(() => {
+    const el = box.current
+    const ro = new ResizeObserver(([e]) => setScale(e.contentRect.width / EMBED_W))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  return (
+    <Rise className="lk-tile-wrap" delay={delay}>
+      <a className="lk-embed" href={postUrl(p)} target="_blank" rel="noreferrer" aria-label={`${p.hook} — open on LinkedIn`}>
+        <span ref={box} className={`lk-embed-frame${ready ? ' is-ready' : ''}`}>
+          {!ready && (
+            <span className="lk-embed-wait" aria-hidden="true">
+              <InIcon /> Loading…
+            </span>
+          )}
+          {scale > 0 && (
+            <iframe
+              src={collapsed(p.embed)}
+              title={`LinkedIn post: ${p.hook}`}
+              loading="lazy"
+              tabIndex={-1}
+              style={{ transform: `scale(${scale})` }}
+              onLoad={() => setReady(true)}
+            />
+          )}
+          <span className="lk-embed-fade" aria-hidden="true" />
+          <span className="lk-tile-open" aria-hidden="true">
+            <InIcon /> View post
+          </span>
+        </span>
+        <span className="lk-tile-meta">
+          <span className="lk-tile-tag">
+            <i className="lk-topic lk-topic--navy" />
+            {p.topic}
+          </span>
+          <span className="lk-tile-date">{fmtDate(p.date)}</span>
+        </span>
+      </a>
+    </Rise>
   )
 }
 
@@ -563,54 +620,50 @@ function PostTile({ p, big, delay }) {
 
 /* ------------------------------------------------------------------ 04 · follow */
 
+// the chequered flag: a full-width black finish panel, like the stats bar under the hero
 function FollowCard() {
-  const fan = [...posts].sort((a, b) => score(b) - score(a)).slice(0, 3)
+  const topics = [...new Set(posts.map((p) => p.topic))].slice(0, 3)
+  const followers = season.totals.find((t) => t.label === 'New followers')?.value
   return (
-    <section className="lk-sec lk-sec--last">
-      <div className="lk-cta">
-        <span className="lk-cta-chequer" aria-hidden="true" />
-        <div className="lk-cta-copy">
-          <p className="lk-label lk-label--light">
-            <i className="lk-live" /> Season 01 · still running
-          </p>
-          <Rise as="h2" className="lk-cta-title">
-            Next post drops <em>this week.</em>
-          </Rise>
-          <Rise as="p" className="lk-cta-sub" delay={0.05}>
-            Design breakdowns, UX teardowns and the honest bits of building in public. Grab a seat on the grid.
-          </Rise>
-          <Rise className="lk-cta-btns" delay={0.1}>
-            <a className="lk-btn lk-btn--light" href={LINKEDIN_PROFILE} target="_blank" rel="noreferrer">
-              <InIcon /> Follow on LinkedIn
-            </a>
-            <span className="lk-cta-meta">
-              <span className="lk-reacts" aria-hidden="true">
-                {REACTIONS.slice(0, 3).map((r) => (
-                  <i key={r.k} style={{ background: r.bg }}>
-                    {r.icon}
-                  </i>
-                ))}
-              </span>
-              {season.totals.find((t) => t.label === 'New followers')?.value} joined this season
-            </span>
-          </Rise>
-        </div>
-        <div className="lk-cta-fan" aria-hidden="true">
-          {fan.map((p, i) => (
-            <motion.span
-              key={p.id}
-              className={`lk-cta-card lk-cta-card--${i}`}
-              initial={{ opacity: 0, y: 40, rotate: 0 }}
-              whileInView={{ opacity: 1, y: 0, rotate: [-9, 2, 11][i] }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ type: 'spring', stiffness: 120, damping: 16, delay: i * 0.08 }}
-              whileHover={{ y: -12, rotate: 0, zIndex: 5 }}
-            >
-              <Thumb p={p} />
-            </motion.span>
-          ))}
-          <img className="lk-cta-face" src="/images/content/pratik-sticker-full.webp" alt="" loading="lazy" />
-        </div>
+    <section className="lk-finish" aria-labelledby="lk-follow-title">
+      <span className="lk-finish-flag lk-finish-flag--l" aria-hidden="true" />
+      <span className="lk-finish-flag lk-finish-flag--r" aria-hidden="true" />
+
+      <div className="lk-finish-in">
+        <Rise as="p" className="lk-label lk-finish-label">
+          <i className="lk-live" /> Season 01 · still running
+        </Rise>
+        <Rise as="h2" id="lk-follow-title" className="lk-finish-title" delay={0.05}>
+          See you on the <em>feed.</em>
+        </Rise>
+        <Rise as="p" className="lk-finish-sub" delay={0.1}>
+          Design breakdowns, UX teardowns and the honest bits of building in public.
+        </Rise>
+        <Rise className="lk-finish-btns" delay={0.15}>
+          <a className="lk-btn lk-btn--light" href={LINKEDIN_PROFILE} target="_blank" rel="noreferrer">
+            <InIcon /> Follow on LinkedIn
+          </a>
+          <a className="lk-finish-link" href={`${LINKEDIN_PROFILE}recent-activity/all/`} target="_blank" rel="noreferrer">
+            All posts <span aria-hidden="true">↗</span>
+          </a>
+        </Rise>
+
+        <Rise as="dl" className="lk-finish-info" delay={0.2}>
+          <div>
+            <dt>Cadence</dt>
+            <dd>Most weeks</dd>
+          </div>
+          <div>
+            <dt>On track</dt>
+            <dd>{topics.join(' · ')}</dd>
+          </div>
+          {followers && (
+            <div>
+              <dt>Joined this season</dt>
+              <dd>{followers}</dd>
+            </div>
+          )}
+        </Rise>
       </div>
     </section>
   )
