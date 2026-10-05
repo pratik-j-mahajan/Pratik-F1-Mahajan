@@ -20,7 +20,7 @@ export const LINKEDIN_PROFILE = 'https://www.linkedin.com/in/pratik-j-mahajan/'
 export const author = {
   name: 'Pratik Mahajan',
   role: 'Product designer',
-  avatar: '/images/about/pratik-id.jpg',
+  avatar: '/images/about/pratik-id.webp',
 }
 
 export const season = {

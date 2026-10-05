@@ -133,7 +133,7 @@ export default function Home() {
           </motion.p>
 
           <motion.div className="hero-driver" {...rise(0.2)}>
-            <img src="/images/driver.webp" alt="Pratik Mahajan" />
+            <img src="/images/driver.webp" alt="Pratik Mahajan" fetchPriority="high" />
             <div className="hero-driver-fade" />
           </motion.div>
 

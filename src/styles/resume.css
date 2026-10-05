@@ -1,0 +1,144 @@
+/* Resume (pages/Resume.jsx) — the PDF on a desk, with a download button */
+.rs {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle, rgba(17, 18, 20, 0.06) 1px, transparent 1.3px) 0 0 / 24px 24px,
+    #f3f3f0;
+}
+
+.rs-main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px) var(--pad) 56px;
+}
+
+.rs-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.rs-title {
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.rs-meta {
+  margin-top: 8px;
+  font-family: var(--timing);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rs-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.rs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.rs-btn:hover {
+  background: var(--red);
+  transform: translateY(-1px);
+}
+
+.rs-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rs-btn--big {
+  padding: 12px 22px;
+  background: var(--red);
+}
+
+.rs-btn--big:hover {
+  background: #b80500;
+}
+
+.rs-link {
+  padding-bottom: 2px;
+  border-bottom: 1.5px solid currentColor;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rs-link:hover {
+  color: var(--red);
+}
+
+/* the pages, as one sheet of paper */
+.rs-paper {
+  overflow: hidden;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(17, 18, 20, 0.06),
+    0 30px 60px -30px rgba(17, 18, 20, 0.35);
+}
+
+.rs-paper img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rs-paper img + img {
+  border-top: 1px dashed #e4e4e0;
+}
+
+.rs-foot {
+  margin-top: 18px;
+  font-size: 13px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.rs-foot a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .rs-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .rs-actions {
+    width: 100%;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+  .cw-nav-right .rs-btn {
+    display: none;
+  }
+}

@@ -128,7 +128,7 @@ export function PassFront() {
 
       <div className="pf-mid">
         <div className="pf-photo">
-          <img src="/images/about/pratik-id.jpg" alt="Pratik Mahajan" />
+          <img src="/images/about/pratik-id.webp" alt="Pratik Mahajan" />
         </div>
         <div className="pf-side">
           <p className="pf-num">06</p>

@@ -11,7 +11,7 @@ export const profile = {
   country: 'IND',
   base: 'Pune, India',
   timeZone: 'Asia/Kolkata',
-  photo: '/images/about/pratik-id.jpg',
+  photo: '/images/about/pratik-id.webp',
   // one line per row of the big headline
   headline: ['I turn messy ideas', 'into interfaces', 'people enjoy'],
   intro: 'Product designer based in Pune, India. Only argues with Figma auto-layout occasionally.',

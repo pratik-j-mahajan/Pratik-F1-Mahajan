@@ -76,8 +76,10 @@ function Card({ study, i, pos, onFocus }) {
     if (ref.current) ref.current.dataset.front = Math.abs(v) < 0.5 ? 'true' : 'false'
   })
 
-  const href = `/case-study/${study.slug}`
-  const openIt = open(study, () => shot.current)
+  // a case with its own `link` opens that straight away, in a new tab
+  const href = study.link || `/case-study/${study.slug}`
+  const ext = study.link ? { target: '_blank', rel: 'noreferrer' } : {}
+  const openIt = study.link ? undefined : open(study, () => shot.current)
 
   return (
     <motion.article
@@ -93,7 +95,7 @@ function Card({ study, i, pos, onFocus }) {
         }
       }}
     >
-      <a href={href} className="sk-shot" onClick={openIt} tabIndex={-1} aria-hidden="true">
+      <a href={href} className="sk-shot" onClick={openIt} tabIndex={-1} aria-hidden="true" {...ext}>
         <img ref={shot} src={study.cover} alt="" style={{ objectPosition: study.focus }} />
       </a>
       <div className="sk-info">
@@ -108,8 +110,8 @@ function Card({ study, i, pos, onFocus }) {
         <p className="sk-cat">
           {study.category} · {study.year}
         </p>
-        <a href={href} className="sk-btn" onClick={openIt}>
-          View case study <span aria-hidden="true">→</span>
+        <a href={href} className="sk-btn" onClick={openIt} {...ext}>
+          View case study <span aria-hidden="true">{study.link ? '↗' : '→'}</span>
         </a>
       </div>
       <motion.span className="sk-veil" style={{ opacity: veil }} aria-hidden="true" />

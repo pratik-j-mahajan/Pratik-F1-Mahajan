@@ -3,6 +3,7 @@
 
   All copy below is placeholder written to be replaced — keep it short; the pages are
   overviews, not articles. Full write-ups live on Behance (paste each link into `behance`).
+  `link`: when set, the card's "View case study" opens that URL in a new tab instead of the page here.
 
   `cover`    the project's key visual (in /public/images/cases), shown at 16:10
   `accent`   the project's colour
@@ -28,7 +29,8 @@ const caseStudies = [
     accent: '#1f6bff',
     streak: '58%',
     focus: '50% 40%',
-    behance: '',
+    behance: 'https://www.behance.net/gallery/256063241/My-Things',
+    link: 'https://www.behance.net/gallery/256063241/My-Things', // the card's "View case study" opens this directly
     problem:
       'Receipts, warranties and where things are kept end up scattered across notes, photos and memory — so the moment you need something, the details are gone.',
     approach: {
@@ -86,7 +88,8 @@ const caseStudies = [
     accent: '#ff6a1a',
     streak: '66%',
     focus: '54% 45%',
-    behance: '',
+    behance: 'https://pratik-j-mahajan.github.io/UNITED-UPI---Case-Study/',
+    link: 'https://pratik-j-mahajan.github.io/UNITED-UPI---Case-Study/', // the card's "View case study" opens this directly
     problem:
       'Payments are spread across PhonePe, Google Pay, BHIM and more. Nobody has a clear picture of what they spent, what they owe or which cashback is about to expire.',
     approach: {

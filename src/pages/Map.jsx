@@ -28,11 +28,18 @@ export default function Map() {
   const [cardId, setCardId] = useState(sections[0].id)
   const navigate = useNavigate()
 
-  // once the map has settled, start downloading the section videos in the background
+  // the day map comes first; once it's in, fetch the night map, then (a moment later) the
+  // section videos — so nothing in the background competes with what's on screen
+  const [mapReady, setMapReady] = useState(false)
+  const [nightLoaded, setNightLoaded] = useState(false)
   useEffect(() => {
-    const t = setTimeout(() => prefetchAllSectionVideos(sections.map((s) => s.video)), 1500)
+    if (!mapReady) return
+    const t = setTimeout(() => prefetchAllSectionVideos(sections.map((s) => s.video)), 2500)
     return () => clearTimeout(t)
-  }, [])
+  }, [mapReady])
+  useEffect(() => {
+    if (night) setNightLoaded(true)
+  }, [night])
   const music = useMusic()
   const parallax = useParallax(MAP_SHIFT)
   const playTransition = useSectionTransition()
@@ -71,7 +78,17 @@ export default function Map() {
         animate={{ filter: isList ? 'blur(6px) brightness(0.55)' : 'blur(0px) brightness(1)' }}
         transition={{ duration: 0.5 }}
       >
-        <img className="map-img" src="/images/map-day.webp" alt="Circuit map" />
+        <img
+          className="map-img"
+          src="/images/map-day.webp"
+          alt="Circuit map"
+          fetchPriority="high"
+          onLoad={() => {
+            setMapReady(true)
+            setNightLoaded(true)
+          }}
+        />
+        {nightLoaded && (
         <motion.img
           className="map-img"
           src="/images/map-night.webp"
@@ -80,6 +97,7 @@ export default function Map() {
           animate={{ opacity: night ? 1 : 0 }}
           transition={{ duration: 0.8 }}
         />
+        )}
 
         {/* a light shade so the markers read against the busy aerial photo */}
         {!isList && <span className="map-shade" aria-hidden="true" />}
