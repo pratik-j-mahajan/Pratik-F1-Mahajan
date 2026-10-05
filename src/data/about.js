@@ -35,7 +35,7 @@ export const disciplines = [
   { name: 'Product Design', tools: ['Figma', 'Framer'] },
   { name: 'Visual Design', tools: ['Figma', 'Canva', 'Illustrator'] },
   { name: 'User Experience', tools: ['Figma', 'Framer'] },
-  { name: 'User Interface', tools: ['Figma', 'Framer', 'LottieFiles', 'After Effects'] },
+  { name: 'User Interface', tools: ['Figma', 'Framer', 'LottieFiles'] },
 ]
 
 // Social links shown in the footer. Empty ones are hidden.

@@ -1,12 +1,11 @@
-import { siFigma, siFramer, siLottiefiles } from 'simple-icons'
+import { siFramer, siLottiefiles } from 'simple-icons'
 
 // The tools on the About ticket — only the ones in daily use. `icon` is a simple-icons entry;
-// Adobe apps and Canva aren't in simple-icons, so they use a lettered `badge`.
+// `logo` is the brand's own full-colour mark (in /public/images/tools); Adobe apps use a lettered `badge`.
 export const tools = [
-  { name: 'Figma', icon: siFigma },
+  { name: 'Figma', logo: '/images/tools/figma.svg', brand: '#F24E1E' },
   { name: 'Framer', icon: siFramer },
   { name: 'LottieFiles', icon: siLottiefiles },
-  { name: 'Canva', badge: { text: 'Ca', fg: '#FFFFFF', bg: '#00C4CC' } },
+  { name: 'Canva', logo: '/images/tools/canva.svg', brand: '#00C4CC' },
   { name: 'Illustrator', badge: { text: 'Ai', fg: '#FF9A00', bg: '#330000' } },
-  { name: 'After Effects', badge: { text: 'Ae', fg: '#9999FF', bg: '#00005B' } },
 ]

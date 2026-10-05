@@ -150,9 +150,19 @@ export function Ticket() {
                 ))}
               </ul>
 
-              <div className="tk2-band-foot" aria-hidden="true">
-                <img src="/images/ticket/band-bottom.svg" alt="" />
-              </div>
+              {/* security print: faint guilloche + watermark, a foil hologram, and the small print */}
+              <span className="tk2-guilloche" aria-hidden="true" />
+              <span className="tk2-watermark" aria-hidden="true">
+                06
+              </span>
+              <span className="tk2-holo" aria-hidden="true">
+                <img src="/images/ticket/f1-logo.svg" alt="" />
+                <i>Official</i>
+              </span>
+              <p className="tk2-fine" aria-hidden="true">
+                <span>Admit one · Paddock &amp; grandstand</span>
+                <span>Non-transferable · Keep for the season</span>
+              </p>
             </div>
 
             {/* ---------- stub ---------- */}
@@ -204,11 +214,15 @@ export function Ticket() {
 }
 
 function Tool({ tool, state }) {
-  const style = tool.badge ? { '--brand': tool.badge.bg, '--brand-fg': tool.badge.fg } : { '--brand': `#${tool.icon.hex}` }
+  const style = tool.badge
+    ? { '--brand': tool.badge.bg, '--brand-fg': tool.badge.fg }
+    : { '--brand': tool.brand || `#${tool.icon.hex}` }
   return (
     <li className={`tk2-tool${state}`} style={style}>
       <span className="tk2-tool-icon">
-        {tool.badge ? (
+        {tool.logo ? (
+          <img src={tool.logo} alt="" />
+        ) : tool.badge ? (
           <span className="tk2-tool-badge">{tool.badge.text}</span>
         ) : (
           <svg viewBox="0 0 24 24" aria-hidden="true">

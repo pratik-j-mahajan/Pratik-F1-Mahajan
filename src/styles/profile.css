@@ -1027,3 +1027,320 @@
     margin-top: 8px;
   }
 }
+
+/* ---------------------------------------------------------------- ticket polish: a real printed pass */
+.tk-fit {
+  --paper: #fdfdfb;
+  --ink-t: #15161a;
+  --muted-t: #7a7d86;
+  --rule-t: #e6e5e0;
+}
+
+.tk2 {
+  filter: drop-shadow(0 34px 44px rgba(12, 20, 51, 0.14)) drop-shadow(0 1px 2px rgba(12, 20, 51, 0.12));
+}
+
+.tk2-stage {
+  color: var(--ink-t);
+  font-family: 'Titillium Web', var(--font);
+}
+
+/* type: F1-style for labels and values, monospace only for serials */
+.tk2-cap {
+  font-family: 'Titillium Web', var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-t);
+}
+
+.tk2-event {
+  font-family: 'Titillium Web', var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.tk2-event b {
+  font-weight: 700;
+}
+
+.tk2-name {
+  margin-top: 10px;
+  font-family: var(--font);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.tk2-role {
+  margin-top: 4px;
+  font-family: var(--font);
+  font-size: 14px;
+  letter-spacing: 0;
+  color: var(--muted-t);
+}
+
+.tk2-seat {
+  grid-template-columns: repeat(4, 72px);
+  margin-top: 24px;
+  overflow: hidden;
+  border: 1px solid var(--rule-t);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.tk2-seat div {
+  padding: 8px 12px 9px;
+  border-left: 1px solid var(--rule-t);
+}
+
+.tk2-seat dt {
+  font-family: 'Titillium Web', var(--font);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--muted-t);
+}
+
+.tk2-seat dd {
+  margin-top: 2px;
+  font-family: 'Titillium Web', var(--font);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink-t);
+}
+
+.tk2-seat div:first-child dd,
+.tk2-seat div:last-child dd {
+  color: var(--red-t);
+}
+
+/* tools: white chips with each tool's real brand colour */
+.tk2-tools ul {
+  gap: 8px;
+}
+
+.tk2-tool {
+  gap: 10px;
+  padding: 7px 10px 7px 7px;
+  border: 1px solid var(--rule-t);
+  border-radius: 10px;
+  background: #fff;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 1px 0 rgba(17, 18, 20, 0.03);
+  transition:
+    opacity 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.tk2-tool-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--brand) 12%, #fff);
+}
+
+.tk2-tool-icon svg {
+  fill: var(--brand);
+}
+
+.tk2-tool-badge {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--brand);
+  color: var(--brand-fg);
+  font-size: 10px;
+}
+
+.tk2-tool.is-lit,
+.tk2-tool:hover {
+  border-color: color-mix(in srgb, var(--brand) 45%, #fff);
+  box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--brand) 60%, transparent);
+  transform: translateY(-1px);
+}
+
+.tk2-tool.is-lit .tk2-tool-badge,
+.tk2-tool:hover .tk2-tool-badge {
+  border: 0;
+}
+
+/* access zones */
+.tk2-zones {
+  top: 284px;
+  border-top: 1px dashed #d9d8d2;
+}
+
+.tk2-zones button {
+  color: var(--ink-t);
+  font-family: 'Titillium Web', var(--font);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.tk2-zones button.is-on {
+  color: var(--red-t);
+}
+
+/* the navy foot band becomes a thin red rule with the small print */
+.tk2-band-foot {
+  display: none;
+}
+
+.tk2-fine {
+  left: 32px;
+  right: 28px;
+  top: 326px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding-top: 8px;
+  border-top: 2px solid var(--red-t);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a3a5ab;
+}
+
+/* faint security print behind everything */
+.tk2-guilloche {
+  left: 0;
+  top: 50px;
+  width: 712px;
+  height: 311px;
+  z-index: -1;
+  background:
+    repeating-radial-gradient(circle at 92% 30%, transparent 0 9px, rgba(225, 6, 0, 0.045) 9px 10px),
+    repeating-linear-gradient(135deg, transparent 0 7px, rgba(17, 18, 20, 0.018) 7px 8px);
+  -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 75%);
+  mask-image: linear-gradient(90deg, transparent 30%, #000 75%);
+  pointer-events: none;
+}
+
+.tk2-watermark {
+  right: 14px;
+  top: 96px;
+  z-index: -1;
+  font-family: 'Titillium Web', var(--font);
+  font-size: 190px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(17, 18, 20, 0.05);
+  pointer-events: none;
+}
+
+/* foil hologram sticker on the band */
+.tk2-holo {
+  right: 22px;
+  top: 9px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background:
+    linear-gradient(115deg, #e9e9ee 0%, #cfe8ff 18%, #f7d6ff 34%, #fff1c9 50%, #d2ffe9 66%, #d4e3ff 82%, #ececf2 100%);
+  background-size: 220% 100%;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6), 0 2px 6px rgba(0, 0, 0, 0.18);
+  animation: tk2-foil 6s ease-in-out infinite alternate;
+}
+
+.tk2-holo img {
+  width: 34px;
+  height: auto;
+  filter: brightness(0) opacity(0.55);
+}
+
+.tk2-holo i {
+  font-family: 'Titillium Web', var(--font);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(17, 18, 20, 0.55);
+}
+
+@keyframes tk2-foil {
+  to {
+    background-position: 100% 0;
+  }
+}
+
+.tk2:hover .tk2-holo {
+  animation-duration: 1.6s;
+}
+
+/* stub */
+.tk2-stub-title {
+  font-size: 24px;
+}
+
+.tk2-actions .ab-link {
+  color: var(--ink-t);
+  font-family: var(--font);
+}
+
+.tk2-code {
+  color: var(--ink-t);
+}
+
+.tk2-code span {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted-t);
+}
+
+@media (max-width: 760px) {
+  .tk2-guilloche,
+  .tk2-watermark {
+    display: none;
+  }
+  .tk2-holo {
+    display: none;
+  }
+  .tk2-fine {
+    position: static;
+    flex-direction: column;
+    gap: 2px;
+    margin: 10px 18px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk2-holo {
+    animation: none;
+  }
+}
+
+/* full-colour brand marks (Figma, Canva) sit on plain white */
+.tk2-tool-icon:has(img) {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--rule-t);
+}
+
+.tk2-tool-icon img {
+  display: block;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* Canva's mark is a round badge, so it can fill more of the tile */
+.tk2-tool-icon img[src*='canva'] {
+  width: 22px;
+  height: 22px;
+}
