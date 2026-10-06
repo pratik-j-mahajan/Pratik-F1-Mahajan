@@ -41,52 +41,76 @@ button {
   font: inherit;
 }
 
-/* Intro */
+/* Intro (components/Intro.jsx) — F1 red, the logo, a hairline, one line of type */
 .intro {
   position: fixed;
   inset: 0;
   z-index: 100;
+  display: grid;
+  place-items: center;
   overflow: hidden;
-  background: #000;
   pointer-events: none;
 }
 
-.intro-tile {
+.intro--still {
+  background: #e10600;
+}
+
+.intro-black {
+  position: absolute;
+  inset: 0;
+  background: #070708;
+}
+
+/* the red screen, in strips */
+.intro-strip {
   position: absolute;
   top: 0;
   height: 100%;
+  background: linear-gradient(180deg, #ec0a02, #e10600 50%, #c90500);
 }
 
-.intro-panel {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(ellipse at 50% 50%, #ff1a0d 0%, #e10600 45%, #a80400 100%);
+.intro-strip:nth-child(odd) {
+  background: linear-gradient(180deg, #e10600, #d80600 50%, #c40500);
 }
 
-.intro-fade {
-  position: absolute;
-  inset: 0;
-  background: #000;
+.intro-mark {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
 }
 
 .intro-logo {
-  width: clamp(180px, 24vw, 360px);
+  display: block;
+  width: clamp(150px, 15vw, 230px);
   height: auto;
   aspect-ratio: 4 / 1;
-  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.25));
 }
 
-.intro-speedline {
+.intro-rule {
   display: block;
-  width: clamp(220px, 32vw, 480px);
-  height: 3px;
-  margin-top: clamp(18px, 2.4vw, 32px);
-  background: linear-gradient(90deg, transparent, #fff 30%, #fff 70%, transparent);
-  transform-origin: left;
+  width: clamp(180px, 18vw, 280px);
+  height: 1px;
+  margin-top: clamp(22px, 2.4vw, 30px);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9) 25%, #fff 50%, rgba(255, 255, 255, 0.9) 75%, transparent);
+  transform-origin: 50% 50%;
+}
+
+.intro-caption {
+  margin: 18px 0 0;
+  padding-left: 0.38em;
+  font-family: 'Titillium Web', var(--font);
+  font-size: clamp(10px, 0.8vw, 12px);
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.intro-caption i {
+  font-style: normal;
+  color: #fff;
 }
 
 /* Top bar */

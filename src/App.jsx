@@ -40,7 +40,9 @@ function usePrefetchPages() {
 }
 import useSmoothScroll from './hooks/useSmoothScroll.js'
 
-const INTRO_DURATION = 2000
+const INTRO_DURATION = 2200
+// the site mounts just before the intro fades, so it's there (and animating in) as the intro dissolves
+const SITE_MOUNT_AT = 1700
 // New pages start at the top; Back/Forward and refreshes keep the browser's own scroll restoration.
 function ScrollManager() {
   const { pathname } = useLocation()
@@ -60,18 +62,23 @@ export default function App() {
   // The intro plays on every full page load: a refresh, a typed URL or an opened link.
   // Moving around inside the site never replays it.
   const [showIntro, setShowIntro] = useState(true)
+  const [siteReady, setSiteReady] = useState(false)
 
   useEffect(() => {
     if (!showIntro) return
+    const mount = setTimeout(() => setSiteReady(true), SITE_MOUNT_AT)
     const timer = setTimeout(() => setShowIntro(false), INTRO_DURATION)
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(mount)
+      clearTimeout(timer)
+    }
   }, [showIntro])
 
   return (
     <>
       <AnimatePresence>{showIntro && <Intro key="intro" />}</AnimatePresence>
 
-      {!showIntro && (
+      {siteReady && (
         <SectionTransitionProvider>
           <ScrollManager />
           <Navbar />
