@@ -45,14 +45,6 @@ export default function Contact() {
       quip: 'The proper channel. I actually read these — all the way to the end.',
       copy: true,
     },
-    {
-      k: 'phone',
-      label: 'Phone',
-      value: contact.phone,
-      href: `tel:${contact.phone.replace(/\s/g, '')}`,
-      quip: 'For things that are urgent. Or genuinely exciting. Ideally both.',
-      copy: true,
-    },
     links.linkedin && {
       k: 'linkedin',
       label: 'LinkedIn',

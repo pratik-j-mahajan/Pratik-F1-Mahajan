@@ -26,7 +26,6 @@ export const profile = {
 // Contact details — shown on /contact.
 export const contact = {
   email: 'mahajanpratik0612@gmail.com',
-  phone: '+91 7841099907',
 }
 
 // What I do — shown as the ticket's access zones. `tools` are names from src/data/skills.js;
