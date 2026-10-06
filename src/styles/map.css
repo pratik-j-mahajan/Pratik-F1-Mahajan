@@ -18,6 +18,8 @@
 /* ---------- Map ---------- */
 .map-layer {
   position: absolute;
+  /* a 0.5 KB blurred copy shows instantly while the full map loads over it */
+  background: #2a3a22 url('/images/map-day-tiny.webp') center / cover no-repeat;
   left: calc(-41 * var(--u));
   top: calc(-79 * var(--u));
   /* Figma: 1639 × 915, grown when needed so it always covers the screen */

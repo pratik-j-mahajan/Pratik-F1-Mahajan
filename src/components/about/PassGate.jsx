@@ -343,7 +343,7 @@ function GateNotes({ show }) {
       transition={{ duration: show ? 0.4 : 0.15 }}
     >
       {NOTES.map((n, i) => {
-        const delay = 1.15 + i * 0.32
+        const delay = 0.45 + i * 0.12
         return (
           <div key={i} className={`gate-note is-${n.side}`} style={{ top: `${n.top}%` }}>
             <svg className="gate-note-arrow" viewBox="0 0 70 40">
@@ -351,20 +351,20 @@ function GateNotes({ show }) {
                 d="M3 8 C 22 2, 44 6, 62 28"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 0.45, delay, ease: [0.6, 0, 0.3, 1] }}
+                transition={{ duration: 0.35, delay, ease: [0.6, 0, 0.3, 1] }}
               />
               <motion.path
                 d="M52 27 L63 29 L61 18"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 0.2, delay: delay + 0.4 }}
+                transition={{ duration: 0.18, delay: delay + 0.3 }}
               />
             </svg>
             <motion.p
               className="gate-note-text"
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: delay + 0.15, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.35, delay: delay + 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
               {n.text}
               <small>{n.sub}</small>

@@ -35,6 +35,18 @@ const readHintDone = () => {
   }
 }
 
+let mapWarmed = false
+function warmMap(priority) {
+  if (mapWarmed) return
+  mapWarmed = true
+  const img = new Image()
+  img.fetchPriority = priority
+  img.decoding = 'async'
+  img.src = '/images/map-day.webp'
+  // decode ahead too, so the first frame of the map paints without a hitch
+  img.decode?.().catch(() => {})
+}
+
 // START: the five lights come on one by one, go out — and away we go
 function useRaceStart() {
   const navigate = useNavigate()
@@ -55,9 +67,10 @@ function useRaceStart() {
     if (reduce) return navigate('/map')
     setRunning(true)
     const at = (ms, fn) => timers.current.push(setTimeout(fn, ms))
-    for (let i = 1; i <= 5; i++) at(i * 200, () => setLit(i))
-    at(1000 + 350, () => setLit(0)) // lights out
-    at(1000 + 550, () => navigate('/map'))
+    // quick, like the real thing: five lights in half a second, lights out, go
+    for (let i = 1; i <= 5; i++) at(i * 100, () => setLit(i))
+    at(500 + 120, () => setLit(0)) // lights out
+    at(500 + 220, () => navigate('/map'))
   }, [running, reduce, navigate])
 
   return { lit, running, start }
@@ -75,6 +88,13 @@ export default function Home() {
   const [hint, setHint] = useState(false)
 
   // first-time visitors get a short "how this works" card after a moment
+  // the map is the next stop: fetch its full-quality image quietly once home has settled,
+  // and again (high priority) the moment someone points at START — so it's cached by the time it opens
+  useEffect(() => {
+    const t = setTimeout(() => warmMap('low'), 1800)
+    return () => clearTimeout(t)
+  }, [])
+
   useEffect(() => {
     if (readHintDone()) return
     const t = setTimeout(() => setHint(true), 1800)
@@ -210,6 +230,8 @@ export default function Home() {
               to="/map"
               className="hero-start"
               aria-label="Start — open the circuit map"
+              onPointerEnter={() => warmMap('high')}
+              onFocus={() => warmMap('high')}
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
                 e.preventDefault()
