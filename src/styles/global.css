@@ -716,8 +716,8 @@ button {
   inset: 0;
   display: block;
   overflow: hidden;
-  /* Figma "Rectangle 24213": only the top-left corner is rounded */
-  border-radius: calc(38 * var(--u)) 0 0 0;
+  /* Figma "Rectangle 24213": dark plate, small even corners, grey rim */
+  border-radius: calc(6 * var(--u));
 }
 
 /* red gradient plate with the grey rim, straight from the Figma vector */
@@ -739,14 +739,14 @@ button {
   left: 0;
   width: calc(26 * var(--u));
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0));
-  transform: translateX(-160%) skewX(-24deg);
+  transform: translateX(calc(-80 * var(--u))) skewX(-24deg);
+  opacity: 0;
   pointer-events: none;
 }
 
 .hero-start::after {
   width: calc(10 * var(--u));
   margin-left: calc(34 * var(--u));
-  opacity: 0.9;
 }
 
 .hero-start:hover::before,
@@ -762,8 +762,13 @@ button {
 }
 
 @keyframes start-flash {
+  from {
+    transform: translateX(calc(-80 * var(--u))) skewX(-24deg);
+    opacity: 1;
+  }
   to {
     transform: translateX(calc(330 * var(--u))) skewX(-24deg);
+    opacity: 1;
   }
 }
 
@@ -803,11 +808,6 @@ button {
   filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.45));
 }
 
-.hero-start:hover .hero-start-label,
-.hero-start:focus-visible .hero-start-label {
-  transform: translateX(4px);
-  text-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
-}
 
 .hero-start:focus-visible {
   outline: 2px solid #e10600;
@@ -1619,7 +1619,7 @@ button {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: calc(38 * var(--u)) 0 0 0;
+  border-radius: calc(6 * var(--u));
   box-shadow: 0 0 0 0 rgba(225, 6, 0, 0.55);
   animation: hero-pulse 3.2s ease-out 2.4s infinite;
   pointer-events: none;
@@ -1924,7 +1924,7 @@ button {
     height: 56px;
   }
   .hero-start {
-    border-radius: 22px 0 0 0;
+    border-radius: 6px;
   }
   .hero-card-logo {
     left: 16px;
@@ -2496,4 +2496,120 @@ html.lenis body {
 
 .lenis.lenis-smooth [data-lenis-prevent] {
   overscroll-behavior: contain;
+}
+
+/* ---- START button + lights, refined ---- */
+/* the chevrons sat outside the button's clip and never showed — retire them */
+.hero-chevrons {
+  display: none;
+}
+
+/* the rectangular pulse ring didn't follow the button's shape: replace it with a glow that does */
+.hero-card::after {
+  display: none;
+}
+
+.hero-card {
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+  animation: hero-breathe 3.4s ease-in-out 2.6s infinite;
+  transition: filter 0.35s ease;
+}
+
+@keyframes hero-breathe {
+  0%,
+  100% {
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 0 rgba(225, 6, 0, 0));
+  }
+  50% {
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 calc(14 * var(--u)) rgba(255, 30, 20, 0.45));
+  }
+}
+
+.hero-card:hover,
+.hero-card:focus-within,
+.hero-card.is-starting {
+  animation: none;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 calc(20 * var(--u)) rgba(255, 30, 20, 0.55));
+}
+
+.hero-start {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-start:hover,
+.hero-start:focus-visible {
+  /* the whole button grows a touch as one piece — logo and text stay put inside it */
+  transform: scale(1.03);
+}
+
+.hero-start:active {
+  transform: scale(0.98);
+  transition-duration: 0.1s;
+}
+
+.hero-start:hover .hero-card-bg,
+.hero-start:focus-visible .hero-card-bg {
+  filter: brightness(1.1) saturate(1.05);
+}
+
+
+/* the gantry: a slim black housing with five real-looking lamps */
+.hero-lights {
+  gap: calc(7 * var(--u));
+  padding: calc(6 * var(--u)) calc(9 * var(--u));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: calc(6 * var(--u));
+  background: linear-gradient(180deg, #1c1d21, #0b0b0d);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.hero-lights i {
+  width: calc(11 * var(--u));
+  height: calc(11 * var(--u));
+  background: radial-gradient(circle at 50% 40%, #2c2e33, #141518 70%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 -2px 3px rgba(0, 0, 0, 0.6);
+  transition: background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.hero-card:hover .hero-lights i,
+.hero-card:focus-within .hero-lights i,
+.hero-card .hero-lights i.is-on {
+  background: radial-gradient(circle at 38% 32%, #ffb3ab 0, #ff2a1f 30%, #d10500 65%, #8a0300 100%);
+  box-shadow:
+    0 0 calc(6 * var(--u)) rgba(255, 40, 30, 0.9),
+    0 0 calc(16 * var(--u)) rgba(255, 20, 10, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.hero-card:hover .hero-lights i,
+.hero-card:focus-within .hero-lights i {
+  transition-delay: calc(var(--i) * 0.09s);
+}
+
+.hero-card .hero-lights i.is-on,
+.hero-card.is-starting .hero-lights i:not(.is-on) {
+  transition-delay: 0s;
+}
+
+.hero-card.is-starting .hero-lights i:not(.is-on) {
+  background: radial-gradient(circle at 50% 40%, #2c2e33, #141518 70%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 -2px 3px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-card {
+    animation: none;
+  }
+}
+
+/* dark plate: a cooler hover glow that brightens the rim, keeping the red only for the lights */
+.hero-start:hover .hero-card-bg,
+.hero-start:focus-visible .hero-card-bg {
+  filter: brightness(1.35);
+}
+
+.hero-card:hover,
+.hero-card:focus-within,
+.hero-card.is-starting {
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 calc(16 * var(--u)) rgba(225, 6, 0, 0.4));
 }
