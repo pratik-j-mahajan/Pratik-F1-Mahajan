@@ -8,14 +8,9 @@
 }
 
 .ctc-main {
-  /* aligned to the same left edge as the header (Back button), not centred */
-  padding: clamp(40px, 7vh, 88px) var(--pad) 64px;
-}
-
-.ctc-list,
-.ctc-meta,
-.ctc-foot {
   max-width: 980px;
+  margin: 0 auto;
+  padding: clamp(40px, 7vh, 88px) var(--pad) 64px;
 }
 
 .ctc-radio {
