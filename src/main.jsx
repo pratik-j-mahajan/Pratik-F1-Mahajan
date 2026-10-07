@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './styles/global.css'
+import { initAnalytics } from './analytics.js'
 
 // Every full page load — a refresh, a typed URL or an opened link — restarts the site
 // from the beginning: home page, intro included, About pass reset.
@@ -12,6 +13,8 @@ try {
   // storage blocked — nothing to reset
 }
 if (window.location.pathname !== '/') window.history.replaceState(null, '', '/')
+
+initAnalytics()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

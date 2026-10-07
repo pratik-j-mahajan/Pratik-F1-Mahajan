@@ -39,6 +39,7 @@ function usePrefetchPages() {
   }, [])
 }
 import useSmoothScroll from './hooks/useSmoothScroll.js'
+import { trackPage } from './analytics.js'
 
 const INTRO_DURATION = 2200
 // the site mounts just before the intro fades, so it's there (and animating in) as the intro dissolves
@@ -47,6 +48,7 @@ const SITE_MOUNT_AT = 1700
 function ScrollManager() {
   const { pathname } = useLocation()
   const type = useNavigationType()
+  useEffect(() => trackPage(pathname), [pathname])
   useLayoutEffect(() => {
     if (type !== 'PUSH' && type !== 'REPLACE') return
     // stop any smooth-scroll glide from the previous page, then jump to the top

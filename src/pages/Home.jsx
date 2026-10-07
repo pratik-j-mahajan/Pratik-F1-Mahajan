@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { track } from '../analytics.js'
 import { Link, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import useParallax from '../hooks/useParallax.js'
@@ -64,6 +65,7 @@ function useRaceStart() {
     } catch {
       /* fine */
     }
+    track('start_race')
     if (reduce) return navigate('/map')
     setRunning(true)
     const at = (ms, fn) => timers.current.push(setTimeout(fn, ms))
