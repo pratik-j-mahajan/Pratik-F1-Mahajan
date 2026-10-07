@@ -1344,3 +1344,26 @@
   width: 22px;
   height: 22px;
 }
+
+/* the photo is a tight crop, so to show a little more of it inside the same frame it's drawn
+   slightly smaller (anchored to the bottom edge), and the frame behind it is filled with a soft,
+   blurred copy of the same leafy background — no hard edges */
+.abx-photo-clip {
+  background: url('/images/about/pratik-id.webp') center / cover no-repeat;
+}
+
+.abx-photo-clip::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: inherit;
+  filter: blur(18px) saturate(1.1);
+}
+
+.abx-photo-clip img {
+  position: relative;
+  transform: scale(0.86);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: radial-gradient(ellipse 72% 78% at 50% 62%, #000 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 78% at 50% 62%, #000 72%, transparent 100%);
+}

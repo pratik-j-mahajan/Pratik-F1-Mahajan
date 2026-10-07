@@ -802,7 +802,8 @@
 @media (max-width: 700px) {
   /* Map sized so all five pins fit, sitting right on top of the bottom sheet (no dead band) */
   .map-layer {
-    left: -47vw;
+    /* shifted so every pin (Projects on the far-left straight to Case Study on the right) is on screen */
+    left: -40vw;
     top: max(72px, calc((100svh - var(--nav-h)) * 0.56 - 94.86vw + 6px));
     width: 170vw;
   }

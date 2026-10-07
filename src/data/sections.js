@@ -22,7 +22,7 @@ const sections = [
     path: '/case-study',
     blurb: 'Deep dives into problems, process and outcomes.',
     video: '/videos/case-study.mp4',
-    pin: { x: 76.5, y: 50.2 },
+    pin: { x: 76.5, y: 50.2, align: 'end' },
   },
   {
     id: 'projects',
@@ -39,7 +39,7 @@ const sections = [
     turn: 'Turn 2',
     path: '/content',
     blurb: 'Posts, carousels and motion pieces I share.',
-    pin: { x: 58.7, y: 47.2 },
+    pin: { x: 58.7, y: 47.2, align: 'end' },
   },
   {
     id: 'contact',

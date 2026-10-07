@@ -34,7 +34,7 @@
   position: fixed;
   z-index: 60;
   top: 20px;
-  right: 6vw;
+  right: clamp(20px, 5vw, 72px);
   display: flex;
   padding: 4px;
   border: 1px solid var(--line);
@@ -572,7 +572,7 @@
 @media (max-width: 800px) {
   .theme-toggle {
     top: 12px;
-    right: 16px;
+    right: 20px;
   }
 }
 
@@ -587,7 +587,8 @@
   position: fixed;
   z-index: 60;
   top: 20px;
-  left: 20px;
+  /* same side gutter as every other page */
+  left: clamp(20px, 5vw, 72px);
 }
 
 /* metallic rim on the pass sleeve */
