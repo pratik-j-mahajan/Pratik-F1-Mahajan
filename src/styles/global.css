@@ -1281,8 +1281,10 @@ button {
 .hero-live-hud {
   position: absolute;
   z-index: 3;
-  left: calc(75 * var(--u));
-  top: calc(372 * var(--u));
+  /* right column, under the timing tower — the left side now carries the pitch */
+  right: calc(75 * var(--u));
+  top: calc(480 * var(--u));
+  width: calc(250 * var(--u));
 }
 
 .hero-live-tower {
@@ -2612,4 +2614,282 @@ html.lenis body {
 .hero-card:focus-within,
 .hero-card.is-starting {
   filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 calc(16 * var(--u)) rgba(225, 6, 0, 0.4));
+}
+
+/* one-line pitch under "Product Designer" */
+.hero-pitch {
+  max-width: calc(340 * var(--u));
+  margin-top: calc(18 * var(--u));
+  padding-left: calc(14 * var(--u));
+  border-left: calc(2 * var(--u)) solid #e10600;
+  font-size: calc(16.5 * var(--u));
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.hero-pitch b {
+  font-weight: 600;
+  color: #fff;
+}
+
+.hero-pitch-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(8 * var(--u));
+  margin-top: calc(16 * var(--u));
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(11 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* status pill, styled like an F1 timing-tower flag: a solid "AVAILABLE" tab + the label */
+.hero-open {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: calc(6 * var(--u));
+  background: rgba(10, 12, 16, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 6px 18px -8px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+}
+
+.hero-open i {
+  position: absolute;
+  left: calc(10 * var(--u));
+  top: 50%;
+  z-index: 1;
+  width: calc(7 * var(--u));
+  height: calc(7 * var(--u));
+  margin-top: calc(-3.5 * var(--u));
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  animation: hero-open-ping 1.8s ease-out infinite;
+}
+
+.hero-open b {
+  display: flex;
+  align-items: center;
+  padding: calc(6 * var(--u)) calc(16 * var(--u)) calc(6 * var(--u)) calc(24 * var(--u));
+  background: linear-gradient(180deg, #2fd27a, #18a85a);
+  color: #062b16;
+  font-weight: 700;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+}
+
+.hero-open > span {
+  display: flex;
+  align-items: center;
+  padding: calc(6 * var(--u)) calc(12 * var(--u)) calc(6 * var(--u)) calc(6 * var(--u));
+  color: #fff;
+}
+
+@keyframes hero-open-ping {
+  to {
+    box-shadow: 0 0 0 calc(6 * var(--u)) rgba(255, 255, 255, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-open i {
+    animation: none;
+  }
+}
+
+/* small spec chips */
+.hero-tags {
+  display: inline-flex;
+  gap: calc(6 * var(--u));
+}
+
+.hero-tags span {
+  padding: calc(6 * var(--u)) calc(10 * var(--u));
+  border-radius: calc(6 * var(--u));
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+
+
+@media (max-width: 760px) {
+  .hero-pitch {
+    max-width: 240px;
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left-width: 2px;
+    font-size: 13px;
+  }
+  .hero-pitch-meta {
+    max-width: 300px;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 9.5px;
+  }
+  .hero-open b,
+  .hero-open > span,
+  .hero-tags span {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .hero-open i {
+    left: 9px;
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
+  }
+  .hero-open b {
+    padding-left: 21px;
+    padding-right: 14px;
+  }
+  .hero-open > span {
+    padding-right: 10px;
+  }
+  .hero-tags span {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+/* ---- right column, tidied: one width, one rhythm ---- */
+/* the onboard readout sits in a panel like the tower rows, its parts aligned edge to edge */
+.race-hud {
+  padding: calc(10 * var(--u)) calc(10 * var(--u)) calc(11 * var(--u));
+  border-radius: calc(3 * var(--u));
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.race-hud-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.race-hud-drs {
+  margin: 0;
+  padding: calc(2 * var(--u)) calc(6 * var(--u));
+  font-size: calc(9.5 * var(--u));
+}
+
+.race-hud-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: calc(10 * var(--u));
+}
+
+.race-hud-speed {
+  min-width: 0;
+}
+
+.race-hud-gear {
+  padding-left: calc(14 * var(--u));
+}
+
+.race-hud-speed,
+.race-hud-gear {
+  font-size: calc(30 * var(--u));
+}
+
+/* throttle and brake run the full width of the panel */
+.race-hud-pedals {
+  width: auto;
+  margin-top: calc(12 * var(--u));
+}
+
+/* even spacing between the three blocks: spec → tower → onboard */
+.hero-live-tower {
+  top: calc(353 * var(--u));
+}
+
+.hero-live-hud {
+  top: calc(490 * var(--u));
+}
+
+/* ---- right column, lighter and brighter: hairlines instead of dark boxes ---- */
+.hero-spec dt,
+.race-hud-tag,
+.race-tower-head span {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.hero-spec div {
+  border-bottom-color: rgba(255, 255, 255, 0.22);
+}
+
+.race-tower-head {
+  color: #fff;
+}
+
+/* tower rows: soft frosted white instead of black */
+.race-tower li {
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.race-tower li.is-me {
+  background: #fff;
+  box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.45);
+}
+
+.race-gap {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* onboard: no box — just a hairline on top, like the spec list */
+.race-hud {
+  padding: calc(12 * var(--u)) 0 0;
+  border-radius: 0;
+  background: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.race-hud-speed small,
+.race-hud-gear small {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.race-hud-gear {
+  border-left-color: rgba(255, 255, 255, 0.25);
+}
+
+.race-hud-drs {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.race-hud-pedals span {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.race-hud-pedals .is-throttle i {
+  background: #2ee87c;
+  box-shadow: 0 0 8px rgba(46, 232, 124, 0.6);
+}
+
+.race-hud-pedals .is-brake i {
+  background: #ff3b2e;
+  box-shadow: 0 0 8px rgba(255, 59, 46, 0.6);
+}
+
+/* raise the left block (India / Product Designer / pitch) and the right column (spec, tower,
+   onboard) by 50 — name, START and the lights stay where they are */
+@media (min-width: 761px) {
+  .hero-role {
+    top: calc(92 * var(--u));
+  }
+  .hero-spec {
+    top: calc(96 * var(--u));
+  }
+  .hero-live-tower {
+    top: calc(303 * var(--u));
+  }
+  .hero-live-hud {
+    top: calc(440 * var(--u));
+  }
 }

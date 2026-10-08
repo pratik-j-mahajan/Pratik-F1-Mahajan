@@ -70,9 +70,12 @@ export function LiveHud() {
 
   return (
     <div className="race-hud" aria-hidden="true">
-      <p className="race-hud-tag">
-        <i /> Onboard · MAH
-      </p>
+      <div className="race-hud-head">
+        <p className="race-hud-tag">
+          <i /> Onboard · MAH
+        </p>
+        <p className={`race-hud-drs${drs ? ' is-on' : ''}`}>DRS</p>
+      </div>
       <div className="race-hud-row">
         <p className="race-hud-speed">
           {Math.round(v)}
@@ -82,7 +85,6 @@ export function LiveHud() {
           {gear}
           <small>Gear</small>
         </p>
-        <p className={`race-hud-drs${drs ? ' is-on' : ''}`}>DRS</p>
       </div>
       <div className="race-hud-pedals">
         <span className="is-throttle">

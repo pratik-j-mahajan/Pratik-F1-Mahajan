@@ -169,6 +169,20 @@ export default function Home() {
               <br />
               Designer
             </p>
+            <p className="hero-pitch">
+              I find <b>UX problems</b> in everyday apps — and design <b>simple fixes</b> for them.
+            </p>
+            <p className="hero-pitch-meta">
+              <span className="hero-open">
+                <i aria-hidden="true" />
+                <b>Available</b>
+                <span>Product design roles</span>
+              </span>
+              <span className="hero-tags">
+                <span>B.Tech CSE &rsquo;26</span>
+                <span>Pune, IN</span>
+              </span>
+            </p>
           </motion.div>
 
           {/* a race quietly running: onboard readout on the left, timing tower on the right */}
