@@ -13,7 +13,9 @@ export const CAPTURE = new URLSearchParams(window.location.search).has('capture'
 window.__capture = CAPTURE
 if (CAPTURE) {
   try {
-    sessionStorage.setItem('about-pass', '1')
+    // /about?capture&gate shows the ID-pass scan screen instead of skipping it
+    if (new URLSearchParams(window.location.search).has('gate')) sessionStorage.removeItem('about-pass')
+    else sessionStorage.setItem('about-pass', '1')
     localStorage.setItem('home-hint-done', '1')
   } catch {
     // storage blocked
