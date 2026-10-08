@@ -7,11 +7,12 @@ import sections from '../data/sections.js'
 
 const pad = (n) => String(n).padStart(2, '0')
 const VOLUME = 0.5 // section videos play at half volume
-const MUTE_KEY = 'section-video-muted'
-// videos start muted; sound only plays once a visitor has turned it on themselves (remembered)
+// Videos start muted. Sound only plays after a visitor turns it on with the speaker button,
+// and that choice is remembered. (New key, so older saved "sound on" settings don't carry over.)
+const SOUND_KEY = 'section-video-sound'
 const readMuted = () => {
   try {
-    return localStorage.getItem(MUTE_KEY) !== '0'
+    return localStorage.getItem(SOUND_KEY) !== 'on'
   } catch {
     return true
   }
@@ -67,7 +68,8 @@ export function SectionTransitionProvider({ children }) {
       v.volume = VOLUME
     }
     try {
-      localStorage.setItem(MUTE_KEY, next ? '1' : '0')
+      localStorage.setItem(SOUND_KEY, next ? 'off' : 'on')
+      localStorage.removeItem('section-video-muted')
     } catch {
       /* fine */
     }
@@ -130,6 +132,7 @@ export function SectionTransitionProvider({ children }) {
             <video
               ref={videoRef}
               src={videoFor(section.video)}
+              muted={muted}
               playsInline
               preload="auto"
               onEnded={finish}
