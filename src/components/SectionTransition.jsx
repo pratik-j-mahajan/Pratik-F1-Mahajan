@@ -8,11 +8,12 @@ import sections from '../data/sections.js'
 const pad = (n) => String(n).padStart(2, '0')
 const VOLUME = 0.5 // section videos play at half volume
 const MUTE_KEY = 'section-video-muted'
+// videos start muted; sound only plays once a visitor has turned it on themselves (remembered)
 const readMuted = () => {
   try {
-    return localStorage.getItem(MUTE_KEY) === '1'
+    return localStorage.getItem(MUTE_KEY) !== '0'
   } catch {
-    return false
+    return true
   }
 }
 

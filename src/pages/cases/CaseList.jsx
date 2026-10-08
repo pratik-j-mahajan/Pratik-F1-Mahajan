@@ -37,9 +37,54 @@ export default function CaseList() {
     if (!el) return
     const run = el.offsetHeight - window.innerHeight
     const y = el.offsetTop + (run * i) / (N - 1)
-    if (window.__lenis) window.__lenis.scrollTo(y, { duration: 1.2 })
+    if (window.__lenis) window.__lenis.scrollTo(y, { duration: 0.7 })
     else window.scrollTo({ top: y, behavior: 'smooth' })
   }
+
+  // when scrolling stops between two cards, glide to the nearest one — so a card always sits
+  // flat in front and its button is exactly where it looks
+  useEffect(() => {
+    let t
+    const settleOnCard = () => {
+      const el = section.current
+      if (!el) return
+      const run = el.offsetHeight - window.innerHeight
+      const p = (window.scrollY - el.offsetTop) / run
+      if (p < -0.02 || p > 1.02) return
+      const i = Math.round(Math.min(1, Math.max(0, p)) * (N - 1))
+      const target = el.offsetTop + (run * i) / (N - 1)
+      if (Math.abs(window.scrollY - target) > 2) scrollTo(i)
+    }
+    const onScroll = () => {
+      clearTimeout(t)
+      t = setTimeout(settleOnCard, 160)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // arrow keys step through the cards, Enter opens the one in front
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.target.closest?.('input, textarea')) return
+      const el = section.current
+      if (!el) return
+      const run = el.offsetHeight - window.innerHeight
+      const cur = Math.round(Math.min(1, Math.max(0, (window.scrollY - el.offsetTop) / run)) * (N - 1))
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault()
+        scrollTo(Math.min(N - 1, cur + 1))
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault()
+        scrollTo(Math.max(0, cur - 1))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <section ref={section} className="sk" style={{ height: `${N * 100}svh` }} aria-label="Case studies">
@@ -49,7 +94,7 @@ export default function CaseList() {
 
         <div className="sk-deck">
           {caseStudies.map((study, i) => (
-            <Card key={study.slug} study={study} i={i} pos={pos} onFocus={() => scrollTo(i)} />
+            <Card key={study.slug} study={study} i={i} pos={pos} />
           ))}
         </div>
 
@@ -59,7 +104,7 @@ export default function CaseList() {
   )
 }
 
-function Card({ study, i, pos, onFocus }) {
+function Card({ study, i, pos }) {
   const open = useOpenCase()
   const navigate = useNavigate()
   const goTo = (to) => (e) => {
@@ -97,12 +142,11 @@ function Card({ study, i, pos, onFocus }) {
       className="sk-card"
       data-front={i === 0 ? 'true' : 'false'}
       style={{ y, z, rotateX, opacity, zIndex, '--accent': study.accent }}
-      onClickCapture={(e) => {
-        if (ref.current?.dataset.front !== 'true') {
-          e.preventDefault()
-          e.stopPropagation()
-          onFocus()
-        }
+      // any visible card opens its case study straight away — a click anywhere on it, whether it's
+      // in front or peeking from behind (no "bring it forward first" step)
+      onClick={(e) => {
+        if (e.target.closest('a')) return
+        ref.current?.querySelector('.sk-btn')?.click()
       }}
     >
       <a href={href} className="sk-shot" onClick={openIt} tabIndex={-1} aria-hidden="true" {...ext}>

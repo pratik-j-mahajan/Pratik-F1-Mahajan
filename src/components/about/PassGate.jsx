@@ -324,7 +324,7 @@ export default function PassGate({ onGranted }) {
             </motion.p>
           </AnimatePresence>
           <button type="button" className="gate-skip" onClick={onGranted}>
-            Lost your pass? Sneak in <span aria-hidden="true">→</span>
+            Skip the scan <span aria-hidden="true">→</span>
           </button>
         </div>
       </div>

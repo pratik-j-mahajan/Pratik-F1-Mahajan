@@ -22,9 +22,11 @@ const readTheme = () => {
 
 // Once scanned, a refresh or back/forward keeps you inside; arriving fresh from a link shows the gate.
 const PASS_KEY = 'about-pass'
+// someone who has scanned (or skipped) once doesn't have to again on later visits
+const SEEN_KEY = 'about-pass-seen'
 const hasPass = () => {
   try {
-    return sessionStorage.getItem(PASS_KEY) === '1'
+    return sessionStorage.getItem(PASS_KEY) === '1' || localStorage.getItem(SEEN_KEY) === '1'
   } catch {
     return false
   }
@@ -82,6 +84,7 @@ export default function About() {
     }
     try {
       sessionStorage.setItem(PASS_KEY, '1')
+      localStorage.setItem(SEEN_KEY, '1')
     } catch {
       /* private mode: the gate just shows again next time */
     }

@@ -14,7 +14,10 @@ window.__capture = CAPTURE
 if (CAPTURE) {
   try {
     // /about?capture&gate shows the ID-pass scan screen instead of skipping it
-    if (new URLSearchParams(window.location.search).has('gate')) sessionStorage.removeItem('about-pass')
+    if (new URLSearchParams(window.location.search).has('gate')) {
+      sessionStorage.removeItem('about-pass')
+      localStorage.removeItem('about-pass-seen')
+    }
     else sessionStorage.setItem('about-pass', '1')
     localStorage.setItem('home-hint-done', '1')
   } catch {

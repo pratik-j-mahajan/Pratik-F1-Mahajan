@@ -1602,3 +1602,23 @@
   height: 6px;
   background: repeating-linear-gradient(-55deg, var(--red) 0 8px, #fff 8px 16px);
 }
+
+/* the card in front opens on a click anywhere; the ones behind bring themselves forward */
+.sk-card {
+  cursor: pointer;
+}
+
+.sk-card[data-front='true'] .sk-btn {
+  box-shadow: 0 10px 24px -12px rgba(17, 18, 20, 0.5);
+}
+
+/* the stack is 3D: cards behind sit "behind" the stage plane, so let clicks pass through the
+   stage and its decoration and land on whichever card is under the pointer */
+.sk-stage,
+.sk-deck {
+  pointer-events: none;
+}
+
+.sk-card {
+  pointer-events: auto;
+}
