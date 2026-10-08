@@ -6,15 +6,15 @@ import LowerThird from './LowerThird.jsx'
 import sections from '../data/sections.js'
 
 const pad = (n) => String(n).padStart(2, '0')
-const VOLUME = 0.5 // section videos play at half volume
-// Videos start muted. Sound only plays after a visitor turns it on with the speaker button,
-// and that choice is remembered. (New key, so older saved "sound on" settings don't carry over.)
+const VOLUME = 0.25 // section videos play quietly (quarter volume), so they're never loud in an office
+// Videos play with sound, at a low volume. A visitor can mute them with the speaker button,
+// and that choice is remembered.
 const SOUND_KEY = 'section-video-sound'
 const readMuted = () => {
   try {
-    return localStorage.getItem(SOUND_KEY) !== 'on'
+    return localStorage.getItem(SOUND_KEY) === 'off'
   } catch {
-    return true
+    return false
   }
 }
 
