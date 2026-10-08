@@ -6,12 +6,14 @@ export const ease = [0.7, 0, 0.2, 1]
 export const settle = [0.22, 1, 0.36, 1]
 
 const VIEW = { once: true, margin: '0px 0px -12% 0px' }
+// capture mode (?capture) shows everything at once, so a page can be imported/screenshotted whole
+const CAPTURE = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('capture')
 
 // Lines of type that rise out of a mask. Plays when scrolled into view, or when `play` is set.
 export function Lines({ as = 'div', lines, className, delay = 0, stagger = 0.08, play, ...rest }) {
   const ref = useRef(null)
   const seen = useInView(ref, VIEW)
-  const reduce = useReducedMotion()
+  const reduce = useReducedMotion() || CAPTURE
   const on = play ?? seen
   const Tag = as
   return (
@@ -39,7 +41,7 @@ export function Lines({ as = 'div', lines, className, delay = 0, stagger = 0.08,
 export function Rise({ as = 'div', className, delay = 0, y = 22, play, children, ...rest }) {
   const ref = useRef(null)
   const seen = useInView(ref, VIEW)
-  const reduce = useReducedMotion()
+  const reduce = useReducedMotion() || CAPTURE
   const on = play ?? seen
   const Tag = motion[as]
   return (

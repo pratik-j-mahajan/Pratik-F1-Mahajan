@@ -34,7 +34,7 @@ function useFit(ref) {
 }
 
 export function Ticket() {
-  const reduce = useReducedMotion()
+  const reduce = useReducedMotion() || new URLSearchParams(window.location.search).has('capture')
   const [active, setActive] = useState(null)
   const lit = active === null ? null : new Set(disciplines[active].tools)
   const rotateX = useSpring(0, TILT)

@@ -63,8 +63,8 @@ export default function App() {
   usePrefetchPages()
   // The intro plays on every full page load: a refresh, a typed URL or an opened link.
   // Moving around inside the site never replays it.
-  const [showIntro, setShowIntro] = useState(true)
-  const [siteReady, setSiteReady] = useState(false)
+  const [showIntro, setShowIntro] = useState(!window.__capture)
+  const [siteReady, setSiteReady] = useState(Boolean(window.__capture))
 
   useEffect(() => {
     if (!showIntro) return
