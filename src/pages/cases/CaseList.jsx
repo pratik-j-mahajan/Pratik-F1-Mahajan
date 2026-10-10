@@ -11,10 +11,15 @@ import { useOpenCase } from './flight.jsx'
   that slightly delayed, weighty feel. Along the bottom a small F1 car drives a thin line
   as the progress bar.
 */
-const N = caseStudies.length
 const pad = (n) => String(n).padStart(2, '0')
 
 export default function CaseList() {
+  return <CardStack items={caseStudies} />
+}
+
+// the 3D stack itself — shared by Case Studies and Projects (pass the cards as `items`)
+export function CardStack({ items, label = 'Case studies', fade = 'veil' }) {
+  const N = items.length
   const reduce = useReducedMotion()
   const section = useRef(null)
   const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end end'] })
@@ -24,7 +29,7 @@ export default function CaseList() {
   const pos = useTransform(progress, (p) => p * (N - 1))
 
   useEffect(() => {
-    caseStudies.forEach((c) => {
+    items.forEach((c) => {
       if (!c.cover) return
       const img = new Image()
       img.src = c.cover
@@ -40,31 +45,6 @@ export default function CaseList() {
     if (window.__lenis) window.__lenis.scrollTo(y, { duration: 0.7 })
     else window.scrollTo({ top: y, behavior: 'smooth' })
   }
-
-  // when scrolling stops between two cards, glide to the nearest one — so a card always sits
-  // flat in front and its button is exactly where it looks
-  useEffect(() => {
-    let t
-    const settleOnCard = () => {
-      const el = section.current
-      if (!el) return
-      const run = el.offsetHeight - window.innerHeight
-      const p = (window.scrollY - el.offsetTop) / run
-      if (p < -0.02 || p > 1.02) return
-      const i = Math.round(Math.min(1, Math.max(0, p)) * (N - 1))
-      const target = el.offsetTop + (run * i) / (N - 1)
-      if (Math.abs(window.scrollY - target) > 2) scrollTo(i)
-    }
-    const onScroll = () => {
-      clearTimeout(t)
-      t = setTimeout(settleOnCard, 160)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      clearTimeout(t)
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // arrow keys step through the cards, Enter opens the one in front
   useEffect(() => {
@@ -87,14 +67,14 @@ export default function CaseList() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <section ref={section} className="sk" style={{ height: `${N * 100}svh` }} aria-label="Case studies">
+    <section ref={section} className="sk" style={{ height: `${N * 100}svh` }} aria-label={label}>
       <div className="sk-stage">
         <Backdrop />
-        <BigPos pos={pos} />
+        <BigPos pos={pos} N={N} />
 
         <div className="sk-deck">
-          {caseStudies.map((study, i) => (
-            <Card key={study.slug} study={study} i={i} pos={pos} />
+          {items.map((study, i) => (
+            <Card key={study.slug} study={study} i={i} N={N} pos={pos} fade={fade} />
           ))}
         </div>
 
@@ -104,7 +84,7 @@ export default function CaseList() {
   )
 }
 
-function Card({ study, i, pos }) {
+function Card({ study, i, N, pos, fade }) {
   const open = useOpenCase()
   const navigate = useNavigate()
   const goTo = (to) => (e) => {
@@ -121,7 +101,13 @@ function Card({ study, i, pos }) {
   const rotateX = useTransform(d, (v) => v * -18)
   // cards stay solid (no see-through overlaps); the ones behind fade toward white instead
   const veil = useTransform(d, (v) => Math.min(0.75, Math.abs(v) * 0.6))
-  const opacity = useTransform(d, (v) => (Math.abs(v) > 1.6 ? Math.max(0, 1 - (Math.abs(v) - 1.6) * 2) : 1))
+  // 'veil': cards behind are washed toward the page colour (white page); 'opacity': they simply
+  // fade out (used on the red Projects page, so nothing turns murky)
+  const opacity = useTransform(d, (v) => {
+    const a = Math.abs(v)
+    if (fade === 'opacity') return Math.max(0, 1 - Math.min(1, a) ** 2 * 0.8 - Math.max(0, a - 1) * 0.5)
+    return a > 1.6 ? Math.max(0, 1 - (a - 1.6) * 2) : 1
+  })
   const zIndex = useTransform(d, (v) => 10 - Math.round(Math.abs(v) * 3))
 
   // only the card in front opens; clicking one behind brings it forward
@@ -150,7 +136,12 @@ function Card({ study, i, pos }) {
       }}
     >
       <a href={href} className="sk-shot" onClick={openIt} tabIndex={-1} aria-hidden="true" {...ext}>
-        {study.comingSoon ? (
+        {!study.cover && !study.comingSoon ? (
+          <span className="sk-ph">
+            <span className="sk-ph-tag">Thumbnail coming</span>
+            <span className="sk-ph-name">{study.name}</span>
+          </span>
+        ) : study.comingSoon ? (
           <span className="sk-soon">
             <span className="sk-soon-flag" />
             <span className="sk-soon-tag">In the garage</span>
@@ -162,7 +153,11 @@ function Card({ study, i, pos }) {
             <span className="sk-soon-note">Case study 03 · 2026</span>
           </span>
         ) : (
-          <img ref={shot} src={study.cover} alt="" style={{ objectPosition: study.focus }} />
+          <>
+            {/* the whole thumbnail is shown (never cropped); a blurred copy fills any spare space */}
+            <span className="sk-shot-fill" style={{ backgroundImage: `url(${study.cover.replace(/\.(webp|jpe?g|png)$/, '-blur.webp')})` }} aria-hidden="true" />
+            <img ref={shot} src={study.cover} alt="" />
+          </>
         )}
       </a>
       <div className="sk-info">
@@ -178,10 +173,10 @@ function Card({ study, i, pos }) {
           {study.category} · {study.year}
         </p>
         <a href={href} className="sk-btn" onClick={openIt} {...ext}>
-          {study.comingSoon ? 'Take a peek' : 'View case study'} <span aria-hidden="true">{external ? '↗' : '→'}</span>
+          {study.comingSoon ? 'Take a peek' : study.cta || 'View case study'} <span aria-hidden="true">{external ? '↗' : '→'}</span>
         </a>
       </div>
-      <motion.span className="sk-veil" style={{ opacity: veil }} aria-hidden="true" />
+      {fade === 'veil' && <motion.span className="sk-veil" style={{ opacity: veil }} aria-hidden="true" />}
     </motion.article>
   )
 }
@@ -224,7 +219,7 @@ function Progress({ progress }) {
 }
 
 // the front card's position, huge and outlined behind the deck
-function BigPos({ pos }) {
+function BigPos({ pos, N }) {
   const [i, setI] = useState(0)
   useMotionValueEvent(pos, 'change', (p) => setI(Math.min(N - 1, Math.max(0, Math.round(p)))))
   return (

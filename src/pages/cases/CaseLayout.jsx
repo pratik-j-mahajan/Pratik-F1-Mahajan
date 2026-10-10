@@ -31,12 +31,12 @@ export default function CaseLayout() {
   }, [])
 
   return (
-    <div className="cw">
+    <div className="cw pj">
       <header className={`cw-nav${scrolled ? ' is-scrolled' : ''}`}>
         <div className="cw-nav-left">
           <BackButton />
           <Link to="/case-study" className="cw-brand">
-            <img src="/images/f1-logo-red.svg" alt="" />
+            <img src="/images/f1-logo-white.svg" alt="" />
             <span>Case studies</span>
           </Link>
         </div>

@@ -1622,3 +1622,647 @@
 .sk-card {
   pointer-events: auto;
 }
+
+/* ---- placeholder cover (no thumbnail yet) ---- */
+.sk-ph {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: clamp(20px, 3vw, 36px);
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.12) 1px, transparent 1.3px) 0 0 / 22px 22px,
+    linear-gradient(150deg, #2a2b30, #111214);
+  color: #fff;
+}
+
+.sk-ph-tag {
+  position: absolute;
+  top: clamp(18px, 2.4vw, 28px);
+  left: clamp(20px, 3vw, 36px);
+  padding: 6px 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  font-family: var(--timing);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.sk-ph-name {
+  font-family: var(--timing);
+  font-size: clamp(44px, 6vw, 86px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+/* ================================================================ Projects: the stack on F1 red */
+.pj {
+  --paper: #e10600;
+  --ink: #111214;
+  background: #e10600;
+  color: #fff;
+}
+
+.pj .cw-nav {
+  background: color-mix(in srgb, #e10600 90%, transparent);
+}
+
+.pj .cw-nav.is-scrolled {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.pj .cw-brand span {
+  color: #fff;
+}
+
+.pj .cw-brand img {
+  filter: none;
+}
+
+.pj .back-pill {
+  --back-bg: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.pj .sk {
+  background: radial-gradient(ellipse 70% 60% at 50% 45%, #f0140c, #c20500 75%, #a80400);
+}
+
+.pj .sk-stage::before {
+  background: linear-gradient(#e10600 20%, rgba(225, 6, 0, 0));
+}
+
+.pj .sk-stage::after {
+  background: linear-gradient(rgba(168, 4, 0, 0), #a80400 70%);
+}
+
+.pj .sk-bg {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.16) 1px, transparent 1.3px);
+}
+
+.pj .sk-bg path {
+  stroke: rgba(255, 255, 255, 0.16);
+}
+
+.pj .sk-bg .sk-bg-kerb {
+  stroke: #fff;
+  opacity: 0.4;
+}
+
+.pj .sk-bigpos {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.28);
+}
+
+/* cards: near-black, white type — they sit strongly on the red */
+.pj .sk-card {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: #141518;
+  box-shadow: 0 34px 70px -34px rgba(60, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.pj .sk-veil {
+  background: #6e0200;
+}
+
+.pj .sk-shot {
+  background: #1d1e22;
+}
+
+.pj .sk-index {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.pj .sk-index b {
+  color: #fff;
+}
+
+.pj .sk-tick {
+  background: #e10600;
+}
+
+.pj .sk-about {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.pj .sk-cat {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pj .sk-name::after {
+  background: conic-gradient(#fff 25%, #141518 0 50%, #fff 0 75%, #141518 0) 0 0 / 6px 6px;
+}
+
+.pj .sk-btn {
+  background: #e10600;
+  color: #fff;
+}
+
+.pj .sk-btn:hover {
+  background: #fff;
+  color: #111214;
+}
+
+/* progress line on red: white line, white car with a black stripe */
+.pj .sk-line {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.pj .sk-line-fill {
+  background: #fff;
+}
+
+.pj .sk-car-body {
+  fill: #fff;
+}
+
+.pj .sk-car-stripe {
+  fill: #111214;
+}
+
+.pj .sk-car-halo {
+  stroke: #fff;
+}
+
+/* ---- Projects polish: no red haze over the cards ---- */
+/* cards behind fade toward their own dark colour (not a red film) */
+.pj .sk-veil {
+  background: #141518;
+}
+
+/* the top/bottom fade bands painted red over the cards — drop them and fade the deck itself */
+.pj .sk-stage::before {
+  background: linear-gradient(#d90500 20%, rgba(217, 5, 0, 0));
+}
+
+.pj .sk-stage::after {
+  background: linear-gradient(rgba(217, 5, 0, 0), #d90500 70%);
+}
+
+
+/* clean, neutral depth instead of a dark-red glow */
+.pj .sk-card {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(180deg, #17181c, #111215);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 40px 80px -40px rgba(0, 0, 0, 0.55),
+    0 12px 24px -16px rgba(0, 0, 0, 0.35);
+}
+
+/* one even backdrop, a soft vignette rather than a glow */
+.pj .sk {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 40%, rgba(255, 255, 255, 0.07), transparent 70%),
+    #d90500;
+}
+
+.pj .sk-bg {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.12) 1px, transparent 1.3px);
+}
+
+.pj .cw-nav {
+  background: #d90500;
+}
+
+.pj .cw-nav.is-scrolled {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* small details */
+.pj .sk-index {
+  letter-spacing: 0.12em;
+}
+
+.pj .sk-kerb {
+  box-shadow: none;
+}
+
+.pj .sk-btn {
+  box-shadow: 0 10px 22px -12px rgba(225, 6, 0, 0.9);
+}
+
+.pj .sk-btn:hover {
+  box-shadow: 0 10px 22px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* placeholder cover: a red edge and the project number, so it feels designed, not empty */
+.pj .sk-ph {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1.3px) 0 0 / 22px 22px,
+    linear-gradient(150deg, #24252a, #121316);
+  box-shadow: inset 4px 0 0 #e10600;
+}
+
+.pj .sk-ph-tag {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pj .sk-bigpos {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.22);
+}
+
+.pj .sk-line {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.pj .sk-flag {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+/* cards behind melt into the page colour (like the white veil on the white case-study page),
+   so there's no dark slab or murky shadow peeking out under the front card */
+.pj .sk-veil {
+  background: #d90500;
+}
+
+
+/* ================================================================ Case studies polish (light) */
+/* soft, even backdrop with a gentle vignette */
+.cw:not(.pj):not(.csn) .sk {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 40%, #fff, #f6f6f3 75%);
+}
+
+/* cards: crisp edge, top highlight, clean layered shadow */
+.cw:not(.pj):not(.csn) .sk-card {
+  border: 1px solid #eceae5;
+  background: linear-gradient(180deg, #fff, #fafaf8);
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 40px 80px -44px rgba(17, 18, 20, 0.32),
+    0 14px 28px -20px rgba(17, 18, 20, 0.16);
+}
+
+.cw:not(.pj):not(.csn) .sk-shot {
+  box-shadow: inset 0 0 0 1px rgba(17, 18, 20, 0.05);
+}
+
+/* button: lifted, with a soft shadow; turns red on hover */
+.cw:not(.pj):not(.csn) .sk-card[data-front='true'] .sk-btn {
+  box-shadow: 0 12px 24px -14px rgba(17, 18, 20, 0.55);
+}
+
+.cw:not(.pj):not(.csn) .sk-btn:hover {
+  background: #e10600;
+  box-shadow: 0 12px 24px -14px rgba(225, 6, 0, 0.7);
+}
+
+/* small details */
+.cw:not(.pj):not(.csn) .sk-index {
+  letter-spacing: 0.12em;
+}
+
+.cw:not(.pj):not(.csn) .sk-kerb {
+  box-shadow: none;
+}
+
+.cw:not(.pj):not(.csn) .sk-bigpos {
+  -webkit-text-stroke-color: rgba(17, 18, 20, 0.08);
+}
+
+.cw:not(.pj):not(.csn) .sk-bg path {
+  stroke: rgba(17, 18, 20, 0.07);
+}
+
+.cw:not(.pj):not(.csn) .sk-line {
+  background: rgba(17, 18, 20, 0.12);
+}
+
+.cw:not(.pj):not(.csn) .sk-stage::before {
+  background: linear-gradient(#fbfbf9 20%, rgba(251, 251, 249, 0));
+}
+
+.cw:not(.pj):not(.csn) .sk-stage::after {
+  background: linear-gradient(rgba(246, 246, 243, 0), #f6f6f3 70%);
+}
+
+.cw:not(.pj):not(.csn) .sk-veil {
+  background: #f8f8f6;
+}
+
+/* the coming-soon card gets the same red left edge as the project placeholders */
+.cw:not(.pj):not(.csn) .sk-soon {
+  box-shadow: inset 4px 0 0 #e10600;
+}
+
+/* ================================================================ Case studies on deep navy */
+/* midnight navy, like an F1 TV broadcast: the white cards and their covers pop, red stays the accent */
+.csn {
+  --paper: #0d1430;
+  background: #0d1430;
+  color: #fff;
+}
+
+.csn .cw-nav {
+  background: color-mix(in srgb, #0d1430 90%, transparent);
+}
+
+.csn .cw-nav.is-scrolled {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.csn .cw-brand span,
+.csn .cw-link {
+  color: #fff;
+}
+
+.csn .cw-link::before {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.csn .back-pill {
+  --back-bg: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.csn .sk {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 42%, #1a2552, transparent 72%),
+    #0d1430;
+}
+
+.csn .sk-bg {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.09) 1px, transparent 1.3px);
+}
+
+.csn .sk-bg path {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.csn .sk-bg .sk-bg-kerb {
+  stroke: #e10600;
+  opacity: 0.55;
+}
+
+.csn .sk-stage::before {
+  background: linear-gradient(#0d1430 20%, rgba(13, 20, 48, 0));
+}
+
+.csn .sk-stage::after {
+  background: linear-gradient(rgba(13, 20, 48, 0), #0d1430 70%);
+}
+
+/* cards stay white; the ones behind melt into the navy */
+.csn .sk-card {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: linear-gradient(180deg, #fff, #f7f8fb);
+  box-shadow:
+    0 40px 90px -40px rgba(0, 0, 0, 0.7),
+    0 14px 30px -18px rgba(0, 0, 0, 0.45);
+  color: #111214;
+}
+
+.csn .sk-veil {
+  background: #0d1430;
+}
+
+.csn .sk-bigpos {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.16);
+}
+
+/* progress line: white line, white car with a red stripe */
+.csn .sk-line {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.csn .sk-line-fill {
+  background: #e10600;
+}
+
+.csn .sk-car-body {
+  fill: #fff;
+}
+
+.csn .sk-car-halo {
+  stroke: #fff;
+}
+
+.csn .sk-flag {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+/* navy: button lift and hover */
+.csn .sk-card[data-front='true'] .sk-btn {
+  box-shadow: 0 12px 24px -14px rgba(13, 20, 48, 0.6);
+}
+
+.csn .sk-btn:hover {
+  background: #e10600;
+  box-shadow: 0 12px 24px -14px rgba(225, 6, 0, 0.7);
+}
+
+.csn .sk-shot {
+  box-shadow: inset 0 0 0 1px rgba(17, 18, 20, 0.05);
+}
+
+.csn .sk-soon {
+  box-shadow: inset 4px 0 0 #e10600;
+}
+
+/* ================================================================ Case studies: carbon (premium) */
+/* near-black with a soft spotlight and a whisper of carbon weave; dark glass cards with hairline
+   edges; white type; one red accent. Restraint is what makes it feel expensive. */
+.csn {
+  --paper: #0a0a0c;
+  background: #0a0a0c;
+}
+
+.csn .cw-nav {
+  background: color-mix(in srgb, #0a0a0c 86%, transparent);
+}
+
+.csn .cw-nav.is-scrolled {
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+.csn .back-pill {
+  --back-bg: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.csn .sk {
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 40%, rgba(255, 255, 255, 0.07), transparent 70%),
+    #0a0a0c;
+}
+
+.csn .sk-bg {
+  background-image: none;
+}
+
+.csn .sk-bg path {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.csn .sk-bg .sk-bg-kerb {
+  stroke: #e10600;
+  opacity: 0.45;
+}
+
+.csn .sk-stage::before {
+  background: linear-gradient(#0a0a0c 20%, rgba(10, 10, 12, 0));
+}
+
+.csn .sk-stage::after {
+  background: linear-gradient(rgba(10, 10, 12, 0), #0a0a0c 70%);
+}
+
+/* dark glass cards */
+.csn .sk-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, #17171a, #101012);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 40px 70px -40px rgba(0, 0, 0, 0.85);
+  color: #fff;
+}
+
+.csn .sk-veil {
+  background: #0a0a0c;
+}
+
+.csn .sk-shot {
+  background: #1a1a1d;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.csn .sk-index {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.csn .sk-index b {
+  color: #fff;
+}
+
+.csn .sk-about {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.csn .sk-cat {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.csn .sk-name::after {
+  background: conic-gradient(#fff 25%, #101012 0 50%, #fff 0 75%, #101012 0) 0 0 / 6px 6px;
+  opacity: 0.7;
+}
+
+/* white pill button, black type — red on hover */
+.csn .sk-btn {
+  background: #fff;
+  color: #0a0a0c;
+}
+
+.csn .sk-card[data-front='true'] .sk-btn {
+  box-shadow: 0 12px 28px -14px rgba(255, 255, 255, 0.35);
+}
+
+.csn .sk-btn:hover {
+  background: #e10600;
+  color: #fff;
+  box-shadow: 0 12px 28px -14px rgba(225, 6, 0, 0.8);
+}
+
+.csn .sk-bigpos {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.1);
+}
+
+.csn .sk-line {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.csn .sk-flag {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+/* keep the moving cards on the GPU so the 3D scroll stays smooth */
+.sk-card {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* links in the red header (Case studies uses the Projects look) */
+.pj .cw-link {
+  color: #fff;
+}
+
+.pj .cw-link::before {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---- boxy cards, like F1 TV graphics: tight corners everywhere ---- */
+.pj .sk-card {
+  border-radius: 6px;
+}
+
+.pj .sk-shot,
+.pj .sk-ph,
+.pj .sk-soon {
+  border-radius: 3px;
+}
+
+.pj .sk-btn {
+  border-radius: 4px;
+}
+
+.pj .sk-ph-tag,
+.pj .sk-soon-tag {
+  border-radius: 3px;
+}
+
+.pj .back-pill {
+  border-radius: 6px;
+}
+
+@media (max-width: 760px) {
+  .pj .sk-card {
+    border-radius: 6px;
+  }
+}
+
+/* ---- thumbnails: always shown whole, at their real ratio ---- */
+.sk-shot img {
+  position: relative;
+  z-index: 1;
+  object-fit: contain;
+}
+
+.sk-shot-fill {
+  position: absolute;
+  inset: 0;
+  /* a tiny pre-blurred copy (…-blur.webp, 48px wide) scaled up — looks blurred for free,
+     no live blur filter, so the 3D scroll stays smooth */
+  background: center / cover no-repeat;
+  opacity: 0.85;
+}
+
+/* phones: the cover area takes the thumbnail's shape, so there's no empty band above and below */
+@media (max-width: 760px) {
+  .sk-card {
+    height: auto;
+    grid-template-rows: auto auto;
+  }
+  .sk-shot {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* the red header is solid, so it doesn't need a (costly) backdrop blur while scrolling */
+.pj .cw-nav {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
