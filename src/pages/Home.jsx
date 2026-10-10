@@ -128,7 +128,7 @@ export default function Home() {
       <section className="hero" onMouseMove={parallax.onMouseMove} onMouseLeave={parallax.onMouseLeave}>
         <div className="hero-stage">
           {HERO_BG === 'photo' ? (
-            <motion.img className="hero-bg" src="/images/hero-bg-v2.webp" alt="" aria-hidden="true" style={{ x: parallax.x, y: parallax.y }} />
+            <motion.div className="hero-bg hero-bg--code" aria-hidden="true" style={{ x: parallax.x, y: parallax.y }} />
           ) : (
             <motion.div className={`hero-bg hero-bg--${LOOKS.includes(HERO_BG) ? 'look' : HERO_BG}`} style={{ x: parallax.x, y: parallax.y }}>
               {LOOKS.includes(HERO_BG) ? (
