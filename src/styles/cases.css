@@ -1685,13 +1685,6 @@
   filter: none;
 }
 
-.pj .back-pill {
-  --back-bg: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-}
-
 .pj .sk {
   background: radial-gradient(ellipse 70% 60% at 50% 45%, #f0140c, #c20500 75%, #a80400);
 }
@@ -2222,10 +2215,6 @@
 .pj .sk-ph-tag,
 .pj .sk-soon-tag {
   border-radius: 3px;
-}
-
-.pj .back-pill {
-  border-radius: 6px;
 }
 
 @media (max-width: 760px) {

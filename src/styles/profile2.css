@@ -1,0 +1,719 @@
+/* About profile (components/about/profile/Profile.jsx) — minimal, warm, a little interactive.
+   Uses the page theme tokens: --bg --ink --muted --line --surface --hair --hair-strong --red */
+
+.ab {
+  --red: #e10600;
+  --green: #1fb866;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ---------------- intro ---------------- */
+.prx-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+  min-height: calc(100svh - 40px);
+  padding: 110px var(--pad) 60px;
+}
+
+.prx-hello {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 7px 14px 7px 10px;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.prx-hello span {
+  display: inline-block;
+  animation: prx-wave 2.4s ease-in-out 1.2s 2;
+  transform-origin: 70% 70%;
+}
+
+@keyframes prx-wave {
+  0%, 60%, 100% { transform: rotate(0); }
+  10%, 30% { transform: rotate(16deg); }
+  20%, 40% { transform: rotate(-8deg); }
+}
+
+.prx-title {
+  margin: 22px 0 0;
+  font-size: clamp(40px, 5.2vw, 76px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+}
+
+.prx-rot {
+  position: relative;
+  display: inline-grid;
+  justify-items: start;
+  color: var(--red);
+  white-space: nowrap;
+}
+
+.prx-rot > span {
+  grid-row: 1;
+  grid-column: 1;
+  display: inline-block;
+}
+
+.prx-rot-ghost {
+  visibility: hidden;
+}
+
+.prx-rot i {
+  font-style: normal;
+  color: var(--ink);
+}
+
+.prx-lead {
+  max-width: 460px;
+  margin: 22px 0 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.prx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.prx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 22px;
+  border: 1px solid var(--hair-strong);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.prx-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.prx-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+}
+
+.prx-btn--solid {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.prx-btn--solid:hover {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 14px 28px -14px rgba(225, 6, 0, 0.7);
+}
+
+.prx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.prx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.prx-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.prx-dot--green {
+  background: var(--green);
+  box-shadow: 0 0 0 0 rgba(31, 184, 102, 0.6);
+  animation: prx-ping 1.8s ease-out infinite;
+}
+
+@keyframes prx-ping {
+  to { box-shadow: 0 0 0 7px rgba(31, 184, 102, 0); }
+}
+
+/* photo: reuse the existing frame, softer and lighter */
+.prx-intro .abx-photo-wrap {
+  justify-self: end;
+  width: min(100%, 460px);
+}
+
+.prx-intro .abx-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  border-radius: 28px;
+  box-shadow: 0 40px 80px -48px rgba(12, 20, 51, 0.45);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+
+/* ---------------- sections ---------------- */
+.prx-sec {
+  padding: clamp(56px, 8vw, 110px) var(--pad) 0;
+}
+
+.prx-kicker {
+  margin: 0 0 22px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* quick facts */
+.prx-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prx-facts li {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 22px;
+  border: 1px solid var(--hair);
+  border-radius: 20px;
+  background: var(--surface);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.prx-facts li:hover {
+  transform: translateY(-4px);
+  border-color: var(--hair-strong);
+  box-shadow: 0 24px 40px -30px rgba(12, 20, 51, 0.4);
+}
+
+.prx-fact-k {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.prx-fact-v {
+  margin-top: 8px;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.prx-fact-s {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* what I do */
+.prx-do {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+
+.prx-disc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--hair);
+}
+
+.prx-disc button {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 24px;
+  align-items: center;
+  width: 100%;
+  padding: 20px 4px;
+  border: 0;
+  border-bottom: 1px solid var(--hair);
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.25s ease, padding 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.prx-disc-n {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.prx-disc-name {
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.prx-disc-arrow {
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.prx-disc button.is-on {
+  padding-left: 14px;
+  color: var(--ink);
+}
+
+.prx-disc button.is-on .prx-disc-n {
+  color: var(--red);
+}
+
+.prx-disc button.is-on .prx-disc-arrow {
+  opacity: 1;
+  transform: none;
+  color: var(--red);
+}
+
+.prx-panel {
+  padding: 28px;
+  border: 1px solid var(--hair);
+  border-radius: 24px;
+  background: var(--surface);
+}
+
+.prx-panel-text {
+  min-height: 3.2em;
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.prx-panel-label {
+  margin: 26px 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.prx-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prx-tools li {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 8px;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  opacity: 0.45;
+  transition: opacity 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.prx-tools li.is-lit {
+  opacity: 1;
+  color: var(--ink);
+  border-color: var(--hair-strong);
+  transform: translateY(-2px);
+}
+
+.prx-tool-mark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.prx-tool-mark img,
+.prx-tool-mark svg {
+  width: 16px;
+  height: 16px;
+}
+
+.prx-badge {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* finish */
+.prx-finish {
+  padding-bottom: 32px;
+}
+
+.prx-cta {
+  padding: clamp(36px, 6vw, 72px);
+  border-radius: 32px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.prx-cta .prx-kicker {
+  margin-bottom: 14px;
+}
+
+.prx-cta-title {
+  max-width: 780px;
+  margin: 0 auto;
+  font-size: clamp(32px, 4.4vw, 60px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+}
+
+.prx-cta-title i {
+  font-style: normal;
+  color: var(--red);
+}
+
+.prx-cta .prx-actions {
+  justify-content: center;
+}
+
+.prx-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+  margin-top: 40px;
+  padding-top: 22px;
+  border-top: 1px solid var(--hair);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.prx-foot p {
+  margin: 0;
+}
+
+.prx-foot nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.prx-foot a,
+.prx-foot button {
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.prx-foot a:hover,
+.prx-foot button:hover {
+  color: var(--red);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prx-hello span,
+  .prx-dot--green {
+    animation: none;
+  }
+}
+
+/* ---------------- tablets & phones ---------------- */
+@media (max-width: 960px) {
+  .prx-intro {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    padding-top: 96px;
+  }
+  .prx-intro .abx-photo-wrap {
+    justify-self: start;
+    width: min(100%, 380px);
+    order: -1;
+  }
+  .prx-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .prx-do {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .prx-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .prx-title {
+    font-size: 38px;
+  }
+
+  .prx-foot {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ---------------- skills, spelled out above the ticket ---------------- */
+.prx-skill-rows {
+  display: grid;
+  gap: 18px;
+  padding: 26px 28px;
+  border: 1px solid var(--hair);
+  border-radius: 22px;
+  background: var(--surface);
+}
+
+.prx-skill-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.prx-skill-row + .prx-skill-row {
+  padding-top: 18px;
+  border-top: 1px solid var(--hair);
+}
+
+.prx-skill-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.prx-skill-row ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prx-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px;
+  border: 1px solid var(--hair-strong);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.prx-skill--tool {
+  padding: 7px 14px 7px 7px;
+  font-weight: 500;
+}
+
+/* the ticket sits right under, so tighten its top spacing */
+.prx-skills + .tk-sec {
+  padding-top: clamp(40px, 5vw, 64px);
+  border-top: 0;
+}
+
+@media (max-width: 640px) {
+  .prx-skill-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .prx-skill-rows {
+    padding: 20px;
+  }
+}
+
+/* ---------------- photo card, premium ---------------- */
+.prx-intro .abx-photo-wrap {
+  position: relative;
+  isolation: isolate;
+}
+
+/* a thin offset frame behind the photo, like a print mount, with a red corner */
+.prx-intro .abx-photo-wrap::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 18px -18px -18px 18px;
+  border: 1px solid var(--hair-strong);
+  border-radius: 30px;
+  background:
+    linear-gradient(var(--red), var(--red)) right 26px bottom -1px / 64px 3px no-repeat,
+    linear-gradient(var(--red), var(--red)) right -1px bottom 26px / 3px 64px no-repeat;
+}
+
+.prx-intro .abx-photo {
+  border-radius: 26px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 50px 90px -50px rgba(12, 20, 51, 0.55),
+    0 18px 36px -24px rgba(12, 20, 51, 0.25);
+}
+
+/* calmer photo: no soft blurred border — just the photo, a touch zoomed out, clean edges */
+.prx-intro .abx-photo-clip {
+  background: none;
+}
+
+.prx-intro .abx-photo-clip::before {
+  display: none;
+}
+
+.prx-intro .abx-photo-clip img {
+  transform: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+  object-position: 50% 30%;
+}
+
+/* fine inner edge + a soft fade at the bottom so the name plate sits on calm ground */
+.prx-intro .abx-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  background: linear-gradient(180deg, transparent 58%, rgba(8, 12, 22, 0.55));
+}
+
+/* the name plate sits inside the card, not hanging off it */
+.prx-intro .abx-lt {
+  left: 22px;
+  right: auto;
+  bottom: 22px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.55);
+}
+
+/* small glass status chip, top-left */
+.prx-photo-chip {
+  position: absolute;
+  z-index: 3;
+  top: 20px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(10, 14, 24, 0.62);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.prx-photo-chip i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2ee87c;
+  box-shadow: 0 0 8px rgba(46, 232, 124, 0.9);
+}
+
+@media (max-width: 560px) {
+  .prx-intro .abx-photo-wrap::before {
+    inset: 12px -10px -12px 12px;
+    border-radius: 24px;
+  }
+  .prx-intro .abx-lt {
+    left: 14px;
+    bottom: 14px;
+  }
+}
+
+.prx-photo {
+  position: relative;
+  justify-self: end;
+  width: min(100%, 460px);
+}
+
+.prx-photo .abx-photo-wrap {
+  width: 100%;
+}
+
+@media (max-width: 960px) {
+  .prx-photo {
+    justify-self: start;
+    width: min(100%, 380px);
+    order: -1;
+  }
+}
+
+/* smooth hover: only the photo inside zooms a touch, on its own GPU layer; the frame,
+   chip and name plate stay perfectly still (no tilt, no live blur) */
+.prx-intro .abx-photo {
+  transition: box-shadow 0.4s ease;
+}
+
+.prx-intro .abx-photo-clip {
+  will-change: transform;
+  backface-visibility: hidden;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.prx-intro .abx-photo:hover .abx-photo-clip {
+  transform: scale(1.025);
+}

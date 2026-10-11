@@ -3,11 +3,11 @@ import { Link, useNavigationType } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import BackButton from '../components/BackButton.jsx'
 import PassGate from '../components/about/PassGate.jsx'
-import Hero from '../components/about/profile/Hero.jsx'
-import { Ticket } from '../components/about/profile/Sections.jsx'
+import Profile from '../components/about/profile/Profile.jsx'
 import { MoonIcon, SunIcon } from '../components/MapIcons.jsx'
 import '../styles/about.css'
 import '../styles/profile.css'
+import '../styles/profile2.css'
 
 const ease = [0.22, 1, 0.36, 1]
 
@@ -129,8 +129,7 @@ export default function About() {
       {entered && (
         <main className="ab">
           {/* the gate fades for 0.7s while the photo flies over — type follows once it's clear */}
-          <Hero from={photoFrom} delay={viaGate ? 0.4 : 0.1} />
-          <Ticket />
+          <Profile from={photoFrom} delay={viaGate ? 0.4 : 0.1} />
         </main>
       )}
     </div>

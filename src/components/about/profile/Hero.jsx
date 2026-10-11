@@ -95,7 +95,7 @@ export default function Hero({ from, delay = 0 }) {
   )
 }
 
-function Photo({ from, delay }) {
+export function Photo({ from, delay }) {
   const reduce = useReducedMotion()
   const frame = useRef(null)
   const fly = Boolean(from) && !reduce
