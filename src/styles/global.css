@@ -1667,87 +1667,14 @@ button {
 }
 
 /* first-visit hint, F1 TV info-card style */
-.hero-hint {
-  right: calc(75 * var(--u));
-  top: calc(468 * var(--u));
-  width: calc(300 * var(--u));
-  padding: calc(14 * var(--u)) calc(38 * var(--u)) calc(14 * var(--u)) calc(16 * var(--u));
-  border-left: 3px solid #e10600;
-  border-radius: 0 calc(8 * var(--u)) calc(8 * var(--u)) 0;
-  background: rgba(10, 11, 14, 0.78);
-  color: #fff;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 18px 30px -18px rgba(0, 0, 0, 0.6);
-}
 
-.hero-hint-tag {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #e10600;
-  font-family: 'Titillium Web', var(--font);
-  font-size: calc(12 * var(--u));
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
 
-.hero-hint-tag i {
-  display: grid;
-  place-items: center;
-  width: calc(16 * var(--u));
-  height: calc(16 * var(--u));
-  border-radius: 50%;
-  background: #e10600;
-  color: #fff;
-  font-family: Georgia, serif;
-  font-size: calc(11 * var(--u));
-  font-style: italic;
-  font-weight: 700;
-  letter-spacing: 0;
-}
 
-.hero-hint p {
-  margin: calc(6 * var(--u)) 0 0;
-  font-size: calc(13.5 * var(--u));
-  line-height: 1.45;
-  opacity: 0.9;
-}
 
-.hero-hint-short {
-  display: none;
-}
 
-.hero-hint b {
-  font-weight: 600;
-  color: #fff;
-}
 
-.hero-hint-close {
-  position: absolute;
-  top: calc(8 * var(--u));
-  right: calc(8 * var(--u));
-  width: calc(24 * var(--u));
-  height: calc(24 * var(--u));
-  border: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  font-size: calc(16 * var(--u));
-  line-height: 1;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
 
-.hero-hint-close:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
 
-.hero-hint-close:focus-visible {
-  outline: 2px solid #e10600;
-  outline-offset: 2px;
-}
 
 @media (prefers-reduced-motion: reduce) {
   .hero-start::after,
@@ -1878,42 +1805,6 @@ button {
     display: none;
   }
   /* phones: a slim one-line strip just above START, clear of the name */
-  .hero-hint {
-    left: 16px;
-    right: 16px;
-    top: auto;
-    bottom: 92px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: auto;
-    padding: 9px 40px 9px 12px;
-  }
-  .hero-hint-long {
-    display: none;
-  }
-  .hero-hint .hero-hint-short {
-    display: block;
-    margin: 0;
-  }
-  .hero-hint-tag {
-    font-size: 11px;
-  }
-  .hero-hint-tag i {
-    width: 15px;
-    height: 15px;
-    font-size: 10px;
-  }
-  .hero-hint p {
-    font-size: 13px;
-  }
-  .hero-hint-close {
-    top: 50%;
-    width: 24px;
-    height: 24px;
-    font-size: 16px;
-    transform: translateY(-50%);
-  }
   .hero-chevrons {
     display: none;
   }
@@ -2938,4 +2829,24 @@ html.lenis body {
 
 .hero-bg--code {
   contain: strict;
+}
+
+/* status badge: solid green tab + a white panel with black text */
+.hero-open {
+  background: #fff;
+  box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.55);
+  backdrop-filter: none;
+}
+
+.hero-open b {
+  background: #22c55e;
+  color: #052e16;
+}
+
+.hero-open > span {
+  color: #111214;
+}
+
+.hero-open i {
+  background: #fff;
 }

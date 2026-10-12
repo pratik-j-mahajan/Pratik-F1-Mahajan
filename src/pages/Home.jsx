@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { track } from '../analytics.js'
 import { Link, useNavigate } from 'react-router-dom'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import useParallax from '../hooks/useParallax.js'
 import { LiveHud, LiveTower } from '../components/home/Live.jsx'
 import AuraBackdrop from '../components/home/AuraBackdrop.jsx'
@@ -26,15 +26,6 @@ const SPEC = [
   ['Discipline', 'Product & UX'],
   ['Season', '2026'],
 ]
-
-const HINT_KEY = 'home-hint-done'
-const readHintDone = () => {
-  try {
-    return localStorage.getItem(HINT_KEY) === '1'
-  } catch {
-    return false
-  }
-}
 
 let mapWarmed = false
 function warmMap(priority) {
@@ -87,30 +78,13 @@ const rise = (delay) => ({
 export default function Home() {
   const parallax = useParallax(BG_SHIFT)
   const race = useRaceStart()
-  const [hint, setHint] = useState(false)
 
-  // first-time visitors get a short "how this works" card after a moment
   // the map is the next stop: fetch its full-quality image quietly once home has settled,
   // and again (high priority) the moment someone points at START — so it's cached by the time it opens
   useEffect(() => {
     const t = setTimeout(() => warmMap('low'), 1800)
     return () => clearTimeout(t)
   }, [])
-
-  useEffect(() => {
-    if (readHintDone()) return
-    const t = setTimeout(() => setHint(true), 1800)
-    return () => clearTimeout(t)
-  }, [])
-
-  const closeHint = () => {
-    setHint(false)
-    try {
-      localStorage.setItem(HINT_KEY, '1')
-    } catch {
-      /* fine */
-    }
-  }
 
   // Enter starts the race (the page itself doesn't scroll, so this is the way in)
   useEffect(() => {
@@ -207,33 +181,6 @@ export default function Home() {
               </div>
             ))}
           </motion.dl>
-
-          {/* first visit: a broadcast-style hint that START is the way in */}
-          <AnimatePresence>
-            {hint && !race.running && (
-              <motion.aside
-                className="hero-hint"
-                initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
-                animate={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
-                exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.55, ease: [0.7, 0, 0.2, 1] }}
-                aria-label="How to explore"
-              >
-                <span className="hero-hint-tag">
-                  <i aria-hidden="true">i</i> New here?
-                </span>
-                <p className="hero-hint-long">
-                  Press <b>Start</b> to enter the circuit — every section of my portfolio is a corner on the track.
-                </p>
-                <p className="hero-hint-short">
-                  Tap <b>Start</b> to explore.
-                </p>
-                <button type="button" className="hero-hint-close" onClick={closeHint} aria-label="Dismiss">
-                  ×
-                </button>
-              </motion.aside>
-            )}
-          </AnimatePresence>
 
           <motion.div className={`hero-card${race.running ? ' is-starting' : ''}`} {...rise(0.65)}>
             {/* start lights: they come on while you hover, and run the real sequence when you start */}

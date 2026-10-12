@@ -7,5 +7,5 @@ export const tools = [
   { name: 'Framer', icon: siFramer },
   { name: 'LottieFiles', icon: siLottiefiles },
   { name: 'Canva', logo: '/images/tools/canva.svg', brand: '#00C4CC' },
-  { name: 'Illustrator', badge: { text: 'Ai', fg: '#FF9A00', bg: '#330000' } },
+  { name: 'Adobe Express', badge: { text: 'Ex', fg: '#ffffff', bg: '#e8304f' } },
 ]

@@ -32,7 +32,7 @@ export const contact = {
 // they light up on the ticket when the zone is pointed at.
 export const disciplines = [
   { name: 'Product Design', tools: ['Figma', 'Framer'] },
-  { name: 'Visual Design', tools: ['Figma', 'Canva', 'Illustrator'] },
+  { name: 'Visual Design', tools: ['Figma', 'Canva', 'Adobe Express'] },
   { name: 'User Experience', tools: ['Figma', 'Framer'] },
   { name: 'User Interface', tools: ['Figma', 'Framer', 'LottieFiles'] },
 ]
