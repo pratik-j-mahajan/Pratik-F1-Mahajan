@@ -25,10 +25,17 @@ export function initAnalytics() {
   // page views are sent by hand on each route change (see trackPage)
   window.gtag('config', GA_ID, { send_page_view: false })
 
-  const s = document.createElement('script')
-  s.async = true
-  s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`
-  document.head.appendChild(s)
+  // Google's script is the biggest download on the page, so it waits until the site has loaded and
+  // settled; events sent before then queue up in dataLayer and go out once it arrives.
+  const load = () => {
+    const s = document.createElement('script')
+    s.async = true
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`
+    document.head.appendChild(s)
+  }
+  const later = () => setTimeout(() => (window.requestIdleCallback || setTimeout)(load), 3000)
+  if (document.readyState === 'complete') later()
+  else window.addEventListener('load', later, { once: true })
 
   // one listener for every link on the site: outbound, résumé, email
   document.addEventListener(

@@ -31,10 +31,10 @@ export const contact = {
 // What I do — shown as the ticket's access zones. `tools` are names from src/data/skills.js;
 // they light up on the ticket when the zone is pointed at.
 export const disciplines = [
-  { name: 'Product Design', tools: ['Figma', 'Framer'] },
-  { name: 'Visual Design', tools: ['Figma', 'Canva', 'Adobe Express'] },
-  { name: 'User Experience', tools: ['Figma', 'Framer'] },
-  { name: 'User Interface', tools: ['Figma', 'Framer', 'LottieFiles'] },
+  { name: 'Product Design', tools: ['Figma', 'Framer', 'Claude', 'ChatGPT'] },
+  { name: 'Visual Design', tools: ['Figma', 'Canva', 'Adobe Express', 'Google Flow', 'Google Whisk'] },
+  { name: 'User Experience', tools: ['Figma', 'Framer', 'Perplexity', 'ChatGPT'] },
+  { name: 'User Interface', tools: ['Figma', 'Framer', 'LottieFiles', 'Claude'] },
 ]
 
 // Social links shown in the footer. Empty ones are hidden.

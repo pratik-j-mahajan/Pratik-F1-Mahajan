@@ -8,7 +8,9 @@
              Leave it empty and the page draws a clean cover from the post's first line instead.
   `format`   'carousel' | 'image' | 'text' — how the post was published (shown on the cover).
   `embed`    LinkedIn's embed URL for the post (from "Embed this post" → the iframe's src). When set,
-             the page shows the real LinkedIn post instead of a generated cover.
+             the page shows the real LinkedIn post instead of a generated cover — as a still image,
+             /public/images/posts/<the long number in the URL>.webp (a 1008 × 1280 screenshot of the
+             collapsed embed). Without that file it falls back to the live embed, which is slow on phones.
   `posts`    every post you want the page to know about — add new ones as you publish and
              refresh the numbers now and then. The page picks the latest 3 (by date) and the best 3
              (views + weighted reactions and comments) on its own.

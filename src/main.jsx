@@ -19,7 +19,6 @@ if (CAPTURE) {
       localStorage.removeItem('about-pass-seen')
     }
     else sessionStorage.setItem('about-pass', '1')
-    localStorage.setItem('home-hint-done', '1')
   } catch {
     // storage blocked
   }
@@ -33,6 +32,11 @@ if (CAPTURE) {
 }
 
 initAnalytics()
+
+// The intro draws no text, so the browser wouldn't ask for the fonts until the site appears —
+// start the main weights downloading now, while the intro plays, so the home page paints in its real fonts.
+const EARLY_FONTS = ['300 1em Poppins', '400 1em Poppins', '600 1em Poppins', '700 1em Poppins', '600 1em "Titillium Web"', '700 1em "Titillium Web"', '400 1em Jost', 'italic 700 1em Kanit']
+EARLY_FONTS.forEach((f) => document.fonts?.load(f).catch(() => {}))
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

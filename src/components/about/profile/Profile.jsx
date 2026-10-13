@@ -169,19 +169,24 @@ function Skills() {
             ))}
           </ul>
         </div>
-        <div className="prx-skill-row">
-          <p className="prx-skill-label">Tools I use</p>
-          <ul>
-            {tools.map((t) => (
-              <Rise as="li" key={t.name} className="prx-skill prx-skill--tool">
-                <span className="prx-tool-mark">
-                  <ToolMark tool={t} />
-                </span>
-                {t.name}
-              </Rise>
-            ))}
-          </ul>
-        </div>
+        {[
+          ['Tools I use', tools.filter((t) => !t.ai)],
+          ['AI tools', tools.filter((t) => t.ai)],
+        ].map(([label, list]) => (
+          <div className="prx-skill-row" key={label}>
+            <p className="prx-skill-label">{label}</p>
+            <ul>
+              {list.map((t) => (
+                <Rise as="li" key={t.name} className="prx-skill prx-skill--tool">
+                  <span className="prx-tool-mark">
+                    <ToolMark tool={t} />
+                  </span>
+                  {t.name}
+                </Rise>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </section>
   )

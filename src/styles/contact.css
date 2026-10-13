@@ -243,7 +243,8 @@
     padding-left: 0;
   }
   .ctc-value {
-    font-size: 20px;
+    /* scales down so the email address stays on one line on phones */
+    font-size: clamp(14px, 4.6vw, 20px);
     white-space: normal;
     overflow-wrap: anywhere;
   }

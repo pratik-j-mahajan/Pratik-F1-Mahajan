@@ -204,6 +204,7 @@ export default function Home() {
               <span className="hero-card-bg" />
               <img className="hero-card-logo" src="/images/f1-logo-white-v2.svg" alt="" />
               <span className="hero-start-label">Start</span>
+              <span className="sr-only"> the portfolio tour</span>
               <span className="hero-chevrons" aria-hidden="true">
                 <i />
                 <i />

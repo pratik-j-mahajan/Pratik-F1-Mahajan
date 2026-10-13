@@ -533,22 +533,27 @@ function Work() {
   )
 }
 
-// the real LinkedIn post as a preview card: LinkedIn's collapsed view (two lines of text + the
-// image), rendered at its native 504px and scaled to the card, clipped to one height; click opens the post
+// the real LinkedIn post as a preview card: LinkedIn's collapsed view (two lines of text + the image).
+// It shows a still of the post (/images/posts/<post id>.webp) — each live LinkedIn embed loads LinkedIn's
+// whole app, and eight of them froze phones. A post with no still yet falls back to the live embed,
+// rendered at its native 504px and scaled to the card. Clicking opens the post either way.
 const EMBED_W = 504
 const collapsed = (src) => (src.includes('collapsed=') ? src : `${src}${src.includes('?') ? '&' : '?'}collapsed=1`)
+const stillFor = (src) => `/images/posts/${src.match(/(\d{15,})/)?.[1]}.webp`
 
 function EmbedTile({ p, delay }) {
   const box = useRef(null)
+  const [live, setLive] = useState(false)
   const [ready, setReady] = useState(false)
   const [scale, setScale] = useState(0)
 
   useEffect(() => {
+    if (!live) return
     const el = box.current
     const ro = new ResizeObserver(([e]) => setScale(e.contentRect.width / EMBED_W))
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [live])
 
   return (
     <Rise className="lk-tile-wrap" delay={delay}>
@@ -559,15 +564,27 @@ function EmbedTile({ p, delay }) {
               <InIcon /> Loading…
             </span>
           )}
-          {scale > 0 && (
-            <iframe
-              src={collapsed(p.embed)}
-              title={`LinkedIn post: ${p.hook}`}
+          {!live ? (
+            <img
+              className="lk-embed-still"
+              src={stillFor(p.embed)}
+              alt=""
               loading="lazy"
-              tabIndex={-1}
-              style={{ transform: `scale(${scale})` }}
+              decoding="async"
               onLoad={() => setReady(true)}
+              onError={() => setLive(true)}
             />
+          ) : (
+            scale > 0 && (
+              <iframe
+                src={collapsed(p.embed)}
+                title={`LinkedIn post: ${p.hook}`}
+                loading="lazy"
+                tabIndex={-1}
+                style={{ transform: `scale(${scale})` }}
+                onLoad={() => setReady(true)}
+              />
+            )
           )}
           <span className="lk-embed-fade" aria-hidden="true" />
           <span className="lk-tile-open" aria-hidden="true">

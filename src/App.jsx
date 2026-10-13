@@ -40,6 +40,36 @@ function usePrefetchPages() {
 }
 import useSmoothScroll from './hooks/useSmoothScroll.js'
 import { trackPage } from './analytics.js'
+import { getCaseStudy } from './data/caseStudies.js'
+
+// each page gets its own tab title (also what analytics records for the page view)
+const SITE = 'Pratik Mahajan'
+const TITLES = {
+  '/': `${SITE} — Product Designer`,
+  '/map': `Circuit Map — ${SITE}`,
+  '/about': `About — ${SITE}`,
+  '/case-study': `Case Studies — ${SITE}`,
+  '/projects': `Projects — ${SITE}`,
+  '/content': `Content — ${SITE}`,
+  '/contact': `Contact — ${SITE}`,
+  '/resume': `Resume — ${SITE}`,
+}
+const titleFor = (path) => {
+  const p = path.replace(/\/+$/, '') || '/'
+  if (TITLES[p]) return TITLES[p]
+  const study = p.startsWith('/case-study/') && getCaseStudy(p.slice(12))
+  return study ? `${study.name} — Case Study — ${SITE}` : `Off track — ${SITE}`
+}
+
+const INTRO_KEY = 'intro-seen'
+const introSeen = () => {
+  try {
+    return sessionStorage.getItem(INTRO_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+const showIntroInitially = () => !window.__capture && !introSeen()
 
 const INTRO_DURATION = 2200
 // the site mounts just before the intro fades, so it's there (and animating in) as the intro dissolves
@@ -48,7 +78,10 @@ const SITE_MOUNT_AT = 1700
 function ScrollManager() {
   const { pathname } = useLocation()
   const type = useNavigationType()
-  useEffect(() => trackPage(pathname), [pathname])
+  useEffect(() => {
+    document.title = titleFor(pathname)
+    trackPage(pathname)
+  }, [pathname])
   useLayoutEffect(() => {
     if (type !== 'PUSH' && type !== 'REPLACE') return
     // stop any smooth-scroll glide from the previous page, then jump to the top
@@ -61,13 +94,18 @@ function ScrollManager() {
 export default function App() {
   useSmoothScroll()
   usePrefetchPages()
-  // The intro plays on every full page load: a refresh, a typed URL or an opened link.
-  // Moving around inside the site never replays it.
-  const [showIntro, setShowIntro] = useState(!window.__capture)
-  const [siteReady, setSiteReady] = useState(Boolean(window.__capture))
+  // The intro plays once per browser session (the first visit); a refresh or reopening the link in the
+  // same session goes straight to the site, so it doesn't wait 2s every time. Moving around never replays it.
+  const [showIntro, setShowIntro] = useState(showIntroInitially)
+  const [siteReady, setSiteReady] = useState(() => !showIntroInitially())
 
   useEffect(() => {
     if (!showIntro) return
+    try {
+      sessionStorage.setItem(INTRO_KEY, '1')
+    } catch {
+      /* storage blocked: the intro just plays again next time */
+    }
     const mount = setTimeout(() => setSiteReady(true), SITE_MOUNT_AT)
     const timer = setTimeout(() => setShowIntro(false), INTRO_DURATION)
     return () => {
