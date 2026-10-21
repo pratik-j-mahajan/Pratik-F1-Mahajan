@@ -27,8 +27,21 @@ const SPEC = [
   ['Season', '2026'],
 ]
 
+// stream overlay: a REC timer counting up from when the page opened
+function StreamTimer() {
+  const [t, setT] = useState(0)
+  useEffect(() => {
+    const start = Date.now()
+    const id = setInterval(() => setT(Math.floor((Date.now() - start) / 1000)), 1000)
+    return () => clearInterval(id)
+  }, [])
+  const mm = String(Math.floor(t / 60)).padStart(2, '0')
+  const ss = String(t % 60).padStart(2, '0')
+  return <>00:{mm}:{ss}</>
+}
+
 let mapWarmed = false
-function warmMap(priority) {
+export function warmMap(priority) {
   if (mapWarmed) return
   mapWarmed = true
   const img = new Image()
@@ -40,7 +53,7 @@ function warmMap(priority) {
 }
 
 // START: the five lights come on one by one, go out — and away we go
-function useRaceStart() {
+export function useRaceStart() {
   const navigate = useNavigate()
   const reduce = useReducedMotion()
   const [lit, setLit] = useState(0)
@@ -51,11 +64,6 @@ function useRaceStart() {
 
   const start = useCallback(() => {
     if (running) return
-    try {
-      localStorage.setItem(HINT_KEY, '1')
-    } catch {
-      /* fine */
-    }
     track('start_race')
     if (reduce) return navigate('/map')
     setRunning(true)
@@ -100,9 +108,28 @@ export default function Home() {
   return (
     <div className="home">
       <section className="hero" onMouseMove={parallax.onMouseMove} onMouseLeave={parallax.onMouseLeave}>
+        {/* a light stream HUD over the stage: corner brackets and a REC timer */}
+        <div className="hero-hud" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+          <span className="hero-rec">
+            <b /> REC <StreamTimer />
+          </span>
+        </div>
         <div className="hero-stage">
           {HERO_BG === 'photo' ? (
-            <motion.div className="hero-bg hero-bg--code" aria-hidden="true" style={{ x: parallax.x, y: parallax.y }} />
+            <motion.div className="hero-bg hero-bg--code" aria-hidden="true" style={{ x: parallax.x, y: parallax.y }}>
+              {/* polished red, with a slow sheen gliding across now and then */}
+              <span className="hero-gloss" />
+              {/* a faint telemetry speed trace across the background, like the F1 TV lap graph */}
+              <svg className="hero-trace" viewBox="0 0 1600 400" preserveAspectRatio="none">
+                <path className="hero-trace-grid" d="M0 100 H1600 M0 200 H1600 M0 300 H1600" />
+                <path className="hero-trace-line" d="M0 100 L140 100 L170 280 L230 290 L300 120 L420 110 L450 250 L480 260 L560 130 L640 115 L680 310 L740 320 L800 160 L980 100 L1010 230 L1060 240 L1140 120 L1300 100 L1340 270 L1400 275 L1480 130 L1600 110" />
+              </svg>
+              <span className="hero-trace-label">Speed · km/h</span>
+            </motion.div>
           ) : (
             <motion.div className={`hero-bg hero-bg--${LOOKS.includes(HERO_BG) ? 'look' : HERO_BG}`} style={{ x: parallax.x, y: parallax.y }}>
               {LOOKS.includes(HERO_BG) ? (
@@ -130,8 +157,10 @@ export default function Home() {
 
           <motion.div className="hero-driver" {...rise(0.2)}>
             <img src="/images/driver.webp" alt="Pratik Mahajan" fetchPriority="high" />
-            <div className="hero-driver-fade" />
           </motion.div>
+
+          {/* the floor: the background's own red rises across the full width over the photo's base */}
+          <span className="hero-floor" aria-hidden="true" />
 
           <motion.div className="hero-role" {...rise(0.35)}>
             <span className="hero-kerb" aria-hidden="true" />

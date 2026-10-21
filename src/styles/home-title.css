@@ -1,0 +1,643 @@
+/*
+  Alternate home, "title card" (src/pages/HomeTitle.jsx) — an F1 driver poster on #F6F5F1.
+  One centred artboard, 640 wide on the 1280 × 766 home frame (X(n) = calc(50% + (n - 640) * u)):
+    name    320–960 × 34–334   — exactly the band's width, stretched tall (SVG textLength)
+    driver  centred, head over the name, base on the band's base
+    band    320–960 × 452–622  — details left / right of the driver
+    under   country 648, tagline 670–728, signature to its right
+  The sides only carry small supporting details; START sits bottom-right.
+*/
+:root:has(.htc) {
+  --u: min(100vw / 1280, 100svh / 832);
+  overflow: hidden;
+}
+
+.htc {
+  --paper: #f6f5f1;
+  --wine: #8b0d12;
+  --red: #e10600;
+  --ink: #111214;
+  --muted: #6b675f;
+  position: relative;
+  height: calc(100svh - 85 * var(--u));
+  overflow: hidden;
+  overflow: clip;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* faint ruled lines across the paper, and a soft paper grain */
+.htc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 calc(96 * var(--u)), rgba(17, 18, 20, 0.04) calc(96 * var(--u)) calc(97 * var(--u))),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.htc > * {
+  position: absolute;
+  margin: 0;
+}
+
+/* ---------------- the artboard ---------------- */
+.htc-name {
+  left: calc(50% - 320 * var(--u));
+  top: calc(34 * var(--u));
+  width: calc(640 * var(--u));
+  height: calc(300 * var(--u));
+  line-height: 0;
+}
+
+.htc-name svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.htc-name text {
+  font-family: 'Anton', 'Impact', sans-serif;
+  font-size: 300px;
+  fill: var(--wine);
+}
+
+.htc-f1 {
+  left: calc(50% - 320 * var(--u));
+  top: calc(414 * var(--u));
+  height: calc(22 * var(--u));
+}
+
+.htc-pm {
+  left: calc(50% + 288 * var(--u));
+  top: calc(408 * var(--u));
+  width: calc(32 * var(--u));
+  height: calc(32 * var(--u));
+  border-radius: calc(7 * var(--u));
+}
+
+.htc-band {
+  left: calc(50% - 320 * var(--u));
+  top: calc(452 * var(--u));
+  width: calc(640 * var(--u));
+  height: calc(170 * var(--u));
+  background: var(--wine);
+  color: #fff;
+}
+
+.htc-band > * {
+  position: absolute;
+  margin: 0;
+}
+
+.htc-full {
+  left: calc(18 * var(--u));
+  top: calc(16 * var(--u));
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.htc-side {
+  left: calc(16 * var(--u));
+  bottom: calc(16 * var(--u));
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(19 * var(--u));
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.htc-bio {
+  right: calc(18 * var(--u));
+  top: calc(16 * var(--u));
+  width: calc(150 * var(--u));
+  text-align: center;
+}
+
+.htc-code {
+  padding-bottom: calc(6 * var(--u));
+  margin-bottom: calc(8 * var(--u));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.htc-bio p:last-child {
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(8.6 * var(--u));
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* the driver: centred, base on the band's base */
+.htc-driver {
+  left: calc(50% - 205 * var(--u));
+  top: calc(196 * var(--u));
+  width: calc(410 * var(--u));
+  height: calc(426 * var(--u));
+  object-fit: cover;
+  object-position: top;
+}
+
+.htc-country {
+  left: 0;
+  right: 0;
+  top: calc(646 * var(--u));
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(13 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.htc-tag {
+  left: 0;
+  right: 0;
+  top: calc(670 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--u));
+  font-family: 'Anton', 'Impact', sans-serif;
+  font-size: calc(52 * var(--u));
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--wine);
+}
+
+.htc-tag span {
+  font-size: calc(18 * var(--u));
+  line-height: 1.02;
+  text-align: right;
+}
+
+.htc-sign {
+  left: calc(50% + 150 * var(--u));
+  top: calc(662 * var(--u));
+  font-family: 'Mrs Saint Delafield', 'Brush Script MT', cursive;
+  font-size: calc(54 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ink);
+  transform: rotate(-9deg);
+}
+
+/* ---------------- the sides ---------------- */
+.htc-edition {
+  left: calc(50% - 568 * var(--u));
+  top: calc(40 * var(--u));
+  padding-left: calc(12 * var(--u));
+  border-left: calc(3 * var(--u)) solid var(--red);
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10.5 * var(--u));
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.htc-edition b {
+  color: var(--ink);
+}
+
+.htc-open {
+  left: calc(50% - 568 * var(--u));
+  bottom: calc(46 * var(--u));
+  width: calc(210 * var(--u));
+}
+
+.htc-open-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(8 * var(--u));
+  padding: calc(5 * var(--u)) calc(11 * var(--u)) calc(5 * var(--u)) calc(9 * var(--u));
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #15803d;
+}
+
+.htc-open-tag i {
+  width: calc(7 * var(--u));
+  height: calc(7 * var(--u));
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.htc-open-role {
+  margin-top: calc(10 * var(--u));
+  font-family: 'Anton', 'Impact', sans-serif;
+  font-size: calc(30 * var(--u));
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.htc-open-meta {
+  margin-top: calc(6 * var(--u));
+  font-size: calc(12 * var(--u));
+  color: var(--muted);
+}
+
+/* ---------------- START ---------------- */
+.htc-start-wrap {
+  right: calc(50% - 565 * var(--u));
+  bottom: calc(46 * var(--u));
+  width: calc(200 * var(--u));
+}
+
+.htc-lights {
+  display: flex;
+  justify-content: flex-end;
+  gap: calc(7 * var(--u));
+  margin-bottom: calc(10 * var(--u));
+}
+
+.htc-lights i {
+  width: calc(10 * var(--u));
+  height: calc(10 * var(--u));
+  border-radius: 50%;
+  background: #d8d4cc;
+  transition: background 0.15s ease;
+}
+
+.htc-start-wrap:hover .htc-lights i,
+.htc-start-wrap:focus-within .htc-lights i,
+.htc-lights i.is-on {
+  background: var(--red);
+}
+
+.htc-start-wrap:hover .htc-lights i,
+.htc-start-wrap:focus-within .htc-lights i {
+  transition-delay: calc(var(--i) * 90ms);
+}
+
+.htc.is-starting .htc-lights i:not(.is-on) {
+  background: #d8d4cc;
+  transition-delay: 0s;
+}
+
+.htc-start {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(56 * var(--u));
+  padding: 0 calc(22 * var(--u));
+  border-radius: calc(8 * var(--u));
+  background: var(--red);
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(18 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.htc-start span[aria-hidden] {
+  font-size: calc(22 * var(--u));
+  transition: transform 0.25s ease;
+}
+
+.htc-start:hover {
+  background: #c40500;
+}
+
+.htc-start:hover span[aria-hidden] {
+  transform: translateX(calc(4 * var(--u)));
+}
+
+.htc-start:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---------------- phones: the same poster, scaled to the width ---------------- */
+@media (max-width: 760px) {
+  .htc {
+    --p: calc((100vw - 32px) / 640);
+    --t: max(20px, calc((100svh - var(--nav-h) - 96px - 740 * var(--p)) / 2));
+    height: calc(100svh - var(--nav-h));
+  }
+  .htc-name {
+    left: 16px;
+    top: var(--t);
+    width: calc(640 * var(--p));
+    height: calc(300 * var(--p));
+  }
+  .htc-driver {
+    left: 50%;
+    top: calc(var(--t) + 162 * var(--p));
+    width: calc(410 * var(--p));
+    height: calc(426 * var(--p));
+    margin-left: calc(-205 * var(--p));
+  }
+  .htc-f1 {
+    left: 16px;
+    top: calc(var(--t) + 380 * var(--p));
+    height: calc(22 * var(--p));
+  }
+  .htc-pm {
+    left: auto;
+    right: 16px;
+    top: calc(var(--t) + 374 * var(--p));
+    width: calc(32 * var(--p));
+    height: calc(32 * var(--p));
+  }
+  .htc-band {
+    left: 16px;
+    top: calc(var(--t) + 418 * var(--p));
+    width: calc(640 * var(--p));
+    height: calc(170 * var(--p));
+  }
+  .htc-full {
+    left: 8px;
+    top: 7px;
+    font-size: 6px;
+  }
+  .htc-side {
+    left: 7px;
+    bottom: 7px;
+    font-size: 9px;
+  }
+  .htc-bio {
+    right: 7px;
+    top: 7px;
+    width: 24%;
+  }
+  .htc-code {
+    font-size: 6px;
+  }
+  .htc-bio p:last-child {
+    display: none;
+  }
+  .htc-country {
+    top: calc(var(--t) + 610 * var(--p));
+    font-size: 10px;
+  }
+  .htc-tag {
+    top: calc(var(--t) + 636 * var(--p));
+    font-size: 34px;
+  }
+  .htc-tag span {
+    font-size: 12px;
+  }
+  .htc-sign {
+    left: auto;
+    right: 18px;
+    top: calc(var(--t) + 700 * var(--p));
+    font-size: 36px;
+  }
+  .htc-edition,
+  .htc-open,
+  .htc-lights {
+    display: none;
+  }
+  .htc-start-wrap {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+  }
+  .htc-start {
+    height: 54px;
+    font-size: 17px;
+  }
+}
+
+/* the driver narrower, so the band's details stay clear on both sides */
+@media (min-width: 761px) {
+  .htc-driver {
+    left: calc(50% - 168 * var(--u));
+    top: calc(206 * var(--u));
+    width: calc(336 * var(--u));
+    height: calc(416 * var(--u));
+  }
+  .htc-bio {
+    width: calc(130 * var(--u));
+  }
+}
+
+@media (max-width: 760px) {
+  .htc-driver {
+    width: calc(336 * var(--p));
+    margin-left: calc(-168 * var(--p));
+    top: calc(var(--t) + 172 * var(--p));
+    height: calc(416 * var(--p));
+  }
+}
+
+/* ================================================================
+   Poster furniture — the details that make it read as a designed F1 poster
+   ================================================================ */
+
+/* crop marks at the artboard's corners (300–980 × 18–748) */
+.htc-crop {
+  left: calc(50% - 340 * var(--u));
+  top: calc(18 * var(--u));
+  width: calc(680 * var(--u));
+  height: calc(730 * var(--u));
+  pointer-events: none;
+}
+
+.htc-crop i {
+  position: absolute;
+  width: calc(18 * var(--u));
+  height: calc(18 * var(--u));
+  border: 0 solid rgba(17, 18, 20, 0.35);
+}
+
+.htc-crop i:nth-child(1) { left: 0; top: 0; border-width: 1px 0 0 1px; }
+.htc-crop i:nth-child(2) { right: 0; top: 0; border-width: 1px 1px 0 0; }
+.htc-crop i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 1px 1px; }
+.htc-crop i:nth-child(4) { right: 0; bottom: 0; border-width: 0 1px 1px 0; }
+
+/* the giant race number, outlined, bleeding off the right edge */
+.htc-num {
+  right: calc(-70 * var(--u));
+  top: calc(250 * var(--u));
+  font-family: 'Anton', 'Impact', sans-serif;
+  font-size: calc(480 * var(--u));
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: calc(1.5 * var(--u)) rgba(139, 13, 18, 0.22);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* a halftone halo behind the driver's head */
+.htc-halo {
+  left: calc(50% - 210 * var(--u));
+  top: calc(150 * var(--u));
+  width: calc(420 * var(--u));
+  height: calc(420 * var(--u));
+  border-radius: 50%;
+  background-image: radial-gradient(circle, rgba(225, 6, 0, 0.55) 1.1px, transparent 1.6px);
+  background-size: calc(9 * var(--u)) calc(9 * var(--u));
+  -webkit-mask-image: radial-gradient(circle, #000 20%, rgba(0, 0, 0, 0.5) 45%, transparent 70%);
+  mask-image: radial-gradient(circle, #000 20%, rgba(0, 0, 0, 0.5) 45%, transparent 70%);
+  pointer-events: none;
+}
+
+/* the name's outline echo, nudged down-right behind it */
+.htc-echo {
+  left: calc(50% - 320 * var(--u) + 7 * var(--u));
+  top: calc(34 * var(--u) + 7 * var(--u));
+  width: calc(640 * var(--u));
+  height: calc(300 * var(--u));
+  line-height: 0;
+  pointer-events: none;
+}
+
+.htc-echo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.htc-echo text {
+  font-family: 'Anton', 'Impact', sans-serif;
+  font-size: 300px;
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+}
+
+/* order: furniture behind, then echo, name, halo, driver */
+.htc-crop,
+.htc-num { z-index: 0; }
+.htc-echo { z-index: 1; }
+.htc-name { z-index: 2; }
+.htc-halo { z-index: 3; }
+.htc-band { z-index: 3; }
+.htc-driver { z-index: 4; }
+.htc-kerb { z-index: 5; }
+
+/* kerb stripe along the band's foot */
+.htc-kerb {
+  left: calc(50% - 320 * var(--u));
+  top: calc(622 * var(--u));
+  width: calc(640 * var(--u));
+  height: calc(8 * var(--u));
+  background: repeating-linear-gradient(-45deg, var(--red) 0 calc(10 * var(--u)), #fff calc(10 * var(--u)) calc(20 * var(--u)));
+  transform-origin: 0 50%;
+}
+
+/* barcode tag under the band's left end */
+.htc-code-tag {
+  left: calc(50% - 320 * var(--u));
+  top: calc(646 * var(--u));
+  display: grid;
+  gap: calc(4 * var(--u));
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(8.5 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+}
+
+.htc-bars {
+  display: block;
+  width: calc(96 * var(--u));
+  height: calc(24 * var(--u));
+  background: repeating-linear-gradient(90deg,
+    var(--ink) 0 2px, transparent 2px 4px,
+    var(--ink) 4px 5px, transparent 5px 8px,
+    var(--ink) 8px 11px, transparent 11px 12px,
+    var(--ink) 12px 13px, transparent 13px 16px);
+}
+
+/* right: the season in numbers */
+.htc-stats {
+  right: calc(50% - 565 * var(--u));
+  top: calc(40 * var(--u));
+  width: calc(200 * var(--u));
+  margin: 0;
+}
+
+.htc-stats div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: calc(10 * var(--u)) 0;
+  border-bottom: 1px solid rgba(17, 18, 20, 0.14);
+}
+
+.htc-stats div:first-child {
+  border-top: calc(3 * var(--u)) solid var(--red);
+}
+
+.htc-stats dt {
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.htc-stats dd {
+  margin: 0;
+  font-family: 'Anton', 'Impact', sans-serif;
+  font-size: calc(30 * var(--u));
+  line-height: 1;
+  color: var(--ink);
+}
+
+@media (max-width: 760px) {
+  .htc-crop,
+  .htc-num,
+  .htc-stats,
+  .htc-code-tag {
+    display: none;
+  }
+  .htc-echo {
+    left: calc(16px + 4px);
+    top: calc(var(--t) + 4px);
+    width: calc(640 * var(--p));
+    height: calc(300 * var(--p));
+  }
+  .htc-halo {
+    left: 50%;
+    top: calc(var(--t) + 120 * var(--p));
+    width: calc(420 * var(--p));
+    height: calc(420 * var(--p));
+    margin-left: calc(-210 * var(--p));
+    background-size: 6px 6px;
+  }
+  .htc-kerb {
+    left: 16px;
+    top: calc(var(--t) + 588 * var(--p));
+    width: calc(640 * var(--p));
+    height: 5px;
+  }
+}
+
+.htc-crop {
+  height: calc(724 * var(--u));
+}

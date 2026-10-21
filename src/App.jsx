@@ -4,7 +4,13 @@ import { AnimatePresence } from 'framer-motion'
 import Intro from './components/Intro.jsx'
 import Navbar from './components/Navbar.jsx'
 import { SectionTransitionProvider } from './components/SectionTransition.jsx'
-import Home from './pages/Home.jsx'
+import HomeOriginal from './pages/Home.jsx'
+import HomePoster from './pages/HomePoster.jsx'
+import HomeTitle from './pages/HomeTitle.jsx'
+
+// home pages while we compare: ?home=poster or ?home=title in the address; anything else shows the original
+const HOME_PICK = new URLSearchParams(window.location.search).get('home')
+const Home = HOME_PICK === 'poster' ? HomePoster : HOME_PICK === 'title' ? HomeTitle : HomeOriginal
 
 // Home loads with the app; every other page is its own download, fetched quietly in the
 // background once home is up — so the first screen is light and later pages still open instantly.
@@ -61,15 +67,6 @@ const titleFor = (path) => {
   return study ? `${study.name} — Case Study — ${SITE}` : `Off track — ${SITE}`
 }
 
-const INTRO_KEY = 'intro-seen'
-const introSeen = () => {
-  try {
-    return sessionStorage.getItem(INTRO_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-const showIntroInitially = () => !window.__capture && !introSeen()
 
 const INTRO_DURATION = 2200
 // the site mounts just before the intro fades, so it's there (and animating in) as the intro dissolves
@@ -94,18 +91,13 @@ function ScrollManager() {
 export default function App() {
   useSmoothScroll()
   usePrefetchPages()
-  // The intro plays once per browser session (the first visit); a refresh or reopening the link in the
-  // same session goes straight to the site, so it doesn't wait 2s every time. Moving around never replays it.
-  const [showIntro, setShowIntro] = useState(showIntroInitially)
-  const [siteReady, setSiteReady] = useState(() => !showIntroInitially())
+  // The intro plays on every full page load: a refresh, a typed URL or an opened link.
+  // Moving around inside the site never replays it.
+  const [showIntro, setShowIntro] = useState(!window.__capture)
+  const [siteReady, setSiteReady] = useState(Boolean(window.__capture))
 
   useEffect(() => {
     if (!showIntro) return
-    try {
-      sessionStorage.setItem(INTRO_KEY, '1')
-    } catch {
-      /* storage blocked: the intro just plays again next time */
-    }
     const mount = setTimeout(() => setSiteReady(true), SITE_MOUNT_AT)
     const timer = setTimeout(() => setShowIntro(false), INTRO_DURATION)
     return () => {

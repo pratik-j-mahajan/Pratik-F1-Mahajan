@@ -1,0 +1,585 @@
+/*
+  Alternate home, "poster" (src/pages/HomePoster.jsx) — the reference poster, recomposed as one
+  wide graphic on #F6F5F1.
+
+  Desktop is drawn on the 1280 × 766 home frame: X(n) = calc(50% + (n - 640) * u) keeps everything
+  centred, sizes are calc(n * u). Grid: left column 72–340, poster 380–980, right column 1000–1205.
+    red block   470–830 × 120–600         surname   up its left edge, 386–460
+    grey back   centred on the block, head above it, base on the block's base
+    colour      in front, over the block's lower-left corner, standing on the floor
+    helmet      grey, lower right, standing on the floor
+  Phones keep the tall reference layout (the poster column in % of a 1125 × 2000 frame).
+*/
+:root:has(.hpo) {
+  --u: min(100vw / 1280, 100svh / 832);
+  overflow: hidden;
+}
+
+.hpo {
+  --paper: #f6f5f1;
+  --wine: #8b0d12;
+  --red: #e10600;
+  --ink: #111214;
+  --muted: #5d5952;
+  position: relative;
+  height: calc(100svh - 85 * var(--u));
+  overflow: hidden;
+  overflow: clip;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.hpo-col {
+  position: absolute;
+  inset: 0;
+}
+
+.hpo-col > * {
+  position: absolute;
+  margin: 0;
+}
+
+/* ================= desktop ================= */
+@media (min-width: 761px) {
+  /* marks, centred over the poster */
+  .hpo-marks {
+    left: 50%;
+    top: calc(26 * var(--u));
+    display: flex;
+    align-items: center;
+    gap: calc(34 * var(--u));
+    transform: translateX(-50%);
+  }
+  .hpo-pm,
+  .hpo-flag {
+    width: calc(30 * var(--u));
+    height: calc(30 * var(--u));
+  }
+  .hpo-pm {
+    border-radius: calc(7 * var(--u));
+  }
+  .hpo-flag {
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px rgba(17, 18, 20, 0.12);
+  }
+  .hpo-f1 {
+    height: calc(20 * var(--u));
+  }
+
+  /* quote: top of the left column */
+  .hpo-quote {
+    left: calc(50% - 568 * var(--u));
+    top: calc(70 * var(--u));
+    width: calc(270 * var(--u));
+  }
+  .hpo-quote p {
+    font-size: calc(17 * var(--u));
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+  .hpo-quote p::before {
+    content: '';
+    display: block;
+    width: calc(28 * var(--u));
+    height: calc(3 * var(--u));
+    margin-bottom: calc(16 * var(--u));
+    background: var(--red);
+  }
+  .hpo-quote cite {
+    display: block;
+    margin-top: calc(12 * var(--u));
+    font-size: calc(13 * var(--u));
+    font-style: normal;
+    color: var(--muted);
+  }
+
+  /* the block */
+  .hpo-block {
+    left: calc(50% - 170 * var(--u));
+    top: calc(120 * var(--u));
+    width: calc(360 * var(--u));
+    height: calc(480 * var(--u));
+    background: linear-gradient(180deg, #96111a, var(--wine) 55%, #6d0a0e);
+  }
+
+  /* the surname, big, reading bottom-to-top up the block's left edge */
+  .hpo-name {
+    left: calc(50% - 254 * var(--u));
+    top: calc(120 * var(--u));
+    width: calc(74 * var(--u));
+    height: calc(480 * var(--u));
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    writing-mode: vertical-rl;
+    font-size: calc(70 * var(--u));
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--wine);
+  }
+  .hpo-name span {
+    display: block;
+    transform: rotate(180deg);
+  }
+  .hpo-name em {
+    font-size: 0.5em;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+
+  /* grey back figure: centred on the block, head above it, base on its base */
+  .hpo-back {
+    left: calc(50% - 205 * var(--u));
+    top: calc(96 * var(--u));
+    width: calc(400 * var(--u));
+    height: calc(504 * var(--u));
+    object-fit: cover;
+    object-position: top;
+    filter: grayscale(1) contrast(1.08) brightness(0.86);
+    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+  }
+
+  /* grey helmet figure, lower right, on the floor */
+  .hpo-helmet {
+    left: calc(50% + 56 * var(--u));
+    bottom: 0;
+    height: calc(330 * var(--u));
+    filter: grayscale(1) contrast(1.12) brightness(0.8);
+  }
+
+  /* colour figure in front, over the block's lower-left corner */
+  .hpo-front {
+    left: calc(50% - 196 * var(--u));
+    bottom: 0;
+    height: calc(440 * var(--u));
+    filter: drop-shadow(calc(2 * var(--u)) 0 0 var(--red)) drop-shadow(calc(-2 * var(--u)) 0 0 var(--red))
+      drop-shadow(0 calc(-2 * var(--u)) 0 var(--red)) drop-shadow(0 calc(24 * var(--u)) calc(40 * var(--u)) rgba(60, 0, 4, 0.25));
+  }
+
+  /* autograph, over the paper to the right of the block, above the helmet */
+  .hpo-sign {
+    left: calc(50% + 150 * var(--u));
+    top: calc(392 * var(--u));
+    font-family: 'Mrs Saint Delafield', 'Brush Script MT', cursive;
+    font-size: calc(76 * var(--u));
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--ink);
+    transform: rotate(-9deg);
+    z-index: 5;
+  }
+}
+
+/* ================= side columns (desktop) ================= */
+.hpo-side {
+  position: absolute;
+  width: calc(240 * var(--u));
+}
+
+.hpo-side--left {
+  left: calc(50% - 568 * var(--u));
+  top: calc(300 * var(--u));
+}
+
+.hpo-side--right {
+  left: calc(50% + 360 * var(--u));
+  top: calc(120 * var(--u));
+  width: calc(205 * var(--u));
+}
+
+.hpo-open {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(8 * var(--u));
+  padding: calc(6 * var(--u)) calc(12 * var(--u)) calc(6 * var(--u)) calc(10 * var(--u));
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10.5 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #15803d;
+}
+
+.hpo-open i {
+  width: calc(7 * var(--u));
+  height: calc(7 * var(--u));
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.hpo-side h2 {
+  margin-top: calc(14 * var(--u));
+  font-size: calc(44 * var(--u));
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.hpo-also {
+  margin-top: calc(10 * var(--u));
+  font-size: calc(13.5 * var(--u));
+  color: var(--wine);
+}
+
+.hpo-side ul {
+  display: grid;
+  gap: calc(8 * var(--u));
+  margin: calc(18 * var(--u)) 0 0;
+  padding: calc(14 * var(--u)) 0 0;
+  border-top: 1px solid rgba(17, 18, 20, 0.14);
+  list-style: none;
+  font-size: calc(13.5 * var(--u));
+  font-weight: 500;
+}
+
+.hpo-side li::before {
+  content: '';
+  display: inline-block;
+  width: calc(10 * var(--u));
+  height: 2px;
+  margin-right: calc(10 * var(--u));
+  vertical-align: middle;
+  background: var(--red);
+}
+
+.hpo-label {
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10.5 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wine);
+}
+
+.hpo-bio {
+  margin-top: calc(10 * var(--u));
+  font-size: calc(13.5 * var(--u));
+  line-height: 1.6;
+  color: #3f3c37;
+}
+
+.hpo-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: calc(18 * var(--u)) 0 0;
+  border-top: 1px solid rgba(17, 18, 20, 0.14);
+}
+
+.hpo-facts div {
+  padding-top: calc(12 * var(--u));
+}
+
+.hpo-facts dt {
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10 * var(--u));
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a766e;
+}
+
+.hpo-facts dd {
+  margin: calc(4 * var(--u)) 0 0;
+  font-size: calc(28 * var(--u));
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+/* ================= START, bottom-right ================= */
+.hpo-start-wrap {
+  position: absolute;
+  left: calc(50% + 360 * var(--u));
+  bottom: calc(44 * var(--u));
+  width: calc(205 * var(--u));
+}
+
+.hpo-lights {
+  display: flex;
+  justify-content: flex-end;
+  gap: calc(7 * var(--u));
+  margin-bottom: calc(10 * var(--u));
+}
+
+.hpo-lights i {
+  width: calc(10 * var(--u));
+  height: calc(10 * var(--u));
+  border-radius: 50%;
+  background: #d8d4cc;
+  transition: background 0.15s ease;
+}
+
+.hpo-start-wrap:hover .hpo-lights i,
+.hpo-start-wrap:focus-within .hpo-lights i,
+.hpo-lights i.is-on {
+  background: var(--red);
+}
+
+.hpo-start-wrap:hover .hpo-lights i,
+.hpo-start-wrap:focus-within .hpo-lights i {
+  transition-delay: calc(var(--i) * 90ms);
+}
+
+.hpo.is-starting .hpo-lights i:not(.is-on) {
+  background: #d8d4cc;
+  transition-delay: 0s;
+}
+
+.hpo-start {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(58 * var(--u));
+  padding: 0 calc(22 * var(--u));
+  border-radius: calc(8 * var(--u));
+  background: var(--red);
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(19 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.hpo-start span[aria-hidden] {
+  font-size: calc(22 * var(--u));
+  transition: transform 0.25s ease;
+}
+
+.hpo-start:hover {
+  background: #c40500;
+}
+
+.hpo-start:hover span[aria-hidden] {
+  transform: translateX(calc(4 * var(--u)));
+}
+
+.hpo-start:active {
+  transform: scale(0.98);
+}
+
+.hpo-start:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.hpo-key {
+  margin-top: calc(10 * var(--u));
+  font-family: 'Titillium Web', var(--font);
+  font-size: calc(10 * var(--u));
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-align: right;
+  text-transform: uppercase;
+  color: #8a867e;
+}
+
+.hpo-key kbd {
+  padding: 1px calc(5 * var(--u));
+  border: 1px solid rgba(17, 18, 20, 0.2);
+  border-radius: 3px;
+  font: inherit;
+  color: var(--ink);
+}
+
+/* ================= phones: the tall reference layout ================= */
+@media (max-width: 760px) {
+  .hpo {
+    height: calc(100svh - var(--nav-h));
+  }
+  .hpo-col {
+    inset: 0 0 auto;
+    aspect-ratio: 1125 / 2000;
+    container-type: size;
+    overflow: hidden;
+  }
+  .hpo-marks {
+    left: 0;
+    right: 0;
+    top: 1.6%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10cqw;
+  }
+  .hpo-pm,
+  .hpo-flag {
+    width: 6cqw;
+    height: 6cqw;
+  }
+  .hpo-pm {
+    border-radius: 1.2cqw;
+  }
+  .hpo-flag {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .hpo-f1 {
+    height: 4cqw;
+  }
+  .hpo-quote {
+    left: 4%;
+    right: 4%;
+    top: 8.5%;
+    text-align: center;
+  }
+  .hpo-quote p {
+    font-size: 3.7cqw;
+    font-weight: 500;
+    line-height: 1.45;
+  }
+  .hpo-quote cite {
+    display: block;
+    margin-top: 1cqh;
+    font-size: 3.2cqw;
+    font-style: normal;
+    color: var(--muted);
+  }
+  .hpo-block {
+    left: 23%;
+    width: 54%;
+    top: 24.4%;
+    height: 39.4%;
+    background: var(--wine);
+  }
+  .hpo-name {
+    left: 13%;
+    width: 9%;
+    top: 24.4%;
+    height: 39.4%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    writing-mode: vertical-rl;
+    font-size: 8cqw;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--wine);
+  }
+  .hpo-name span {
+    display: block;
+    transform: rotate(180deg);
+  }
+  .hpo-name em {
+    font-size: 0.5em;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+  .hpo-back {
+    left: 26%;
+    width: 66%;
+    bottom: 36.2%;
+    filter: grayscale(1) contrast(1.08) brightness(0.86);
+    -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
+  }
+  .hpo-helmet {
+    left: 52%;
+    width: 52%;
+    bottom: 0;
+    filter: grayscale(1) contrast(1.12) brightness(0.8);
+  }
+  .hpo-front {
+    left: 1%;
+    width: 55%;
+    bottom: 0;
+    filter: drop-shadow(1.5px 0 0 var(--red)) drop-shadow(-1.5px 0 0 var(--red)) drop-shadow(0 -1.5px 0 var(--red));
+  }
+  .hpo-sign {
+    left: 58%;
+    top: 55%;
+    z-index: 5;
+    font-family: 'Mrs Saint Delafield', 'Brush Script MT', cursive;
+    font-size: 11cqw;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--ink);
+    transform: rotate(-9deg);
+    text-shadow: 0 0 4px rgba(246, 245, 241, 0.95), 0 0 10px rgba(246, 245, 241, 0.8);
+  }
+  .hpo-side,
+  .hpo-lights,
+  .hpo-key {
+    display: none;
+  }
+  .hpo-start-wrap {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+  }
+  .hpo-start {
+    height: 54px;
+    font-size: 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hpo-lights i {
+    transition: none;
+  }
+}
+
+/* ---- polish ---- */
+.hpo-quote p {
+  text-wrap: balance;
+}
+
+.hpo-sign {
+  text-shadow: 0 0 4px rgba(246, 245, 241, 0.95), 0 0 10px rgba(246, 245, 241, 0.8);
+}
+
+@media (min-width: 761px) {
+  .hpo-name {
+    font-size: calc(62 * var(--u));
+    justify-content: center;
+  }
+  .hpo-quote {
+    width: calc(290 * var(--u));
+  }
+  .hpo-sign {
+    left: calc(50% + 200 * var(--u));
+    top: calc(300 * var(--u));
+  }
+}
+
+@media (max-width: 760px) {
+  .hpo-name {
+    font-size: 6.6cqw;
+  }
+  .hpo-front {
+    width: 51%;
+  }
+}
+
+@media (min-width: 761px) {
+  .hpo-sign {
+    left: calc(50% + 150 * var(--u));
+    top: calc(430 * var(--u));
+    font-size: calc(62 * var(--u));
+  }
+}
+
+@media (min-width: 761px) {
+  .hpo-sign {
+    left: calc(50% + 170 * var(--u));
+    top: calc(366 * var(--u));
+    font-size: calc(56 * var(--u));
+  }
+}
