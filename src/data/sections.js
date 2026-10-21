@@ -42,6 +42,14 @@ const sections = [
     pin: { x: 58.7, y: 47.2, align: 'end' },
   },
   {
+    id: 'instagram',
+    title: 'Instagram',
+    turn: 'Turn 3',
+    path: '/instagram',
+    blurb: 'Reels, visuals and design snippets from my Instagram.',
+    pin: { x: 37.2, y: 29 }, // the hairpin at the top of the circuit
+  },
+  {
     id: 'contact',
     title: 'Contact',
     turn: 'Pit lane',

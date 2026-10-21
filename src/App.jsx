@@ -23,6 +23,7 @@ const pages = {
   projects: () => import('./pages/Projects.jsx'),
   content: () => import('./pages/Content.jsx'),
   contact: () => import('./pages/Contact.jsx'),
+  instagram: () => import('./pages/Instagram.jsx'),
   resume: () => import('./pages/Resume.jsx'),
   notFound: () => import('./pages/NotFound.jsx'),
 }
@@ -34,6 +35,7 @@ const CaseDetail = lazy(pages.caseDetail)
 const Projects = lazy(pages.projects)
 const Content = lazy(pages.content)
 const Contact = lazy(pages.contact)
+const Instagram = lazy(pages.instagram)
 const Resume = lazy(pages.resume)
 const NotFound = lazy(pages.notFound)
 
@@ -58,6 +60,7 @@ const TITLES = {
   '/projects': `Projects — ${SITE}`,
   '/content': `Content — ${SITE}`,
   '/contact': `Contact — ${SITE}`,
+  '/instagram': `Instagram — ${SITE}`,
   '/resume': `Resume — ${SITE}`,
 }
 const titleFor = (path) => {
@@ -128,6 +131,7 @@ export default function App() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/content" element={<Content />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/instagram" element={<Instagram />} />
               <Route path="/resume" element={<Resume />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -249,7 +249,7 @@ export default function Map() {
             transition={{ duration: 0.2 }}
           >
             <p className="map-info-label">{active ? active.turn : 'Portfolio Grand Prix'}</p>
-            <p className="map-info-title">{active ? active.title : 'Lap 1 · 5 Sections'}</p>
+            <p className="map-info-title">{active ? active.title : `Lap 1 · ${sections.length} Sections`}</p>
             <p className="map-info-sub">{active ? active.blurb : 'Pick a turn on the track to explore'}</p>
           </motion.div>
         </AnimatePresence>
