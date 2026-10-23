@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { track } from '../analytics.js'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion, useTransform } from 'framer-motion'
 import useParallax from '../hooks/useParallax.js'
 import { LiveHud, LiveTower } from '../components/home/Live.jsx'
 import AuraBackdrop from '../components/home/AuraBackdrop.jsx'
@@ -86,6 +86,9 @@ const rise = (delay) => ({
 export default function Home() {
   const parallax = useParallax(BG_SHIFT)
   const race = useRaceStart()
+  // depth: the driver drifts less than the background, so he stands in front of it
+  const driverX = useTransform(parallax.x, (v) => v * 0.45)
+  const driverY = useTransform(parallax.y, (v) => v * 0.45)
 
   // the map is the next stop: fetch its full-quality image quietly once home has settled,
   // and again (high priority) the moment someone points at START — so it's cached by the time it opens
@@ -155,7 +158,7 @@ export default function Home() {
             06
           </motion.p>
 
-          <motion.div className="hero-driver" {...rise(0.2)}>
+          <motion.div className="hero-driver" style={{ x: driverX, y: driverY }} {...rise(0.2)}>
             <img src="/images/driver.webp" alt="Pratik Mahajan" fetchPriority="high" />
           </motion.div>
 

@@ -3119,3 +3119,29 @@ html.lenis body {
     left: calc(3% + 40px);
   }
 }
+
+/* a slow light sweep across the glossy 06 */
+.hero-number {
+  background:
+    linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.7) 50%, transparent 60%) 160% 0 / 250% 100% no-repeat,
+    linear-gradient(0deg, rgba(110, 0, 2, 0.5) 18%, rgba(255, 255, 255, 0.5) 55%, rgba(255, 214, 205, 0.28) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: hero-06-sheen 6s cubic-bezier(0.6, 0, 0.3, 1) 2.4s infinite;
+}
+
+@keyframes hero-06-sheen {
+  0% {
+    background-position: 160% 0, 0 0;
+  }
+  25%,
+  100% {
+    background-position: -60% 0, 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-number {
+    animation: none;
+  }
+}
