@@ -1,5 +1,5 @@
 /*
-  Instagram (Turn 3) — @productwalaah. Numbers are from the public profile (Oct 21, 2026);
+  Instagram (Turn 3) — @productwalaah. Profile counts checked Nov 1, 2026;
   update them here as they grow. Instagram doesn't make share counts public, so reels get a
   Share button instead.
   `reels`: newest first. `id` is the code in the reel's link (instagram.com/reel/<id>/) and the
@@ -12,12 +12,24 @@ export const profile = {
   avatar: '/images/instagram/avatar.webp',
   bio: 'Design thinker — user interfaces, user experience, industrial design and motion. Building in public with AI.',
   topics: ['Product design', 'UI/UX', 'Tech', 'AI'],
-  followers: '592',
-  following: '5',
-  posts: '7',
+  followers: '675',
+  following: '8',
+  posts: '16',
   igBio: 'Design thinker | User Interfaces | User Experience | Industrial Design | Motion | linkedin 1.5M+ views',
   link: 'the-jantar-mantar-run.vercel.app',
-  updated: 'Oct 2026',
+  updated: 'Nov 1, 2026',
+}
+
+// Account Insights screenshot supplied Nov 1, 2026. Reporting period not shown.
+export const insights = {
+  views: 2852250,
+  viewers: 2061918,
+  interactions: 485542,
+  followerViewsPercent: 1.2,
+  nonFollowerViewsPercent: 98.8,
+  reelViewsPercent: 99.4,
+  storyViewsPercent: 0.5,
+  postViewsPercent: 0,
 }
 
 // the project the account is built around right now
@@ -26,8 +38,8 @@ export const featured = {
   titleHi: 'द जंतर मंतर रन',
   blurb: 'A browser runner game I designed and shipped — and the reel series that took it from launch to a crowd.',
   stats: [
-    ['2.5M+', 'Views'],
-    ['45K+', 'Players'],
+    ['3M+', 'Views'],
+    ['65K+', 'Players'],
   ],
   play: 'https://the-jantar-mantar-run.vercel.app',
   reel: 'DevkLvqoSGM',
@@ -55,3 +67,13 @@ export const totals = { views: sum('views'), likes: sum('likes'), comments: sum(
 // for "+" totals: round down so a figure is never overstated (2,590,769 → "2.5M", 161,649 → "161K")
 export const floorCompact = (n) =>
   n >= 1e6 ? `${Math.floor(n / 1e5) / 10}M` : n >= 1e3 ? `${Math.floor(n / 1e3)}K` : String(n)
+
+// Latest non-pinned posts verified on the profile, Nov 1, 2026.
+// Engagement counts omitted until verified; missing values are not zero.
+export const latestPosts = [
+  { id: 'DfKSgvfI9SD', title: 'Dr. Driving, reimagined with AI', kind: 'reel' },
+  { id: 'DfJZ2HeoxBR', title: 'Hill Climb Racing — same terrible driving', kind: 'reel' },
+  { id: 'DfFFddmiCqw', title: 'Same icons. Extra grain.', kind: 'p' },
+  { id: 'De_KYhxooGl', title: 'AI gave him hair. Then workplace anxiety.', kind: 'reel' },
+].map(post => ({ ...post, thumbnail: `/images/instagram/${post.id}.jpg` }))
+export const postUrl = (post) => `https://www.instagram.com/productwalaah/${post.kind || 'reel'}/${post.id}/`

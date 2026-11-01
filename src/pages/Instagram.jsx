@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import BackButton from '../components/BackButton.jsx'
-import { compact, floorCompact, featured, profile, reels, reelUrl, totals } from '../data/instagram.js'
+import { compact, floorCompact, featured, profile, reels, reelUrl, insights, latestPosts, postUrl } from '../data/instagram.js'
 import '../styles/cases.css'
 import '../styles/instagram.css'
 
@@ -19,7 +19,8 @@ const rise = (delay = 0) => ({
   transition: { duration: 0.8, delay, ease },
 })
 const fmt = (d) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
-const top = reels.reduce((a, r) => (r.views > a.views ? r : a), reels[0])
+const top = { ...reels.find(r => r.id === 'Deoy9JnIRFG'), views: 1800000 }
+const feed = [...latestPosts, top]
 
 function IgIcon() {
   return (
@@ -57,7 +58,7 @@ function ShareButton({ reel }) {
   const [copied, setCopied] = useState(false)
   const share = async (e) => {
     e.preventDefault()
-    const url = reelUrl(reel.id)
+    const url = postUrl(reel)
     try {
       if (navigator.share) await navigator.share({ title: reel.title, url })
       else {
@@ -88,9 +89,9 @@ export default function Instagram() {
 
   const stats = [
     [profile.followers, 'Followers'],
-    [`${floorCompact(totals.views)}+`, 'Reel views'],
-    [`${floorCompact(totals.likes)}+`, 'Likes'],
-    [String(reels.length), 'Reels'],
+    [`${floorCompact(insights.views)}+`, 'Account views'],
+    [`${floorCompact(insights.viewers)}+`, 'Viewers'],
+    [`${floorCompact(insights.interactions)}+`, 'Interactions'],
   ]
 
   return (
@@ -188,7 +189,7 @@ export default function Instagram() {
                 </a>
               </div>
             </div>
-            <figcaption>Live profile · {profile.updated}</figcaption>
+            <figcaption>Profile snapshot · {profile.updated}</figcaption>
           </motion.figure>
 
           <motion.dl className="ig-stats" {...rise(0.25)}>
@@ -199,6 +200,7 @@ export default function Instagram() {
               </div>
             ))}
           </motion.dl>
+          <p className="ig-note">Account Insights · Nov 1, 2026 · {insights.nonFollowerViewsPercent}% of views from non-followers · {insights.followerViewsPercent}% from followers. Reels {insights.reelViewsPercent}% · Stories {insights.storyViewsPercent}% · Posts {insights.postViewsPercent}%. Reporting period not shown in the supplied snapshot.</p>
         </section>
 
         {/* ---------- the feature ---------- */}
@@ -240,44 +242,44 @@ export default function Instagram() {
           <motion.div className="ig-reels-head" {...rise()}>
             <div>
               <p className="ig-label ig-label--dark">The feed</p>
-              <h2 id="ig-reels-title">Every reel, with its numbers</h2>
+              <h2 id="ig-reels-title">Latest posts & the top reel</h2>
             </div>
             <a href={profile.url} target="_blank" rel="noreferrer">
               See all on Instagram ↗
             </a>
           </motion.div>
           <ul className="ig-grid">
-            {reels.map((r, i) => (
+            {feed.map((r, i) => (
               <motion.li key={r.id} className="ig-card" {...rise(Math.min(i, 5) * 0.06)}>
-                <a className="ig-card-shot" href={reelUrl(r.id)} target="_blank" rel="noreferrer" aria-label={`${r.title} — watch on Instagram`}>
-                  <img src={`/images/instagram/${r.id}.webp`} alt="" loading="lazy" decoding="async" />
+                <a className="ig-card-shot" href={postUrl(r)} target="_blank" rel="noreferrer" aria-label={`${r.title} — watch on Instagram`}>
+                  <img src={r.thumbnail || `/images/instagram/${r.id}.webp`} alt="" loading="lazy" decoding="async" />
                   {r.id === top.id && <span className="ig-top">Top reel</span>}
                   <span className="ig-views">
-                    <Play /> {compact(r.views)}
+                    <Play /> {r.views != null ? `${floorCompact(r.views)}+` : r.kind === 'p' ? 'Carousel' : 'Reel'}
                   </span>
                 </a>
                 <div className="ig-card-body">
                   <p className="ig-card-meta">
                     <span>{String(i + 1).padStart(2, '0')}</span>
-                    {fmt(r.date)}
+                    {r.date ? fmt(r.date) : r.kind === 'p' ? 'Carousel' : 'Latest reel'}
                   </p>
-                  <a className="ig-card-title" href={reelUrl(r.id)} target="_blank" rel="noreferrer">
+                  <a className="ig-card-title" href={postUrl(r)} target="_blank" rel="noreferrer">
                     {r.title}
                   </a>
                   <div className="ig-engage">
-                    <span title={`${r.likes.toLocaleString('en-IN')} likes`}>
+                    {r.likes != null && <span title={`${r.likes.toLocaleString('en-IN')} likes`}>
                       <Heart /> {compact(r.likes)}
-                    </span>
-                    <span title={`${r.comments.toLocaleString('en-IN')} comments`}>
+                    </span>}
+                    {r.comments != null && <span title={`${r.comments.toLocaleString('en-IN')} comments`}>
                       <Bubble /> {compact(r.comments)}
-                    </span>
+                    </span>}
                     <ShareButton reel={r} />
                   </div>
                 </div>
               </motion.li>
             ))}
           </ul>
-          <p className="ig-note">Views, likes and comments from the public profile · updated {profile.updated}</p>
+          <p className="ig-note">Latest posts checked Nov 1, 2026. Top reel views from Account Insights; its likes and comments are from Oct 21, 2026.</p>
         </section>
       </main>
     </div>
