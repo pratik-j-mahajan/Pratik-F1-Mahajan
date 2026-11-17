@@ -1,0 +1,25 @@
+/* Flow credit follows the original video's actual frame, not the player controls. */
+.section-video { font-family: 'Titillium Web', var(--font); }
+.sv-flow-plane { position: absolute; top: 50%; left: 50%; width: max(100vw, 177.7778dvh); aspect-ratio: 16 / 9; transform: translate(-50%, -50%); pointer-events: none; }
+.sv-flow-credit { position: absolute; left: 69.5%; top: 71.5%; display: flex; flex-direction: column; font-size: clamp(10px, 1.1vw, 21px); line-height: 1.45; color: #d4d5d8; text-shadow: 0 1px 4px #101114; }
+.sv-flow-credit strong { font-size: 1.25em; color: #f5f5f2; font-weight: 500; }
+.sv-flow-annotation { position: absolute; inset: 0; width: 100%; height: 100%; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 2px rgba(7,8,11,.35)); }
+.sv-flow-annotation path { vector-effect: non-scaling-stroke; }
+.sv-hand-circle { stroke-width: 3.5; }
+.sv-flow-annotation .sv-ink-stroke { fill: #fff; stroke: #fff; stroke-width: .35; }
+.sv-leader-mobile { display: none; }
+/* Keep the embedded watermark visible on tall screens, with the original controls. */
+@media (orientation: portrait) {
+  .section-video[role="dialog"] video { object-fit: contain; }
+  .sv-flow-plane { width: min(100vw, 177.7778dvh); }
+}
+@media (max-width: 700px) and (orientation: portrait) {
+  .sv-flow-credit { left: 42%; top: 65%; font-size: 10px; }
+  .sv-flow-annotation, .sv-hand-circle { stroke-width: 2.5; }
+  .sv-leader-desktop { display: none; }
+  .sv-leader-mobile { display: block; }
+}
+/* On shorter screens, clear the embedded watermark without changing the button style. */
+@media (max-height: 800px) and (orientation: landscape) {
+  .section-video .section-video-skip { bottom: 16px; }
+}

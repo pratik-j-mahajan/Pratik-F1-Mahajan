@@ -204,37 +204,34 @@ export default function Instagram() {
         </section>
 
         {/* ---------- the feature ---------- */}
-        <motion.section className="ig-feature" {...rise()}>
-          <a className="ig-feature-shot" href={reelUrl(featured.reel)} target="_blank" rel="noreferrer">
-            <img src={`/images/instagram/${featured.reel}.webp`} alt={`${featured.title} reel`} />
-            <span className="ig-play" aria-hidden="true">
-              ▶
-            </span>
-          </a>
-          <div className="ig-feature-body">
-            <p className="ig-label">Featured project</p>
-            <h2>
-              {featured.title}
-              <small lang="hi">{featured.titleHi}</small>
-            </h2>
-            <p className="ig-feature-text">{featured.blurb}</p>
-            <dl className="ig-feature-stats">
-              {featured.stats.map(([n, k]) => (
-                <div key={k}>
-                  <dd>{n}</dd>
-                  <dt>{k}</dt>
-                </div>
-              ))}
-            </dl>
-            <div className="ig-feature-ctas">
-              <a className="ig-btn ig-btn--dark" href={featured.play} target="_blank" rel="noreferrer">
+        <motion.section className="ig-game" aria-labelledby="ig-game-title" {...rise()}>
+          <div className="ig-game-topline">
+            <span>From the feed to a playable world</span>
+            <span>Independent game / 01</span>
+          </div>
+          <div className="ig-game-layout">
+            <div className="ig-game-copy">
+              <p className="ig-game-label">Designed. Built. Played.</p>
+              <h2 id="ig-game-title">The Jantar<br />Mantar Run<span>.</span></h2>
+              <p className="ig-game-hindi" lang="hi">{featured.titleHi}</p>
+              <p className="ig-game-description">{featured.blurb}</p>
+              <a className="ig-game-play" href={featured.play} target="_blank" rel="noreferrer">
                 Play the game <span aria-hidden="true">↗</span>
               </a>
-              <a className="ig-btn" href={reelUrl(featured.reel)} target="_blank" rel="noreferrer">
-                Watch the reel <span aria-hidden="true">↗</span>
+              <a className="ig-game-reel" href={reelUrl(featured.reel)} target="_blank" rel="noreferrer">
+                Watch the launch reel <span aria-hidden="true">↗</span>
               </a>
             </div>
+            <a className="ig-game-screen" href={featured.play} target="_blank" rel="noreferrer" aria-label="Play The Jantar Mantar Run in a new tab">
+              <div className="ig-game-screenbar"><span>THE JANTAR MANTAR RUN</span><span>Browser game ↗</span></div>
+              <img src="/images/instagram/jantar-gameplay.jpg" alt="Gameplay on a Delhi street, with runners, barricades and police vans" loading="lazy" decoding="async" width="1920" height="1080" />
+              <span className="ig-game-screenfoot">A little chaos. A lot of character.<span aria-hidden="true">→</span></span>
+            </a>
           </div>
+          <dl className="ig-game-results">
+            {featured.stats.map(([n, k]) => <div key={k}><dd>{n}</dd><dt>{k}</dt></div>)}
+            <div className="ig-game-platform"><dd>Made for your browser.</dd><dt>Jump straight into the game ↗</dt></div>
+          </dl>
         </motion.section>
 
         {/* ---------- reels ---------- */}

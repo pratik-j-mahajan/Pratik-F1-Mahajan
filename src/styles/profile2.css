@@ -608,17 +608,27 @@
     0 18px 36px -24px rgba(12, 20, 51, 0.25);
 }
 
-/* calmer photo: no soft blurred border — just the photo, a touch zoomed out, clean edges */
+/* Pull the portrait back slightly inside the same frame; use the source photo softly behind it. */
 .prx-intro .abx-photo-clip {
-  background: none;
+  background: url('/images/about/pratik-id.webp') center / cover no-repeat;
 }
 
 .prx-intro .abx-photo-clip::before {
-  display: none;
+  content: '';
+  position: absolute;
+  inset: -18px;
+  background: inherit;
+  filter: blur(16px) saturate(0.85);
+  opacity: 0.72;
 }
 
 .prx-intro .abx-photo-clip img {
   transform: none;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 18px;
   -webkit-mask-image: none;
   mask-image: none;
   object-position: 50% 30%;

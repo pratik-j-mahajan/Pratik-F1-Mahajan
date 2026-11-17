@@ -5,7 +5,7 @@ import sections from '../data/sections.js'
 import { links } from '../data/about.js'
 import useParallax from '../hooks/useParallax.js'
 import useMusic from '../hooks/useMusic.js'
-import { prefetchAllSectionVideos, prefetchSectionVideo, useSectionTransition } from '../components/SectionTransition.jsx'
+import { prefetchSectionVideo, useSectionTransition } from '../components/SectionTransition.jsx'
 import {
   ArrowIcon,
   ListIcon,
@@ -35,15 +35,8 @@ export default function Map() {
   const [cardId, setCardId] = useState(sections[0].id)
   const navigate = useNavigate()
 
-  // the day map comes first; once it's in, fetch the night map, then (a moment later) the
-  // section videos — so nothing in the background competes with what's on screen
-  const [mapReady, setMapReady] = useState(false)
+  // Load the night image only when the visitor asks for it.
   const [nightLoaded, setNightLoaded] = useState(false)
-  useEffect(() => {
-    if (!mapReady) return
-    const t = setTimeout(() => prefetchAllSectionVideos(sections.map((s) => s.video)), 2500)
-    return () => clearTimeout(t)
-  }, [mapReady])
   useEffect(() => {
     if (night) setNightLoaded(true)
   }, [night])
@@ -90,10 +83,6 @@ export default function Map() {
           src="/images/map-day.webp"
           alt="Circuit map"
           fetchPriority="high"
-          onLoad={() => {
-            setMapReady(true)
-            setNightLoaded(true)
-          }}
         />
         {nightLoaded && (
         <motion.img

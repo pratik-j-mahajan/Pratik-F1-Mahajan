@@ -976,3 +976,70 @@
 .ig-feature-shot {
   border-radius: 12px;
 }
+
+/* Game feature: an arcade launch panel with a real gameplay preview. */
+.ig-game { margin-top: 64px; background: #161719; color: #f8f5ec; overflow: hidden; border: 1px solid #303134; }
+.ig-game-topline { display: flex; justify-content: space-between; gap: 16px; padding: 16px 32px; border-bottom: 1px solid #393a3b; font: 11px var(--timing); letter-spacing: .12em; text-transform: uppercase; color: #c8c8c6; }
+.ig-game-layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.3fr); align-items: center; gap: 40px; padding: 40px 32px; }
+.ig-game-label { margin: 0 0 20px; color: #f5ce58; font: 11px var(--timing); letter-spacing: .12em; text-transform: uppercase; }
+.ig-game h2 { margin: 0; font-size: clamp(36px, 4.2vw, 64px); line-height: .98; letter-spacing: -.045em; font-weight: 650; }
+.ig-game h2 span { color: #f5ce58; }
+.ig-game-hindi { margin: 16px 0 0; font-size: 20px; color: #f5ce58; }
+.ig-game-description { margin: 24px 0; max-width: 390px; color: #c8c8c6; line-height: 1.65; font-size: 16px; }
+.ig-game-play { display: flex; justify-content: space-between; align-items: center; max-width: 280px; min-height: 52px; padding: 12px 20px; color: #161719; background: #f5ce58; font-weight: 650; text-decoration: none; transition: background .2s, transform .2s; }
+.ig-game-play:hover { background: #ffe28a; transform: translateY(-2px); }
+.ig-game-reel { display: inline-flex; align-items: center; gap: 20px; min-height: 44px; margin-top: 8px; color: #f8f5ec; font-size: 14px; text-underline-offset: 5px; }
+.ig-game-reel:hover { color: #f5ce58; }
+.ig-game-screen { display: block; min-width: 0; color: #f8f5ec; text-decoration: none; border: 1px solid #505052; background: #222326; transform: rotate(-2deg); transition: transform .25s; }
+.ig-game-screen:hover { transform: rotate(0); }
+.ig-game-screenbar, .ig-game-screenfoot { display: flex; justify-content: space-between; gap: 12px; padding: 16px; }
+.ig-game-screenbar { font: 10px var(--timing); letter-spacing: .06em; text-transform: uppercase; }
+.ig-game-screen img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; }
+.ig-game-screenfoot { font-size: 13px; }
+.ig-game-results { display: grid; grid-template-columns: 1fr 1fr 1.4fr; margin: 0; border-top: 1px solid #393a3b; }
+.ig-game-results > div { padding: 24px 32px; }
+.ig-game-results > div + div { border-left: 1px solid #393a3b; }
+.ig-game-results dd { margin: 0; font-size: clamp(32px, 4vw, 48px); line-height: 1; font-weight: 650; letter-spacing: -.04em; }
+.ig-game-results dt { margin-top: 8px; color: #c8c8c6; font: 11px var(--timing); text-transform: uppercase; letter-spacing: .1em; }
+.ig-game-platform { align-content: center; }
+.ig-game-platform dd { font-size: 20px; letter-spacing: -.02em; }
+.ig-game a:focus-visible { outline: 3px solid #f5ce58; outline-offset: 5px; }
+.ig-game a:active { transform: translateY(1px); }
+@media(max-width: 800px) {
+ .ig-game-layout { grid-template-columns: 1fr; gap: 32px; padding: 32px 24px; }
+ .ig-game-description { max-width: 540px; }
+ .ig-game-screen { transform: none; }
+ .ig-game-results > div { padding: 24px; }
+ .ig-game-platform dd { font-size: 18px; }
+}
+@media(max-width: 560px) {
+ .ig-game-topline { padding: 16px 24px; font-size: 10px; }
+ .ig-game-topline span:last-child { display: none; }
+ .ig-game-results { grid-template-columns: 1fr 1fr; }
+ .ig-game-results .ig-game-platform { grid-column: 1/-1; border-left: 0; border-top: 1px solid #393a3b; }
+ .ig-game-screenbar { font-size: 9px; padding: 12px; }
+}
+@media(prefers-reduced-motion: reduce) {
+ .ig-game a { transition: none; transform: none; }
+ .ig-game a:hover { transform: none; }
+}
+
+/* Match the Instagram page's white surfaces and racing-red accents. */
+.ig-game { background: #fff; color: #161719; border-color: #deded8; border-radius: 18px; }
+.ig-game-topline { border-color: #e8e8e3; color: #62645f; }
+.ig-game-label, .ig-game h2 span, .ig-game-hindi { color: #c9100b; }
+.ig-game-description { color: #595b56; }
+.ig-game-play { color: #fff; background: #d51a12; border-radius: 999px; }
+.ig-game-play:hover { background: #b6100a; }
+.ig-game-reel { color: #262823; }
+.ig-game-reel:hover { color: #b6100a; }
+.ig-game-screen { background: #f6f6f1; color: #262823; border-color: #deded8; border-radius: 12px; overflow: hidden; transform: none; }
+.ig-game-screen:hover { transform: translateY(-3px); }
+.ig-game-results { border-color: #e8e8e3; background: #fafaf7; }
+.ig-game-results > div + div { border-color: #e8e8e3; }
+.ig-game-results dd { font-family: 'Kanit', var(--font); font-style: italic; }
+.ig-game-results dt { color: #62645f; }
+.ig-game-platform dd { font-family: var(--font); font-style: normal; }
+.ig-game a:focus-visible { outline-color: #b6100a; }
+@media(max-width: 560px) { .ig-game-results .ig-game-platform { border-color: #e8e8e3; } }
+@media(prefers-reduced-motion: reduce) { .ig-game-screen:hover { transform: none; } }

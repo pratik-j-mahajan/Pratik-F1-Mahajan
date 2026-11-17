@@ -14,12 +14,11 @@ import { useOpenCase } from './flight.jsx'
 const pad = (n) => String(n).padStart(2, '0')
 
 export default function CaseList() {
-  return <CardStack items={caseStudies} portrait />
+  return <CardStack items={caseStudies} />
 }
 
 // the 3D stack itself — shared by Case Studies and Projects (pass the cards as `items`)
-// `portrait` adds the driver photo and an autograph in the bottom-right corner (Case Studies only)
-export function CardStack({ items, label = 'Case studies', fade = 'veil', portrait = false }) {
+export function CardStack({ items, label = 'Case studies', fade = 'veil' }) {
   const N = items.length
   const reduce = useReducedMotion()
   const section = useRef(null)
@@ -68,10 +67,9 @@ export function CardStack({ items, label = 'Case studies', fade = 'veil', portra
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <section ref={section} className={`sk${portrait ? ' sk--me' : ''}`} style={{ height: `${N * 100}svh` }} aria-label={label}>
+    <section ref={section} className="sk" style={{ height: `${N * 100}svh` }} aria-label={label}>
       <div className="sk-stage">
         <Backdrop />
-        {portrait && <Portrait />}
         <BigPos pos={pos} N={N} />
 
         <div className="sk-deck">
@@ -192,20 +190,6 @@ function Backdrop() {
         <path className="sk-bg-kerb" d="M-40 760 C 260 700 380 520 640 540" />
       </svg>
     </div>
-  )
-}
-
-// the driver in the bottom-right corner, signed in yellow, with his name printed beneath
-function Portrait() {
-  return (
-    <figure className="sk-me" aria-hidden="true">
-      <img src="/images/cases/me-cutout.webp" alt="" />
-      <span className="sk-sign">Pratik Mahajan</span>
-      <figcaption className="sk-me-name">
-        <b>Pratik Mahajan</b>
-        <small>Product Designer</small>
-      </figcaption>
-    </figure>
   )
 }
 
